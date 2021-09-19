@@ -22,7 +22,7 @@
           หน้าบริการ
         </v-btn>
 
-        <v-btn to="/">
+        <v-btn to="/payment">
           หน้าชำระเงิน
         </v-btn>
 
