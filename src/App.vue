@@ -14,6 +14,16 @@
           <!--หน้าหลัก-->
         </v-btn>
 
+         <v-btn>
+          หน้าเลือกบริการ
+        </v-btn>
+
+        <v-btn to="/service">
+          หน้าบริการ
+        </v-btn>
+
+
+
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
