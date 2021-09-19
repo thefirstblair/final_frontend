@@ -14,7 +14,7 @@
           <!--หน้าหลัก-->
         </v-btn>
 
-         <v-btn>
+        <v-btn>
           หน้าเลือกบริการ
         </v-btn>
 
@@ -22,7 +22,9 @@
           หน้าบริการ
         </v-btn>
 
-
+        <v-btn to="/">
+          หน้าชำระเงิน
+        </v-btn>
 
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
@@ -31,10 +33,7 @@
         <v-btn icon to="/login">
           <v-icon>mdi-login</v-icon>
         </v-btn>
-
-
       </v-app-bar>
-
 
       <!-- Show Page -->
       <router-view />

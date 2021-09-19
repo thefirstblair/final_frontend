@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Service from '../views/ServicePage.vue'
+import Payment from '../views/Payment.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,12 @@ const routes = [
     name: "Service",
     component: Service
   },
+  {
+    path: "/payment",
+    name: "Payment",
+    component: Payment
+  },
+
 
   
 ]
