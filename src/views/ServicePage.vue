@@ -12,7 +12,7 @@
           src="https://picsum.photos/id/11/500/300"
         ></v-img>
 
-        <v-row style="background:grey; margin-top:1vh;">
+        <v-row style="backgroud:grey; margin-top:1vh;">
           <v-col v-for="n in 3" :key="n">
             <v-item v-slot="{ active, toggle }">
               <v-card

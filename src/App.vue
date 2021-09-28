@@ -26,9 +26,34 @@
           หน้าชำระเงิน
         </v-btn>
 
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        <div class="text-center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <!-- Item -->
+            <v-list>
+              <v-list-item to='/booking-customer'>
+                <v-list-item-title>การจองของฉัน</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to='/profile'>
+                <v-list-item-title>ข้อมูลผู้ใช้</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to='/management'>
+                <v-list-item-title>Admin: ข้อมูลบริการ</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to='/reservedlist'>
+                <v-list-item-title>Admin: การจองของลูกค้า</v-list-item-title>
+              </v-list-item>
+
+            </v-list>
+          </v-menu>
+        </div>
 
         <v-btn icon to="/login">
           <v-icon>mdi-login</v-icon>
@@ -45,8 +70,6 @@
 export default {
   name: "App",
 
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
 };
 </script>
