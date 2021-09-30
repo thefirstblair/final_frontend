@@ -97,7 +97,7 @@
               />
             </v-btn>
           </template>
-          <span>สระผม</span>
+          <span>ซาลอน</span>
         </v-tooltip>
 
         <v-tooltip bottom>
