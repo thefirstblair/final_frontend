@@ -6,17 +6,17 @@
         <v-row style="margin-top:1vh;">
           <v-col col="2">
             <v-card color="#385F73" dark style="margin-top=10px">
-              <v-card-title class="text-h6">Gowasabi Nail</v-card-title>
+              <!-- fix ตัวแปร --> <v-card-title class="text-h6">Gowasabi Nail</v-card-title>
               <v-img
                 src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
                 height="200px"
               ></v-img>
-              <v-card-subtitle>Description: ทาสีเจลมือ + เท้า</v-card-subtitle>
+             <!-- fix ตัวแปร --> <v-card-subtitle>Description: ทาสีเจลมือ + เท้า </v-card-subtitle>
               <v-card-subtitle>
-                <p>ราคา : 1000 THB</p>
+              <!-- fix ตัวแปร --> <p>ราคา : 1000 THB</p>
 
-                <p>วันที่จอง: 2021-09-20</p>
-                <p>เวลา: 12.00 น.</p>
+               <!-- fix ตัวแปร --> <p>วันที่จอง: 2021-09-20</p>
+              
               </v-card-subtitle>
               <v-card-subtitle
                 ><img
@@ -32,24 +32,25 @@
         <h2 style="text-align: center;">2. รายละเอียด</h2>
         <v-row style="margin-top:1vh;">
           <v-col col="2">
-            <v-text>
+           <!-- fix ตัวแปร --> <v-text>
               Username: หนูรัตน์ บ้านยาง
               <!-- item.username -->
             </v-text>
           </v-col>
         </v-row>
 
-        <v-text class="text-h6">
+       <!-- fix ตัวแปร --> <v-text class="text-h6">
           ยอดที่ต้องชำระ: 1000 THB
         </v-text>
 
         <div style="margin:10px">
           <p>ช่องทางการชำระเงิน</p>
-          <v-checkbox
+         
+         <!-- fix label --> <v-checkbox
             v-model="checkbox"
             :error-messages="errors"
             value="1"
-            label="ชำระเงินหน้าร้าน"
+            label="ชำระเงินหน้าร้าน" 
             type="checkbox"
             required
           ></v-checkbox>
