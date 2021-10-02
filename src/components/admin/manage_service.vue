@@ -1,29 +1,22 @@
 <template>
   <v-row>
     <v-col>
-      
-          <h1>ประวัติการจองทั้งหมดของลูกค้า</h1>
- <v-card>
-    <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :search="search"
-    >
-    <!-- เดี้ยวตรงนี้ต้องมาแก้ ออกแบบเป็นแบบนี้ไว้ก่อน -->
-    <template v-slot:item.action="{ item }">
-                    <v-btn color="success" @click="createPacks(item)">เปลี่ยนสถานะ</v-btn>  
-                </template></v-data-table>
-  </v-card>
-
+      <h1>ประวัติการจองทั้งหมดของลูกค้า</h1>
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="items" :search="search">
+        <!-- เดี้ยวตรงนี้ต้องมาแก้ ออกแบบเป็นแบบนี้ไว้ก่อน -->
+        <template v-slot:[`item.action`]="{ item }">
+          <v-btn color="success" @click="createPacks(item)">เปลี่ยนสถานะ</v-btn>
+        </template>
+      </v-data-table>
     </v-col>
   </v-row>
 </template>
@@ -32,7 +25,7 @@
 export default {
   data() {
     return {
-     search: '',
+      search: "",
       headers: [
         {
           text: "ชื่อบริการ",
@@ -43,7 +36,7 @@ export default {
         { text: "Username", value: "username" },
         { text: "วันเวลาที่จอง", value: "date" },
         { text: "สถานะ", value: "status" },
-         { text: "Action", value: "action" },
+        { text: "Action", value: "action" },
       ],
       items: [
         {
@@ -70,7 +63,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-card {
   width: 80%;
   max-width: 2000px;

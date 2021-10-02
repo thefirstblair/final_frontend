@@ -18,10 +18,6 @@
           หน้าเลือกบริการ
         </v-btn>
 
-        <v-btn to="/service">
-          หน้าบริการ
-        </v-btn>
-
         <v-btn to="/payment">
           หน้าชำระเงิน
         </v-btn>
@@ -35,22 +31,13 @@
             </template>
             <!-- Item -->
             <v-list>
-              <v-list-item to='/booking-customer'>
-                <v-list-item-title>การจองของฉัน</v-list-item-title>
+              <v-list-item to="/Customer">
+                <v-list-item-title>Customer</v-list-item-title>
               </v-list-item>
 
-              <v-list-item to='/profile'>
-                <v-list-item-title>ข้อมูลผู้ใช้</v-list-item-title>
+              <v-list-item to="/admin">
+                <v-list-item-title>Admin Dashboard</v-list-item-title>
               </v-list-item>
-
-              <v-list-item to='/management'>
-                <v-list-item-title>Admin: ข้อมูลบริการ</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item to='/reservedlist'>
-                <v-list-item-title>Admin: การจองของลูกค้า</v-list-item-title>
-              </v-list-item>
-
             </v-list>
           </v-menu>
         </div>

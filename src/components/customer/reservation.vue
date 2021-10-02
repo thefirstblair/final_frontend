@@ -1,11 +1,10 @@
 <template>
   <v-container>
     <span style="font-size:40px;">การจองของฉัน</span>
+    <v-divider></v-divider>
 
     <v-row>
-      <v-col
-        style="background:grey; height:750px; margin-top:5vh  overflow: auto;"
-      >
+      <v-col>
         <v-row>
           <!-- LOOP -->
           <v-col ref="vcol" v-for="item in items" :key="item.id" cols="12">
@@ -76,7 +75,6 @@
                   </v-card>
                 </v-dialog>
               </v-row>
-              
             </v-card>
           </v-col>
         </v-row>
