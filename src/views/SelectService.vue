@@ -140,7 +140,7 @@ export default {
           name_customer: "yok",
           review_desc:
             "first and yok love bankky so much manow have house" +
-            "that have many of cats too such as bunroad",
+            " that have many of cats too such as bunroad",
           service_customer: "สระผม",
         },
         {

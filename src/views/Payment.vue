@@ -1,90 +1,154 @@
 <template>
   <v-container>
-    <v-row justify="center" style="background:grey; margin:50px">
-      <v-col cols="3" style="background:white; margin:40px;">
-        <h2 style="text-align: center;">1. การจองของคุณ</h2>
-        <v-row style="margin-top:1vh;">
-          <v-col col="2">
-            <v-card color="#385F73" dark style="margin-top=10px">
-              <!-- fix ตัวแปร --> <v-card-title class="text-h6">Gowasabi Nail</v-card-title>
-              <v-img
-                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                height="200px"
-              ></v-img>
-             <!-- fix ตัวแปร --> <v-card-subtitle>Description: ทาสีเจลมือ + เท้า </v-card-subtitle>
-              <v-card-subtitle>
-              <!-- fix ตัวแปร --> <p>ราคา : 1000 THB</p>
+    <v-row>
+      <v-col cols="3.5" >
+        <h2 style="text-align: center">การจองของคุณ</h2>
+        <v-col
+          style="background: #dfdfdf; margin-top: 10px"
+          class="align-center; justify-center"
+        >
+          <v-row class="align-center; justify-center">
+            <h3 style="margin: 15px">{{ form_service.service_name }}</h3>
+          </v-row>
+          <v-row>
+            <img :src="form_service.data_images" style="width: 100%" />
+          </v-row>
+          <v-row style="margin-top: 30px" class="align-center; justify-center">
+            Description : {{ form_service.description }}
+          </v-row>
+          <v-row style="margin-top: 35px" class="align-center; justify-center">
+            ราคา : {{ form_service.price }} บาท
+          </v-row>
+          <v-row style="margin-top: 20px" class="align-center; justify-center">
+            วันที่จอง : {{ form_service.date_time }}
+          </v-row>
+          <v-row
+            style="margin-top: 35px; margin-bottom: 15px"
+            class="align-center; justify-center"
+          >
+            <img
+              src="https://img.icons8.com/material-outlined/24/000000/clock--v1.png"
+            />
+            {{ form_service.time }} นาที
+          </v-row>
+        </v-col>
+      </v-col>
 
-               <!-- fix ตัวแปร --> <p>วันที่จอง: 2021-09-20</p>
-              
-              </v-card-subtitle>
-              <v-card-subtitle
-                ><img
-                  src="https://img.icons8.com/material-outlined/24/000000/clock--v1.png"
-                />60 min</v-card-subtitle
+      <v-col cols="3.5" >
+        <h2 style="text-align: center">รายละเอียด</h2>
+        <v-col
+          style="background: #dfdfdf; margin-top: 10px"
+          class="align-center; justify-center"
+        >
+          <v-row style="margin-top: 20px" class="align-center; justify-center">
+            User name : {{ form_user.user_name }}
+          </v-row>
+          <v-row style="margin-top: 25px" class="align-center; justify-center">
+            <h3 class="red--text">
+              ยอดที่ต้องชำระ : {{ form_service.price }} บาท
+            </h3>
+          </v-row>
+
+          <v-row style="margin-top: 25px" class="align-center; justify-center">
+            <div style="margin: 20px">
+              <p>- ช่องทางการชำระเงิน</p>
+              <v-checkbox
+                v-model="checkbox"
+                :error-messages="errors"
+                value="1"
+                label="ชำระเงินหน้าร้าน"
+                type="checkbox"
+                required
+              ></v-checkbox>
+            </div>
+          </v-row>
+
+          <v-row style="margin-top: 30px" class="align-center; justify-center">
+            <h2 style="text-align: center">
+              หากมีข้อสงสัย ติดต่อที่ XXX-XXX-XXXX
+            </h2>
+          </v-row>
+
+          <v-col
+            style="background: #dfdfdf; margin-top: 20px"
+            class="align-center; justify-center"
+          >
+            <v-row
+              style="margin-top: 25px; margin-bottom: 25px"
+              class="align-center; justify-center"
+            >
+              <v-checkbox
+                v-model="checkbox"
+                :error-messages="errors"
+                value="1"
+                label="ข้อมูลถูกต้องครบถ้วน"
+                type="checkbox"
+                required
+              ></v-checkbox>
+            </v-row>
+
+            <v-row
+              style="margin-top: 25px; margin-bottom: 25px"
+              class="align-center; justify-center"
+            >
+              <v-btn
+                style="background: #2bd598; margin-top: 15px"
+                class="white--text"
               >
-            </v-card>
+                ยืนยันการจอง
+              </v-btn>
+            </v-row>
           </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="3" style="background:white; margin:40px;">
-        <h2 style="text-align: center;">2. รายละเอียด</h2>
-        <v-row style="margin-top:1vh;">
-          <v-col col="2">
-           <!-- fix ตัวแปร --> <v-text>
-              Username: หนูรัตน์ บ้านยาง
-              <!-- item.username -->
-            </v-text>
-          </v-col>
-        </v-row>
-
-       <!-- fix ตัวแปร --> <v-text class="text-h6">
-          ยอดที่ต้องชำระ: 1000 THB
-        </v-text>
-
-        <div style="margin:10px">
-          <p>ช่องทางการชำระเงิน</p>
-         
-         <!-- fix label --> <v-checkbox
-            v-model="checkbox"
-            :error-messages="errors"
-            value="1"
-            label="ชำระเงินหน้าร้าน" 
-            type="checkbox"
-            required
-          ></v-checkbox>
-        </div>
-      </v-col>
-
-      <v-col cols="3" style="margin:40px;">
-        <h2 style="text-align: center;">หากมีข้อสงสัยติดต่อที่ XXX-XXX-XXXX</h2>
-        <v-row style="margin-top:2vh;">
-          <v-col col="2">
-            <v-card color="#c7c7c7" dark style="margin-top=10px">
-              <v-card-title class="text-h6">
-                <v-checkbox
-                  v-model="checkbox"
-                  :error-messages="errors"
-                  value="1"
-                  label="ข้อมูลถูกต้องครบถ้วน"
-                  type="checkbox"
-                  required
-                ></v-checkbox>
-              </v-card-title>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-btn style="margin:60px;">
-          ยืนยันการจอง
-        </v-btn>
+        </v-col>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      form_service: {
+        service_name: "Gowasabi nail",
+        category_label: "โกวาซาบิ ทำเล็บ",
+        description: "ทาสีเจลมือ + เท้า",
+        data_images: "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
+        price: 1000,
+        date_time: "2021-09-20",
+        time: 60,
+      },
+      form_user: {
+        user_name: "หนูรัตน์ บ้านยาง",
+      },
+    };
+  },
+};
 </script>
 
-<style></style>
+<style>
+.type_select_btn {
+  padding: 1vh;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.type_select_btn:hover {
+  background: #d8d8d8;
+}
+
+.active {
+  background: #f1f1f1;
+}
+
+.buy_btn {
+  margin-left: 5vh;
+  margin-right: 2vh;
+  padding: 1vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  background: #2bd598;
+}
+</style>
