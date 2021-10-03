@@ -12,7 +12,6 @@
         ></v-text-field>
       </v-card-title>
       <v-data-table :headers="headers" :items="items" :search="search">
-        <!-- เดี้ยวตรงนี้ต้องมาแก้ ออกแบบเป็นแบบนี้ไว้ก่อน -->
         <template v-slot:[`item.action`]="{ item }">
           <v-btn color="success" @click="createPacks(item)">เปลี่ยนสถานะ</v-btn>
         </template>

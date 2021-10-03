@@ -10,10 +10,16 @@
         <div class="type_select_btn" @click="current_component = 'manage_service'">
           จัดการการจอง / ประวัติ ของลูกค้า
         </div>
+
+        <div class="type_select_btn" @click="current_component = 'manage_user'">
+          จัดการผู้ใช้งาน
+        </div>
       </v-col>
       <v-col>
         <manageShop v-if="current_component == 'manage_shop'" />
         <manageService v-else-if="current_component == 'manage_service'" />
+        <manageUser v-else-if="current_component == 'manage_user'" />
+
       </v-col>
     </v-row>
   </v-container>
@@ -22,9 +28,10 @@
 <script>
 import manageShop from "@/components/admin/manage_shop.vue";
 import manageService from "@/components/admin/manage_service.vue";
+import manageUser from "@/components/admin/manage_user.vue";
 
 export default {
-  components: { manageShop, manageService },
+  components: { manageShop, manageService, manageUser },
   data() {
     return {
       current_component: "manage_shop",
