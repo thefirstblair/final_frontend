@@ -3,6 +3,11 @@
     <v-row>
       <v-col>
         <h1>ตัวจัดการบริการ</h1>
+
+        <v-icon >
+          mdi-arrow-left
+        </v-icon>
+
         <v-card-title>
           <v-text-field
             v-model="search"
@@ -17,7 +22,7 @@
             <v-icon small class="mr-2" @click="selectCategory">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="dialog = !dialog" class>
+            <v-icon small @click="dialog_fixService = !dialog_fixService" class>
               mdi-delete
             </v-icon>
           </template>
@@ -28,7 +33,7 @@
     <!-- dialog -->
 
     <v-row justify="center" class="align-center">
-      <v-dialog v-model="dialog" scrollable max-width="80%">
+      <v-dialog v-model="dialog_fixService" scrollable max-width="80%">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" dark v-bind="attrs" v-on="on">
             แก้ไขบริการ
@@ -95,8 +100,8 @@
                 <v-col>
                   <span
                     >ส่วนจัดการคูปอง
-                    <span style="font-size:1.5vh; text-decoration:underline;"
-                      >+เพิ่มคูปอง</span
+                    <v-btn text style="font-size:1.5vh; text-decoration:underline;" @click="dialog_addCoupon = !dialog_addCoupon" class
+                      >+เพิ่มคูปอง</v-btn
                     >
                   </span>
                 </v-col>
@@ -140,9 +145,12 @@
         </v-card>
       </v-dialog>
 
+
+      
+
       <!-- Add Coupon / Fix Coupon -->
       <v-row justify="center">
-        <v-dialog v-model="dialog2" max-width="600px">
+        <v-dialog v-model="dialog_addCoupon" max-width="600px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark v-bind="attrs" v-on="on">
               Add Coupon
@@ -156,38 +164,117 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="ชื่อคูปอง"
-                      required
-                    ></v-text-field>
+                    <v-text-field label="ชื่อคูปอง" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="ราคา"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="เวลาที่ใช้ (หน่วยเป็นนาที)"
+                      >นาที</v-text-field
+                    >
+                  </v-col>
+              
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog_addCoupon = false">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="dialog_addCoupon = false">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+
+      <!-- Add Categories -->
+      <v-row justify="center">
+        <v-dialog v-model="dialog_AddCategory" max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
+              Add Category
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">เพิ่มประเภท</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="ชื่อประเภท" required></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      label="ราคา"
-                      
+                      label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
                     ></v-text-field>
                   </v-col>
-                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="เวลาที่ใช้ (หน่วยเป็นนาที)"
-                      
-                    >นาที</v-text-field>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog_AddCategory = false">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="dialog_AddCategory = false">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+
+      <!-- Add Service -->
+      <v-row justify="center">
+        <v-dialog v-model="dialog_AddService" max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
+              Add Service
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">เพิ่ม Service</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field label="ชื่อ Service" required></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field label="Description" required></v-text-field>
                   </v-col>
-               
-                  
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="URL Image 1"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="URL Image 2"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="URL Image 3"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field label="URL Image 4"></v-text-field>
+                  </v-col>
                 </v-row>
               </v-container>
-              <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog2 = false">
+              <v-btn color="blue darken-1" text @click="dialog_AddService = false">
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="dialog2 = false">
+              <v-btn color="blue darken-1" text @click="dialog_AddService = false">
                 Save
               </v-btn>
             </v-card-actions>
@@ -202,8 +289,11 @@
 export default {
   data() {
     return {
-      dialog: false,
-      dialog2: false,
+      dialog_fixService: false,
+      dialog_addCoupon: false,
+      dialog_AddCategory: false,
+      dialog_AddService: false,
+
       search: "",
       headers: [
         {
