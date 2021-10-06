@@ -209,7 +209,7 @@
                 :key="index">
 
                 <v-row>
-                  <v-col cols="11" style="" >
+                  <v-col cols="9" style="margin-left: 15px; " >
                     <v-row style="padding: 3px">
                       Coupon name : {{ v.coupon }}
                     </v-row>
@@ -223,20 +223,24 @@
 
                   <v-col cols="2" class="align-center justify-center" >
                     {{ v.count }} ชิ้น 
-
-                    <p>Value: {{ v.count }}</p>
-                    <vue-number-input :model-value="1" :min="1" :max="3"  inline controls></vue-number-input>
-                      
-                         
-                  </v-col>
+            
+                    <!-- <v-text-field
+                      label="จำนวน"
+                      value="10"
+                    ></v-text-field> -->
 
                   
 
+
+                    
+                  </v-col>
+
                 </v-row>
-                
-                
 
               </v-col>
+              <v-row style="margin-top: 15px" class=" justify-center" >
+                <v-btn color="success" larger style="float: right;">ชำระเงิน</v-btn>
+              </v-row>
             </v-col>
             
 
@@ -330,12 +334,7 @@ export default {
           time: 60,
           count: 4,
         },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
+        
       ],
     };
   },
