@@ -2,13 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="5">
-        <h1>ชำระเงิน</h1>
+        <h1>รายการสินค้า</h1>
 
         <v-divider></v-divider>
       </v-col>
 
       <v-col cols="7">
-        <h1>กรอกข้อมูลบัตร</h1>
+        <h1>ชำระสินค้า</h1>
 
         <v-divider></v-divider>
       </v-col>
@@ -16,14 +16,19 @@
 
     <v-row style="margin-top:1vh">
       <v-col cols="5">
-        <v-card width="550" height="700" style="margin-top:1vh">
+        <v-card
+          max-width="550"
+          max-height="700"
+          style="margin-top:1vh"
+          class="scroll"
+        >
           <v-card-title>
-            รายการสินค้า
+            ยอดรวมทั้งหมด {{ cost }} บาท
           </v-card-title>
 
           <v-divider></v-divider>
 
-          <div>
+          <div style="overflow:auto; max-height:62vh;">
             <v-col>
               <v-col
                 style="
@@ -57,103 +62,98 @@
               </v-col>
             </v-col>
           </div>
-
-          <v-divider></v-divider>
-
-          <v-text style="float: right">Total: {{ cost }} Baht </v-text>
         </v-card>
       </v-col>
-      <v-col cols="7">
-        <v-card max-width="700" max-height="350">
-          <v-card-title
-            class="green darken-1 white--text font-weight-black title"
-          >
-            PAYMENT DETAILS<v-spacer></v-spacer>
 
-            <v-img
-              aspect-ratio="3.075"
-              max-height="40"
-              :src="URL_IMAGE"
-              position="right"
-              contain
-            />
-          </v-card-title>
-
-          <v-card-text class="pb-10">
-            <v-row>
-              <v-col cols="6">
-                <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                  >CARDHOLDER’S NAME</v-subheader
-                >
-                <v-text-field
-                  single-line
-                  outlined
-                  label="Johny Relative"
-                  hide-details
-                />
-              </v-col>
-
-              <v-col cols="6">
-                <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                  >CARD NUMBER</v-subheader
-                >
-                <v-text-field
-                  single-line
-                  outlined
-                  mask="credit-card"
-                  label="**** **** ****"
-                  v-model="valueOfCardNumber"
-                  hide-details
-                />
-              </v-col>
-
-              <v-col col="4">
-                <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                  >EXPIRE DATE</v-subheader
-                >
-                <v-select
-                  :items="monthList"
-                  label="Month"
-                  outlined
-                  hide-details
-                />
-              </v-col>
-
-              <v-col col="4">
-                <v-subheader
-                  class="grey--text text--lighten-1 pl-0 subheader"
-                ></v-subheader>
-                <v-select
-                  :items="yearlist"
-                  label="Year"
-                  outlined
-                  hide-details
-                />
-
-                <!-- <v-select :items="items" label="Permission" dense></v-select> -->
-              </v-col>
-
-              <v-col col="4">
-                <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                  >CVV</v-subheader
-                >
-                <v-text-field single-line outlined hide-details />
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-
-        <v-divider></v-divider>
-        <v-row align="center" justify="space-around">
-         
-            <v-btn
-              x-large
-              color="success"
-              style="margin-top:5vh"
-            
-              >ยืนยันการสั่งซื้อ</v-btn
+      <v-col>
+        <v-col cols="12">
+          <h2>เลือกช่องทางการชำระเงิน</h2>
+          <v-select
+            v-model="selected"
+            :items="payments"
+            label="ช่องทางการชำระเงิน"
+            dense
+            solo
+            return-object
+            style="margin-top:10px;"
+          ></v-select
+        ></v-col>
+        <v-col cols="12" v-if="selected === 'Credit Card'">
+          <v-card max-width="800" max-height="350">
+            <v-card-title
+              class="green darken-1 white--text font-weight-black title"
             >
+              PAYMENT DETAILS<v-spacer></v-spacer>
+            </v-card-title>
 
+            <v-card-text class="pb-10">
+              <v-row>
+                <v-col cols="6">
+                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
+                    >CARDHOLDER’S NAME</v-subheader
+                  >
+                  <v-text-field
+                    single-line
+                    outlined
+                    label="Johny Relative"
+                    hide-details
+                  />
+                </v-col>
+
+                <v-col cols="6">
+                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
+                    >CARD NUMBER</v-subheader
+                  >
+                  <v-text-field
+                    single-line
+                    outlined
+                    mask="credit-card"
+                    label="**** **** ****"
+                    v-model="valueOfCardNumber"
+                    hide-details
+                  />
+                </v-col>
+
+                <v-col col="4">
+                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
+                    >EXPIRE DATE</v-subheader
+                  >
+                  <v-select
+                    :items="monthList"
+                    label="Month"
+                    outlined
+                    hide-details
+                  />
+                </v-col>
+
+                <v-col col="4">
+                  <v-subheader
+                    class="grey--text text--lighten-1 pl-0 subheader"
+                  ></v-subheader>
+                  <v-select
+                    :items="yearlist"
+                    label="Year"
+                    outlined
+                    hide-details
+                  />
+                </v-col>
+
+                <v-col col="4">
+                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
+                    >CVV</v-subheader
+                  >
+                  <v-text-field single-line outlined hide-details />
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+          <v-divider></v-divider>
+        </v-col>
+        <v-row align="center" justify="space-around">
+          <v-btn x-large color="success" style="margin-top:10px"
+            >ยืนยันการสั่งซื้อ</v-btn
+          >
         </v-row>
       </v-col>
     </v-row>
@@ -165,6 +165,8 @@ export default {
   data() {
     return {
       cost: 0.0,
+      selected: "Cash",
+      payments: ["Cash", "Credit Card"],
       yearlist: ["2030", "2029", "2028", "2027"],
       monthList: [
         "January",
@@ -236,8 +238,9 @@ export default {
 };
 </script>
 
-<style>
-div {
-  overflow: auto;
+<style scoped>
+.select {
+  max-width: 60px;
+  max-height: 60px;
 }
 </style>
