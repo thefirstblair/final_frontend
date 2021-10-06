@@ -57,13 +57,13 @@
     <div>
       <v-row>
         <v-col v-for="(v, index) in random_coupon" :key="index" cols="3">
-          <v-card class="mx-auto" max-width="400" style="margin-">
+          <v-card class="mx-auto " width="400" height="200">
             <v-card-title class="pb-0"> ชื่อคูปอง : {{ v.name }} </v-card-title>
 
             <v-card-text class="text--primary">
-              <div>ราคา : {{ v.price }}</div>
+              <div>ราคา : {{ v.price }} บาท</div>
 
-              <div>เวลา : {{ v.time }}</div>
+              <div>เวลา : {{ v.time }} นาที</div>
             </v-card-text>
 
             <v-card-actions>
@@ -102,20 +102,22 @@ export default {
     };
   },
   methods: {
-    getType(){
-      this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
-        if(response.status == 200){
-          this.types = response.data
-        }else{
-          console.log(response.error)
-        }
-      });
-    },
+    // api แบบแรก ใส่ใน created ด้วย
+
+    // getType(){
+    //   this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
+    //     if(response.status == 200){
+    //       this.types = response.data
+    //     }else{
+    //       console.log(response.error)
+    //     }
+    //   });
+    // },
 
     randomCoupon(){
       this.$http.get("http://127.0.0.1:8000/api/coupon/random").then((response) => {
         if(response.status == 200){
-          this.types = response.data
+          this.random_coupon = response.data
         }else{
           console.log(response.error)
         }
@@ -124,7 +126,7 @@ export default {
   },
   created() {
 
-    this.getType();
+    // this.getType();
     this.randomCoupon();
 
     // fetch
@@ -145,6 +147,19 @@ export default {
     // }).then((response) => {
     //   console.log(response.data);
     // });
+
+
+    // อีกแบบใส่ในนี้เลย
+    
+      this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
+        if(response.status == 200){
+          this.types = response.data
+        }else{
+          console.log(response.error)
+        }
+      });
+    
+
   },
 };
 </script>
