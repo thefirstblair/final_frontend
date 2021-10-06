@@ -27,11 +27,12 @@ export default {
       search: "",
       headers: [
         {
-          text: "ชื่อบริการ",
+          text: "ชื่อ Service",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "service_name",
         },
+        { text: "ชื่อ Coupon", value: "coupon_name" },
         { text: "Username", value: "username" },
         { text: "วันเวลาที่จอง", value: "date" },
         { text: "สถานะ", value: "status" },
@@ -39,19 +40,22 @@ export default {
       ],
       items: [
         {
-          name: "สระผม",
+          service_name: "สระผม",
+          coupon_name: "test",
           username: "Thidaporn",
           date: "9/29/2021",
           status: "ใช้แล้ว",
         },
         {
-          name: "ทำเล็บ",
+          service_name: "ทำเล็บ",
+          coupon_name: "test",
           username: "Nichatitra",
           date: "9/29/2021",
           status: "ยังไม่ได้ใช้งาน",
         },
         {
-          name: "นวดแผนโบราณ",
+          service_name: "นวดแผนโบราณ",
+          coupon_name: "test",
           username: "Yokky",
           date: "9/28/2021",
           status: "ยังไม่ได้ใช้งาน",

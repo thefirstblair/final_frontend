@@ -1,46 +1,33 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import Payment from "../views/Payment.vue";
-import SelectService from "../views/SelectService.vue";
-import Admin from "../views/Admin.vue";
-import Customer from "../views/Customer.vue";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
-  },
-  {
-    path: "/login",
-    name: "Login",
-    component: Login,
+    component: () => import('../views/Home.vue'),
   },
   {
     path: "/admin",
     name: "Admin",
-    component: Admin,
+    component: () => import('../views/Admin.vue'),
   },
   {
     path: "/payment",
     name: "Payment",
-    component: Payment,
+    component: () => import('../views/Payment.vue'),
   },
   {
     path: "/select-service",
     name: "SelectService",
-    component: SelectService,
+    component: () => import('../views/SelectService.vue'),
   },
   {
     path: "/customer",
     name: "Customer",
-    component: Customer,
+    component: () => import('../views/Customer.vue'),
   },
-
-
 ];
 
 const router = new VueRouter({

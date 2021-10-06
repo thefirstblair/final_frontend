@@ -55,7 +55,7 @@
               <v-col>
                 <v-row class="align-center justify-end">
                   <b>฿ {{ v.price }}</b>
-                  <button class="buy_btn">ซื้อคูปอง</button>
+                  <button class="buy_btn">เพิ่มลงตะกร้า</button>
                 </v-row>
               </v-col>
             </v-row>

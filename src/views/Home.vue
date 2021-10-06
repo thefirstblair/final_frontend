@@ -111,7 +111,9 @@
               v-bind="attrs"
               v-on="on"
             >
-              <img src="https://img.icons8.com/ios-filled/50/000000/massage.png"/>
+              <img
+                src="https://img.icons8.com/ios-filled/50/000000/massage.png"
+              />
             </v-btn>
           </template>
           <span>นวด</span>
@@ -128,7 +130,9 @@
               v-bind="attrs"
               v-on="on"
             >
-           <img src="https://img.icons8.com/ios-filled/50/000000/manicure.png"/>
+              <img
+                src="https://img.icons8.com/ios-filled/50/000000/manicure.png"
+              />
             </v-btn>
           </template>
           <span>ทำเล็บ</span>
@@ -201,6 +205,27 @@ export default {
         },
       ],
     };
+  },
+  created() {
+
+    // fetch
+
+    // fetch("http://127.0.0.1:8000/api/user/login", {
+    //   method: "post",
+      // headers: {
+      //   "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsdW1lbi1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzQyNTU1MywiZXhwIjoxNjMzNDYxNTUzfQ.o07l65fE3cphIStt33kZR2Wn5LUvbElvSJ3dCxG7A3k"
+      // },
+    // }).then((response) =>{
+    //   console.log(response);
+    // });
+
+    // axios
+
+    // this.$http.get("http://localhost:8082/api/v1/test",{},{
+    //   "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsdW1lbi1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzQyNTU1MywiZXhwIjoxNjMzNDYxNTUzfQ.o07l65fE3cphIStt33kZR2Wn5LUvbElvSJ3dCxG7A3k"
+    // }).then((response) => {
+    //   console.log(response.data);
+    // });
   },
 };
 </script>
