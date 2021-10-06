@@ -196,38 +196,49 @@
         <template v-slot:default="dialog">
           <v-card>
             <v-toolbar color="#41ad69" dark>ตะกร้าของคุณ</v-toolbar>
-            <v-list>
-              <template v-for="(coupon, index) in coupons">
-                <v-list-tile :key="coupon.coupon_name">
-                  <v-list-tile-title v-html="coupon.title"></v-list-tile-title>
-                  <v-list-tile-sub-title
-                    v-html="coupon.sub_title"
-                  ></v-list-tile-sub-title>
-                  <v-list-tile> ราคา {{ coupon.price }}$ </v-list-tile>
 
-                  <v-list-tile-action>
-                    <v-text-field
-                      label="Quantity"
-                      reverse
-                      :value="coupon.qty"
-                    ></v-text-field>
-                  </v-list-tile-action>
+            <!-- code yokkkk -->
+            <v-col>
+              <v-col 
+                style="
+                  background: #f1f1f1;
+                  margin-right: 5px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;"
+                v-for="(v, index) in service_lists"
+                :key="index">
 
-                  <v-list-tile> {{ coupon.price * coupon.qty }}$ </v-list-tile>
+                <v-row>
+                  <v-col cols="11" style="" >
+                    <v-row style="padding: 3px">
+                      Coupon name : {{ v.coupon }}
+                    </v-row>
+                    <v-row style="padding: 3px">
+                      Price : {{ v.price }}
+                    </v-row>
+                    <v-row style="padding: 3px">
+                      Time : {{ v.time }}
+                    </v-row>
+                  </v-col>
 
-                  <v-list-tile-action>
-                    <v-btn icon ripple>
-                      <v-icon color="red lighten-1">mdi-delete</v-icon>
-                    </v-btn>
-                  </v-list-tile-action>
-                </v-list-tile>
+                  <v-col cols="2" class="align-center justify-center" >
+                    {{ v.count }} ชิ้น 
 
-                <v-divider
-                  v-if="index + 1 < coupons.length"
-                  :key="index"
-                ></v-divider>
-              </template>
-            </v-list>
+                    <p>Value: {{ v.count }}</p>
+                    <vue-number-input :model-value="1" :min="1" :max="3"  inline controls></vue-number-input>
+                      
+                         
+                  </v-col>
+
+                  
+
+                </v-row>
+                
+                
+
+              </v-col>
+            </v-col>
+            
 
             <!-- button -->
             <v-card-actions class="justify-end">
@@ -291,6 +302,39 @@ export default {
             "Our vintage kitchen utenils delight any chef. Made of bamboo by hand",
           price: 64.99,
           qty: 2,
+        },
+      ],
+
+      service_lists: [
+        {
+          coupon: "สระไดร์ + ตัดผม",
+          price: 350,
+          time: 45,
+          count: 1,
+        },
+        {
+          coupon: "ทาสีเล็บมือ + เล็บเท้า",
+          price: 200,
+          time: 20,
+          count: 2,
+        },
+        {
+          coupon: "นวดคอ บ่า ไหล่",
+          price: 300,
+          time: 60,
+          count: 4,
+        },
+        {
+          coupon: "นวดคอ บ่า ไหล่",
+          price: 300,
+          time: 60,
+          count: 4,
+        },
+        {
+          coupon: "นวดคอ บ่า ไหล่",
+          price: 300,
+          time: 60,
+          count: 4,
         },
       ],
     };
