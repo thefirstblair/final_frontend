@@ -105,7 +105,7 @@ export default {
       dialog_AddUser: false,
       dialog_editUser: false,
       search: "",
-        items: ['ADMIN','USER']
+      items: ['ADMIN','USER']
     ,
       headers: [
         {
