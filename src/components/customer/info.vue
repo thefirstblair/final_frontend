@@ -5,13 +5,11 @@
         <h1>ข้อมูลของฉัน</h1>
         <v-divider></v-divider>
 
-        <div style="margin:auto;padding:2vh;">
+        <div style="margin: auto; padding: 2vh">
           <v-row>
             <v-col>
               <v-avatar style="margin-top=1vh" color="primary" size="128"
-                ><v-icon dark x-large>
-                  mdi-account-circle
-                </v-icon></v-avatar
+                ><v-icon dark x-large> mdi-account-circle </v-icon></v-avatar
               >
             </v-col>
           </v-row>
@@ -19,7 +17,7 @@
 
         <v-row>
           <v-col col="5">
-            <v-container fluid style="height: 100vh;">
+            <v-container fluid style="height: 100vh">
               <v-layout column>
                 <v-card>
                   <v-card-text>
@@ -36,13 +34,53 @@
                       label="Password"
                     ></v-text-field>
                   </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="primary">
-                      แก้ไข
-                    </v-btn>
-                  </v-card-actions>
                 </v-card>
               </v-layout>
+
+              <v-row justify="center" style="margin: 20px">
+                <v-dialog v-model="dialog" persistent max-width="600px">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                      แก้ไข
+                    </v-btn>
+                  </template>
+                  <v-layout column>
+                    <v-card>
+                      <v-card-text>
+                        <v-text-field
+                          v-model="info.name"
+                          label="Name"
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="info.username"
+                          label="Old password"
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="info.password"
+                          label="New password"
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="info.password"
+                          label="Confirm new password"
+                        ></v-text-field>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" dark v-bind="attrs" v-on="on" justify="center">
+                          ยืนยันแก้ไข
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Close
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-layout>
+                </v-dialog>
+              </v-row>
             </v-container>
           </v-col>
         </v-row>
@@ -55,25 +93,27 @@
 export default {
   data() {
     return {
-      info: {
-        
-        
-      },
+      info: {},
+      dialog: false,
     };
-  },created() {
-
+  },
+  created() {
     // รับ token user or admin ใหม่ทุกรอบ
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzYwMzQyNywiZXhwIjoxNjMzNjM5NDI3fQ.r_DO6u9DMKnfmNYluplcJGQW_WJDzRhRMk-4cZOjoJM';
+    const token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzYwMzQyNywiZXhwIjoxNjMzNjM5NDI3fQ.r_DO6u9DMKnfmNYluplcJGQW_WJDzRhRMk-4cZOjoJM";
 
-    this.$http.get("http://127.0.0.1:8000/api/user/me",  {headers:{'Authorization': `${token}` }}).then((response) => {
-        
-        if(response.status == 200){
-          this.info = response.data
-        }else{
-          console.log(response.error)
+    this.$http
+      .get("http://127.0.0.1:8000/api/user/me", {
+        headers: { Authorization: `${token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          this.info = response.data;
+        } else {
+          console.log(response.error);
         }
       });
-  }
+  },
 };
 </script>
 
