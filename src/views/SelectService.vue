@@ -25,6 +25,8 @@
           <v-col>
             <v-row>
               <h2>{{ data.name }}</h2>
+            </v-row>
+            <v-row>
               <p>
                 {{ data.description }}
               </p>
