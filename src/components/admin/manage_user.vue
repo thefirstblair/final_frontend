@@ -13,6 +13,22 @@
           ></v-text-field>
         </v-card-title>
         <v-data-table :headers="headers" :items="user" :search="search">
+          <template v-slot:[`item.actions`]="{ item, index }">
+            <v-icon
+              small
+              @click="
+                dialog_editUser = !dialog_editUser;
+                editUser = item;
+                editUser.index = index;
+              "
+            >
+              mdi-pencil
+            </v-icon>
+
+            <v-icon small @click="deleteUser(item.id, index)">
+              mdi-delete
+            </v-icon>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -20,24 +36,28 @@
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
     <v-row justify="center">
       <v-dialog v-model="dialog_editUser" max-width="600px">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on">
-            แก้ไขผู้ใช้
-          </v-btn>
-        </template>
         <v-card>
           <v-card-title>
-            <span class="text-h5">แก้ไข</span>
+            <span class="text-h5">แก้ไข Permission</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field label="Name" required></v-text-field>
-                </v-col>
-                <v-col class="d-flex" cols="12" sm="6">
-                  <v-select :items="items" label="Permission" dense></v-select>
-                </v-col>
+                <v-text-field label="Name" v-model="editUser.name"
+                  >Name</v-text-field
+                >
+              </v-row>
+              <v-row>
+                <v-text-field label="Password" v-model="editUser.password"
+                  >Password</v-text-field
+                >
+              </v-row>
+              <v-row>
+                <v-select
+                  :items="items"
+                  label="Permission"
+                  v-model="editUser.role"
+                ></v-select>
               </v-row>
             </v-container>
           </v-card-text>
@@ -46,14 +66,21 @@
             <v-btn color="blue darken-1" text @click="dialog_editUser = false">
               Close
             </v-btn>
-            <v-btn color="blue darken-1" text @click="dialog_editUser = false">
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="
+                updateUser();
+                dialog_editUser = false;
+              "
+            >
               Save
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-    <!-- Add User for Admin -->
+      <!-- Add User for Admin -->
       <v-dialog v-model="dialog_AddUser" max-width="600px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" dark v-bind="attrs" v-on="on">
@@ -68,17 +95,16 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field label="Name" required></v-text-field>
+                  <v-text-field label="Name" v-model="addUser.name" required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field label="Username"></v-text-field>
+                  <v-text-field label="Username" v-model="addUser.username"></v-text-field>
                 </v-col>
-
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field label="Passowrd"></v-text-field>
+                  <v-text-field label="Passowrd" v-model="addUser.password"></v-text-field>
                 </v-col>
                 <v-col class="d-flex" cols="12" sm="6">
-                  <v-select :items="items" label="Permission" dense></v-select>
+                  <v-select :items="items" label="Permission" v-model="addUser.role"></v-select>
                 </v-col>
               </v-row>
             </v-container>
@@ -88,7 +114,7 @@
             <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
               Close
             </v-btn>
-            <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
+            <v-btn color="blue darken-1" text @click="dialog_AddUser = false; confirmed_addUser()">
               Save
             </v-btn>
           </v-card-actions>
@@ -105,36 +131,116 @@ export default {
       dialog_AddUser: false,
       dialog_editUser: false,
       search: "",
-      items: ['ADMIN','USER']
-    ,
+      items: ["ADMIN", "USER"],
       headers: [
         {
           text: "Username",
-
           value: "username",
         },
-
         { text: "Name", value: "name" },
         { text: "Permission", value: "role" },
+        { text: "Action", value: "actions" },
       ],
       user: [],
+      editUser: {},
+      addUser:{
+        name:'',
+        username:'',
+        password:'',
+        role:'USER'
+      },
     };
   },
+  methods: {
+    confirmed_addUser() {
+      const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzY0NTYzOCwiZXhwIjoxNjMzNjgxNjM4fQ._ljiY932DbrVXofZ5Nudx0g0Mzyhndshh5oi260X3hU";
 
+      this.$http
+        .post(
+          "http://127.0.0.1:8000/api/user/",
+          this.addUser,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            this.user.push(this.addUser);
+          } else {
+            console.log(response.error);
+          }
+        });
+
+    },
+    updateUser() {
+      const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzY0NTYzOCwiZXhwIjoxNjMzNjgxNjM4fQ._ljiY932DbrVXofZ5Nudx0g0Mzyhndshh5oi260X3hU";
+
+      this.$http
+        .put(
+          "http://127.0.0.1:8000/api/user/" + this.editUser.id,
+          this.editUser,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            this.user[this.editUser.index] = this.editUser;
+          } else {
+            console.log(response.error);
+          }
+        });
+    },
+    deleteUser(id, index) {
+      const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzY0NTYzOCwiZXhwIjoxNjMzNjgxNjM4fQ._ljiY932DbrVXofZ5Nudx0g0Mzyhndshh5oi260X3hU";
+
+      this.$http
+        .delete("http://127.0.0.1:8000/api/user/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            this.user.splice(index, 1);
+          } else {
+            console.log(response.error);
+          }
+        });
+    },
+  },
   created() {
-
     // รับ token admin ใหม่ทุกรอบ
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzU5OTI4NCwiZXhwIjoxNjMzNjM1Mjg0fQ.UgSHHUEcm09_0j3nznzXfKTk1Mbu-Hp4jBysb8HTwgY';
+    const token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjEsImlhdCI6MTYzMzY0NTYzOCwiZXhwIjoxNjMzNjgxNjM4fQ._ljiY932DbrVXofZ5Nudx0g0Mzyhndshh5oi260X3hU";
 
-    this.$http.get("http://127.0.0.1:8000/api/user",  {headers:{'Authorization': `${token}` }}).then((response) => {
-        
-        if(response.status == 200){
-          this.user = response.data
-        }else{
-          console.log(response.error)
+    // get all user
+    this.$http
+      .get("http://127.0.0.1:8000/api/user", {
+        headers: { Authorization: `${token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          this.user = response.data;
+        } else {
+          console.log(response.error);
         }
       });
-  }
+
+    // edit user
+    // this.$http
+    //   .put("http://127.0.0.1:8000/api/user/{id}", {
+    //     headers: { Authorization: `${token}` },
+    //   })
+    //   .then((response) => {
+    //     if (response.status == 200) {
+    //       console.log("success")
+    //     } else {
+    //       console.log(response.error);
+    //     }
+    //   });
+  },
 };
 </script>
 
