@@ -39,8 +39,8 @@
 
               <v-row justify="center" style="margin: 20px">
                 <v-dialog v-model="dialog" persistent max-width="600px">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                  <template>
+                    <v-btn color="primary" dark>
                       แก้ไข
                     </v-btn>
                   </template>
@@ -66,7 +66,11 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" dark v-bind="attrs" v-on="on" justify="center">
+                        <v-btn
+                          color="primary"
+                          dark
+                          justify="center"
+                        >
                           ยืนยันแก้ไข
                         </v-btn>
                         <v-btn
@@ -100,18 +104,26 @@ export default {
   created() {
     // รับ token user or admin ใหม่ทุกรอบ
     const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzYwMzQyNywiZXhwIjoxNjMzNjM5NDI3fQ.r_DO6u9DMKnfmNYluplcJGQW_WJDzRhRMk-4cZOjoJM";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzYwODk5OCwiZXhwIjoxNjMzNjQ0OTk4fQ.uumEM5lVQpUYFudCU0D35nuBMDi-8QHbs34jSrRv-qo";
 
     this.$http
-      .get("http://127.0.0.1:8000/api/user/me", {
-        headers: { Authorization: `${token}` },
-      })
+      .get(
+        "http://127.0.0.1:8000/api/user/me",
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           this.info = response.data;
         } else {
           console.log(response.error);
         }
+      })
+      .catch((response) => {
+        console.log(response.response);
       });
   },
 };

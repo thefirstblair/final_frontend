@@ -19,7 +19,7 @@ const routes = [
     component: () => import('../views/Payment.vue'),
   },
   {
-    path: "/select-service",
+    path: "/service/:id",
     name: "SelectService",
     component: () => import('../views/SelectService.vue'),
   },

@@ -14,7 +14,7 @@
           <!--หน้าหลัก-->
         </v-btn>
 
-        <v-btn to="/select-service">
+        <v-btn to="/service/1">
           หน้าเลือกบริการ
         </v-btn>
 

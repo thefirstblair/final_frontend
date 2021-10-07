@@ -4,39 +4,39 @@
       <v-col cols="3">
         <div style="header">
           <span>หมวดหมู่</span>
-          <h2 style="text-align: right">ชื่อหมวดหมู่</h2>
+          <h2 style="text-align: right">{{ type_name }}</h2>
         </div>
         <div
           class="type_select_btn"
-          v-for="(v, index) in category_lists"
+          v-for="(v, index) in services"
           :key="index"
           :class="{ active: index == lists_select }"
-          @click="lists_select = index"
+          @click="lists_select = index; getListData(v.id)"
         >
-          {{ v.type_label }}
+          {{ v.name }}
         </div>
       </v-col>
 
       <v-col>
         <v-row>
           <v-col>
-            <img :src="data.image[0]" style="width: 100%" />
+            <img :src="data.service_image_url" style="width: 100%" />
           </v-col>
           <v-col>
             <v-row>
-              <h2>{{ data.title }}</h2>
+              <h2>{{ data.name }}</h2>
               <p>
-                {{ data.desc }}
+                {{ data.description }}
               </p>
             </v-row>
-            <v-row>
+            <!-- <v-row>
               <v-col
                 v-for="(v, index) in data.image.slice(1, data.image.length)"
                 :key="index"
               >
                 <img :src="v" style="width: 100%" />
               </v-col>
-            </v-row>
+            </v-row> -->
           </v-col>
         </v-row>
 
@@ -44,12 +44,12 @@
           <v-col
             cols="12"
             style="background: #f1f1f1; margin-bottom: 5px"
-            v-for="(v, index) in data.services"
+            v-for="(v, index) in data.coupons"
             :key="index"
           >
             <v-row class="align-center">
               <v-col cols="8">
-                <h2>{{ v.label }}</h2>
+                <h2>{{ v.name }}</h2>
                 <h3>เวลาที่ใช้ {{ v.time }} นาที</h3>
               </v-col>
               <v-col>
@@ -64,7 +64,6 @@
 
         <v-row>
           <p style="margin-top: 10px">รีวิวจากผู้ใช้บริการล่าสุด 3 ท่าน</p>
-          
         </v-row>
 
         <v-row>
@@ -81,14 +80,10 @@
               :key="index"
               class="white--text"
             >
-              <v-row
-                style="padding: 1vh; padding-left: 3vh"
-              >
+              <v-row style="padding: 1vh; padding-left: 3vh">
                 {{ v.name_customer }}
               </v-row>
-              <v-row 
-                class="align-center; justify-center" 
-                style="padding: 2vh">
+              <v-row class="align-center; justify-center" style="padding: 2vh">
                 {{ v.review_desc }}
               </v-row>
               <v-row
@@ -131,10 +126,10 @@ export default {
         },
       ],
       data: {
-        title: "",
-        desc: "",
-        image: [],
-        services: [],
+        name: "",
+        description: "",
+        service_image_url: [],
+        coupons: [],
       },
       data_review_lists: [
         {
@@ -155,44 +150,35 @@ export default {
           service_customer: "ย้อมผม",
         },
       ],
+      services: [],
+      type_name: "",
     };
   },
-  mounted() {
-    this.getListData("cut");
-  },
   methods: {
-    getListData(type) {
-      if (type == "cut") {
-        //api request
-        //api response
-        this.data = {
-          title: "บริการตัดผม",
-          desc:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque" +
-            "voluptatem unde architecto fuga laboriosam enim quo inventore" +
-            "corrupti perferendis sit. Similique libero eveniet aliquid" +
-            "inventore architecto culpa optio temporibus odio.",
-          image: [
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-          ],
-          services: [
-            {
-              label: "โกนผม",
-              time: 15,
-              price: 1000,
-            },
-            {
-              label: "ปลูกผม",
-              time: 15,
-              price: 1500,
-            },
-          ],
-        };
-      }
+    getListData(id) {
+      this.$http
+        .get("http://127.0.0.1:8000/api/service/" + id)
+        .then((response) => {
+          if (response.status == 200) {
+            this.data = response.data
+          } else {
+            console.log(response.error);
+          }
+        });
     },
+  },
+  created() {
+    this.$http
+      .get("http://127.0.0.1:8000/api/type/" + this.$route.params.id)
+      .then((response) => {
+        if (response.status == 200) {
+          this.type_name = response.data.name;
+          this.services = response.data.services;
+          this.getListData(response.data.services[0].id);
+        } else {
+          console.log(response.error);
+        }
+      });
   },
 };
 </script>
