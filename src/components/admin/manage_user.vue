@@ -136,6 +136,15 @@ export default {
       ],
     };
   },
+  created() {
+    this.$http.get("http://127.0.0.1:8000/api/user").then((response) => {
+        if(response.status == 200){
+          this.user = response.data
+        }else{
+          console.log(response.error)
+        }
+      });
+  }
 };
 </script>
 
