@@ -22,68 +22,75 @@
                 <v-card>
                   <v-card-text>
                     <v-text-field
+                      disabled
                       v-model="info.name"
                       label="Name"
                     ></v-text-field>
-                    <v-text-field
+                    <v-text-field 
+                      disabled
                       v-model="info.username"
                       label="Username"
                     ></v-text-field>
-                    <v-text-field
+                    <!-- <v-text-field
                       v-model="info.password"
                       label="Password"
-                    ></v-text-field>
+                    ></v-text-field> -->
                   </v-card-text>
                 </v-card>
               </v-layout>
 
-              <v-row justify="center" style="margin: 20px">
+                
+
+              <!-- <v-row justify="center" style="margin: 20px"> -->
+
+              
+            <v-row justify="center" style="margin: 20px">
                 <v-dialog v-model="dialog" persistent max-width="600px">
-                  <template>
-                    <v-btn color="primary" dark>
-                      แก้ไข
-                    </v-btn>
-                  </template>
-                  <v-layout column>
-                    <v-card>
-                      <v-card-text>
-                        <v-text-field
-                          v-model="info.name"
-                          label="Name"
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="info.username"
-                          label="Old password"
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="info.password"
-                          label="New password"
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="info.password"
-                          label="Confirm new password"
-                        ></v-text-field>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          color="primary"
-                          dark
-                          justify="center"
-                        >
-                          ยืนยันแก้ไข
-                        </v-btn>
-                        <v-btn
-                          color="blue darken-1"
-                          text
-                          @click="dialog = false"
-                        >
-                          Close
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-layout>
-                </v-dialog>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn color="primary" dark  v-bind="attrs" v-on="on">
+                        เปลี่ยนรหัสผ่าน
+                      </v-btn>
+                    </template>
+                    <v-layout column>
+                      <v-card>
+                        <v-card-text>
+                          <!-- <v-text-field
+                            
+                            label="Name"
+                          ></v-text-field> -->
+                          <v-text-field
+                            
+                            label="Old password"
+                          ></v-text-field>
+                          <v-text-field
+                            
+                            label="New password"
+                          ></v-text-field>
+                          <v-text-field
+                            
+                            label="Confirm new password"
+                          ></v-text-field>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="primary"
+                            dark
+                            justify="center"
+                          >
+                            ยืนยันแก้ไข
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="dialog = false"
+                          >
+                            Close
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-layout>
+                  </v-dialog>
               </v-row>
             </v-container>
           </v-col>
@@ -104,7 +111,7 @@ export default {
   created() {
     // รับ token user or admin ใหม่ทุกรอบ
     const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzYwODk5OCwiZXhwIjoxNjMzNjQ0OTk4fQ.uumEM5lVQpUYFudCU0D35nuBMDi-8QHbs34jSrRv-qo";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzYyMzUzOCwiZXhwIjoxNjMzNjU5NTM4fQ.XhneMg8KXO-EU3pAq7B7YARIwfJomX-a-Se_7D59ncI";
 
     this.$http
       .get(
