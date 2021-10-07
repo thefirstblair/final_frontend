@@ -24,16 +24,16 @@
                 <v-card>
                   <v-card-text>
                     <v-text-field
-                      v-model="form.firstName"
-                      label="First Name"
+                      v-model="info.name"
+                      label="Name"
                     ></v-text-field>
                     <v-text-field
-                      v-model="form.lastName"
-                      label="Last Name"
+                      v-model="info.username"
+                      label="Username"
                     ></v-text-field>
                     <v-text-field
-                      v-model="form.contactEmail"
-                      label="Email"
+                      v-model="info.password"
+                      label="Password"
                     ></v-text-field>
                   </v-card-text>
                   <v-card-actions>
@@ -55,15 +55,27 @@
 export default {
   data() {
     return {
-      form: {
-        firstName: "John",
-        lastName: "Doe",
-        contactEmail: "john@doe.com",
-        avatar: "MALE_CAUCASIAN_BLOND_BEARD",
+      info: {
+        
+        
       },
     };
-  },
+  },created() {
+
+    // รับ token user or admin ใหม่ทุกรอบ
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzYwMzQyNywiZXhwIjoxNjMzNjM5NDI3fQ.r_DO6u9DMKnfmNYluplcJGQW_WJDzRhRMk-4cZOjoJM';
+
+    this.$http.get("http://127.0.0.1:8000/api/user/me",  {headers:{'Authorization': `${token}` }}).then((response) => {
+        
+        if(response.status == 200){
+          this.info = response.data
+        }else{
+          console.log(response.error)
+        }
+      });
+  }
 };
 </script>
+
 
 <style></style>

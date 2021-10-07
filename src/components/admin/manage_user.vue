@@ -115,29 +115,19 @@ export default {
         },
 
         { text: "Name", value: "name" },
-        { text: "Permission", value: "permission" },
+        { text: "Permission", value: "role" },
       ],
-      user: [
-        {
-          username: "Manowniinow",
-          name: "มะนาวสวย",
-          permission: "Customer",
-        },
-        {
-          username: "Yokky",
-          name: "อีอ้วน",
-          permission: "Customer",
-        },
-        {
-          username: "NooRat101",
-          name: "ธิดาพร ชาวคูเวียง",
-          permission: "Admin",
-        },
-      ],
+      user: [],
     };
   },
+
   created() {
-    this.$http.get("http://127.0.0.1:8000/api/user").then((response) => {
+
+    // รับ token admin ใหม่ทุกรอบ
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzU5OTI4NCwiZXhwIjoxNjMzNjM1Mjg0fQ.UgSHHUEcm09_0j3nznzXfKTk1Mbu-Hp4jBysb8HTwgY';
+
+    this.$http.get("http://127.0.0.1:8000/api/user",  {headers:{'Authorization': `${token}` }}).then((response) => {
+        
         if(response.status == 200){
           this.user = response.data
         }else{
