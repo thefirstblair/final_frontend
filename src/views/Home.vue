@@ -35,6 +35,7 @@
               x-large
               v-bind="attrs"
               v-on="on"
+              @click="changePage(v.id)"
             >
               <img style="width:70%;" :src="v.type_image_url" />
             </v-btn>
@@ -113,7 +114,10 @@ export default {
     //     }
     //   });
     // },
-
+    
+    changePage(id){
+      this.$router.push('/service/' + id);
+    },
     randomCoupon(){
       this.$http.get("http://127.0.0.1:8000/api/coupon/random").then((response) => {
         if(response.status == 200){
