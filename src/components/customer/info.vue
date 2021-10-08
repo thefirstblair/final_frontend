@@ -53,6 +53,7 @@
                           type="password"
                           label="Old password"
                           required
+                          v-model="oldpassword"
                         ></v-text-field>
 
                         <v-text-field
@@ -74,7 +75,9 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" dark justify="center" text>
+                        <v-btn 
+                          @click="updatePassword"
+                          color="primary" dark justify="center" text>
                           เปลี่ยนรหัสผ่าน
                         </v-btn>
                         <v-btn
@@ -104,6 +107,7 @@ export default {
     return {
       info: {},
       dialog: false,
+      oldpassword: "",
       password: "",
       confirmPassword: "",
       passwordRules: [
@@ -142,18 +146,23 @@ export default {
       });
   },
   methods: {
-    updateUser() {
+    updatePassword() {
       const token =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
       this.$http
-        .put("http://127.0.0.1:8000/api/user/me", this.editUser, {
+        .put("http://127.0.0.1:8000/api/user/me", {
+          oldpassword:this.oldpassword,
+          newpassword:this.password,
+        }, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
-          if (response.status == 200) {
-            this.user[this.editUser.index] = this.editUser;
-          } else {
-            console.log(response.error);
+          if (response.data.status == "error") {
+            alert(response.data.error);
+          }else if(response.data.status != "error"){
+            this.dialog = false;
+            this.oldpassword = "";
+            this.newpassword = "";
           }
         });
     },

@@ -14,9 +14,7 @@
           <!--หน้าหลัก-->
         </v-btn>
 
-        <v-btn to="/payment">
-          หน้าชำระเงิน
-        </v-btn>
+        <v-btn to="/payment"> หน้าชำระเงิน </v-btn>
 
         <div v-if="isAuthen()" class="text-center">
           <v-menu offset-y>
@@ -49,13 +47,25 @@
           <v-icon>mdi-login</v-icon>
         </v-btn>
 
-        <v-btn v-if="isAuthen()" icon @click="dialog = true; logout()">
+        <v-btn
+          v-if="isAuthen()"
+          icon
+          @click="
+            dialog = true;
+            logout();
+          "
+        >
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>
 
       <!-- dialog_login -->
-      <v-dialog v-if="!isAuthen()" v-model="dialog" max-width="600px" min-width="360px">
+      <v-dialog
+        v-if="!isAuthen()"
+        v-model="dialog"
+        max-width="600px"
+        min-width="360px"
+      >
         <div>
           <v-tabs
             v-model="tab"
@@ -195,50 +205,36 @@
 
             <!-- code yokkkk -->
             <v-col>
-              <v-col 
+              <v-col
                 style="
                   background: #f1f1f1;
                   margin-right: 5px;
                   margin-top: 10px;
-                  margin-bottom: 10px;"
+                  margin-bottom: 10px;
+                "
                 v-for="(v, index) in service_lists"
-                :key="index">
-
+                :key="index"
+              >
                 <v-row>
-                  <v-col cols="9" style="margin-left: 15px; " >
+                  <v-col cols="9" style="margin-left: 15px">
                     <v-row style="padding: 3px">
                       Coupon name : {{ v.coupon }}
                     </v-row>
-                    <v-row style="padding: 3px">
-                      Price : {{ v.price }}
-                    </v-row>
-                    <v-row style="padding: 3px">
-                      Time : {{ v.time }}
-                    </v-row>
+                    <v-row style="padding: 3px"> Price : {{ v.price }} </v-row>
+                    <v-row style="padding: 3px"> Time : {{ v.time }} </v-row>
                   </v-col>
 
-                  <v-col cols="2" class="align-center justify-center" >
-                    {{ v.count }} ชิ้น 
-            
-                    <!-- <v-text-field
-                      label="จำนวน"
-                      value="10"
-                    ></v-text-field> -->
-
-                  
-
-
-                    
+                  <v-col cols="2" class="align-center justify-center">
+                    {{ v.count }} ชิ้น
                   </v-col>
-
                 </v-row>
-
               </v-col>
-              <v-row style="margin-top: 15px" class=" justify-center" >
-                <v-btn color="success" larger style="float: right;">ชำระเงิน</v-btn>
+              <v-row style="margin-top: 15px" class="justify-center">
+                <v-btn color="success" larger style="float: right"
+                  >ชำระเงิน</v-btn
+                >
               </v-row>
             </v-col>
-            
 
             <!-- button -->
             <v-card-actions class="justify-end">
@@ -249,13 +245,17 @@
       </v-dialog>
       <!-- Show Page -->
       <router-view />
+      
     </v-main>
+
+    
+    
   </v-app>
 </template>
 
 <script>
-import Swal from 'sweetalert2'
-import AuthUser from '@/store/AuthUser'
+import Swal from "sweetalert2";
+import AuthUser from "@/store/AuthUser";
 export default {
   name: "App",
   data() {
@@ -332,18 +332,16 @@ export default {
           time: 60,
           count: 4,
         },
-        
       ],
-       form_login:{
-        username:"",
-        password:""
+      form_login: {
+        username: "",
+        password: "",
       },
-      form_register:{
-        username:"",
-        name:"",
-         password:""
-
-      }
+      form_register: {
+        username: "",
+        name: "",
+        password: "",
+      },
     };
   },
   computed: {
@@ -355,11 +353,8 @@ export default {
     validate() {
       if (this.$refs.loginForm.validate()) {
         // submit form to server/API here...
-        
-          this.login()
-       
-          
-        
+
+        this.login();
       }
     },
     reset() {
@@ -368,109 +363,93 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
-    async login(){
-      
-          this.form_login.username=this.loginUsername
-          this.form_login.password=this.loginPassword
-          let res=await AuthUser.dispatch('login',this.form_login)
-          if(res.success){
-           //login สำเร็จ
-            Swal.fire({
-              icon: 'success',
-              title: 'เข้าสู่ระบบสำเร็จ',
-              showConfirmButton: false,
-              timer: 1500
-            })
-            
-            this.clearFormLogin()
-          }
-          else{
-            if(res.message == 1 ){
-              //แสดงข้อความ error
-              console.log(res.data.error);
-              Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: res.data.error,
-                
-                })
-              
-            }
-            
-          }
-      
-          
-      },
-      isAuthen(){
-        //เช็คว่าเข้าสู้ระบบอยู่
-        return AuthUser.getters.isAuthen
-      },
-      logout(){
-        AuthUser.dispatch('logout')
-      },
-      isCustomer(){
-        //เช็คว่าเป็นผู้ใช้ไม
-         if(AuthUser.getters.user==null){
-          //  console.log("BBB")
-           return this.isAuthen()==true
-         }
-         else{
-          //  console.log("AAA")
-          return this.isAuthen()==true && AuthUser.getters.user.role == "USER"
-         }
-      },
-      isAdmin(){
-        //เช็คว่าเป็น Adminไม
-        if(AuthUser.getters.user==null){
-          return this.isAuthen()==true 
-        }
-        else{
-         return this.isAuthen()==true && AuthUser.getters.user.role == "ADMIN"
-        }
-        
-      },
-      clearFormLogin(){
-        this.loginUsername=""
-        this.loginPassword=""
-      },
-      clearFormRegister(){
-        this.Username=""
-        this.Name=""
-        this.password=""
-        this.verify=""
-      },
-      async register(){
-          
-            this.form_register.username=this.Username
-            this.form_register.name=this.Name
-            this.form_register.password=this.password
-            let res=await AuthUser.dispatch('register',this.form_register)
-            if(res.success){
-                
-                Swal.fire({
-                  icon: 'success',
-                  title: 'register สำเร็จ',
-                  showConfirmButton: false,
-                  timer: 1500
-                 })
-                 this.clearFormRegister()
-            }else{
-                
-               if(res.message == 2 ){
-              //แสดงข้อความ error
-              console.log(res.data.error);
-              
-              Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: res.data.error.username[0],
-                
-                })
-              
-            }
-            }
+    async login() {
+      this.form_login.username = this.loginUsername;
+      this.form_login.password = this.loginPassword;
+      let res = await AuthUser.dispatch("login", this.form_login);
+      if (res.success) {
+        //login สำเร็จ
+        Swal.fire({
+          icon: "success",
+          title: "เข้าสู่ระบบสำเร็จ",
+          showConfirmButton: false,
+          timer: 1500,
+        });
 
+        this.clearFormLogin();
+      } else {
+        if (res.message == 1) {
+          //แสดงข้อความ error
+          console.log(res.data.error);
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: res.data.error,
+          });
         }
+      }
+    },
+    isAuthen() {
+      //เช็คว่าเข้าสู้ระบบอยู่
+      return AuthUser.getters.isAuthen;
+    },
+    logout() {
+      AuthUser.dispatch("logout");
+    },
+    isCustomer() {
+      //เช็คว่าเป็นผู้ใช้ไม
+      if (AuthUser.getters.user == null) {
+        //  console.log("BBB")
+        return this.isAuthen() == true;
+      } else {
+        //  console.log("AAA")
+        return this.isAuthen() == true && AuthUser.getters.user.role == "USER";
+      }
+    },
+    isAdmin() {
+      //เช็คว่าเป็น Adminไม
+      if (AuthUser.getters.user == null) {
+        return this.isAuthen() == true;
+      } else {
+        return this.isAuthen() == true && AuthUser.getters.user.role == "ADMIN";
+      }
+    },
+    clearFormLogin() {
+      this.loginUsername = "";
+      this.loginPassword = "";
+    },
+    clearFormRegister() {
+      this.Username = "";
+      this.Name = "";
+      this.password = "";
+      this.verify = "";
+    },
+    async register() {
+      this.form_register.username = this.Username;
+      this.form_register.name = this.Name;
+      this.form_register.password = this.password;
+      let res = await AuthUser.dispatch("register", this.form_register);
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "register สำเร็จ",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.clearFormRegister();
+      } else {
+        if (res.message == 2) {
+          //แสดงข้อความ error
+          console.log(res.data.error);
+
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: res.data.error.username[0],
+          });
+        }
+      }
+    },
   },
 };
 </script>

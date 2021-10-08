@@ -80,13 +80,14 @@
               "
               v-for="(v, index) in reviews"
               :key="index"
+              
               class="white--text"
             >
               <v-row style="padding: 1vh; padding-left: 3vh">
-                {{ v.review_detail }}
+                {{ v.name }}
               </v-row>
               <v-row class="align-center; justify-center" style="padding: 2vh">
-                {{ v.review_desc }}
+                {{ v.review_detail }}
               </v-row>
               <v-row
                 class="align-center; justify-end"
@@ -168,6 +169,15 @@ export default {
             console.log(response.error);
           }
         });
+      this.$http
+      .get("http://127.0.0.1:8000/api/review")
+      .then((response) => {
+        if (response.status == 200) {
+          this.reviews = response.data;
+        } else {
+          console.log(response.error);
+        }
+      });
     },
   },
   created() {
@@ -183,15 +193,15 @@ export default {
         }
       });
 
-      this.$http
-      .get("http://127.0.0.1:8000/api/review")
-      .then((response) => {
-        if (response.status == 200) {
-          this.reviews = response.data.reviews;
-        } else {
-          console.log(response.error);
-        }
-      });
+      // this.$http
+      // .get("http://127.0.0.1:8000/api/review")
+      // .then((response) => {
+      //   if (response.status == 200) {
+      //     this.reviews = response.data.reviews;
+      //   } else {
+      //     console.log(response.error);
+      //   }
+      // });
   },
 };
 </script>
