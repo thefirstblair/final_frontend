@@ -109,7 +109,8 @@ export default {
     };
   },
   created() {
-    // รับ token user or admin ใหม่ทุกรอบ
+    console.log(AuthUser.getters.user.api_token)
+    // รับ token user or admin ใหม่ทุกรอบ (AuthUser.getters.user.api_token เราลองอันนี้แต่ติด 400)
     const token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzYyMzUzOCwiZXhwIjoxNjMzNjU5NTM4fQ.XhneMg8KXO-EU3pAq7B7YARIwfJomX-a-Se_7D59ncI";
 
