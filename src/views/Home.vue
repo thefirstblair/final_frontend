@@ -114,8 +114,9 @@ export default {
     //     }
     //   });
     // },
-    
+
     changePage(id){
+      // this is commit testing
       this.$router.push('/service/' + id);
     },
     randomCoupon(){
