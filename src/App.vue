@@ -18,7 +18,7 @@
           หน้าชำระเงิน
         </v-btn>
 
-        <div class="text-center">
+        <div v-if="isAuthen()" class="text-center">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
@@ -27,11 +27,11 @@
             </template>
             <!-- Item -->
             <v-list>
-              <v-list-item to="/Customer">
+              <v-list-item v-if="isCustomer()" to="/customer">
                 <v-list-item-title>Customer</v-list-item-title>
               </v-list-item>
 
-              <v-list-item to="/admin">
+              <v-list-item v-if="isAdmin()" to="/admin">
                 <v-list-item-title>Admin Dashboard</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -45,17 +45,17 @@
           </v-badge>
         </v-btn>
 
-        <v-btn icon @click="dialog = true">
+        <v-btn v-if="!isAuthen()" icon @click="dialog = true">
           <v-icon>mdi-login</v-icon>
         </v-btn>
 
-        <v-btn icon @click="dialog = true">
+        <v-btn v-if="isAuthen()" icon @click="dialog = true; logout()">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>
 
       <!-- dialog_login -->
-      <v-dialog v-model="dialog" max-width="600px" min-width="360px">
+      <v-dialog v-if="!isAuthen()" v-model="dialog" max-width="600px" min-width="360px">
         <div>
           <v-tabs
             v-model="tab"
@@ -170,7 +170,7 @@
                           block
                           :disabled="!valid"
                           color="success"
-                          @click="validate"
+                          @click="register()"
                           >Register</v-btn
                         >
                       </v-col>
@@ -254,6 +254,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import AuthUser from '@/store/AuthUser'
 export default {
   name: "App",
   data() {
@@ -332,6 +334,16 @@ export default {
         },
         
       ],
+       form_login:{
+        username:"",
+        password:""
+      },
+      form_register:{
+        username:"",
+        name:"",
+         password:""
+
+      }
     };
   },
   computed: {
@@ -343,6 +355,11 @@ export default {
     validate() {
       if (this.$refs.loginForm.validate()) {
         // submit form to server/API here...
+        
+          this.login()
+       
+          
+        
       }
     },
     reset() {
@@ -351,6 +368,109 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
+    async login(){
+      
+          this.form_login.username=this.loginUsername
+          this.form_login.password=this.loginPassword
+          let res=await AuthUser.dispatch('login',this.form_login)
+          if(res.success){
+           //login สำเร็จ
+            Swal.fire({
+              icon: 'success',
+              title: 'เข้าสู่ระบบสำเร็จ',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            
+            this.clearFormLogin()
+          }
+          else{
+            if(res.message == 1 ){
+              //แสดงข้อความ error
+              console.log(res.data.error);
+              Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: res.data.error,
+                
+                })
+              
+            }
+            
+          }
+      
+          
+      },
+      isAuthen(){
+        //เช็คว่าเข้าสู้ระบบอยู่
+        return AuthUser.getters.isAuthen
+      },
+      logout(){
+        AuthUser.dispatch('logout')
+      },
+      isCustomer(){
+        //เช็คว่าเป็นผู้ใช้ไม
+         if(AuthUser.getters.user==null){
+          //  console.log("BBB")
+           return this.isAuthen()==true
+         }
+         else{
+          //  console.log("AAA")
+          return this.isAuthen()==true && AuthUser.getters.user.role == "USER"
+         }
+      },
+      isAdmin(){
+        //เช็คว่าเป็น Adminไม
+        if(AuthUser.getters.user==null){
+          return this.isAuthen()==true 
+        }
+        else{
+         return this.isAuthen()==true && AuthUser.getters.user.role == "ADMIN"
+        }
+        
+      },
+      clearFormLogin(){
+        this.loginUsername=""
+        this.loginPassword=""
+      },
+      clearFormRegister(){
+        this.Username=""
+        this.Name=""
+        this.password=""
+        this.verify=""
+      },
+      async register(){
+          
+            this.form_register.username=this.Username
+            this.form_register.name=this.Name
+            this.form_register.password=this.password
+            let res=await AuthUser.dispatch('register',this.form_register)
+            if(res.success){
+                
+                Swal.fire({
+                  icon: 'success',
+                  title: 'register สำเร็จ',
+                  showConfirmButton: false,
+                  timer: 1500
+                 })
+                 this.clearFormRegister()
+            }else{
+                
+               if(res.message == 2 ){
+              //แสดงข้อความ error
+              console.log(res.data.error);
+              
+              Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: res.data.error.username[0],
+                
+                })
+              
+            }
+            }
+
+        }
   },
 };
 </script>
