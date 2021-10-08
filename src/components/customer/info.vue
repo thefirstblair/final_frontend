@@ -26,7 +26,7 @@
                       v-model="info.name"
                       label="Name"
                     ></v-text-field>
-                    <v-text-field 
+                    <v-text-field
                       disabled
                       v-model="info.username"
                       label="Username"
@@ -39,58 +39,55 @@
                 </v-card>
               </v-layout>
 
-                
-
-              <!-- <v-row justify="center" style="margin: 20px"> -->
-
-              
-            <v-row justify="center" style="margin: 20px">
+              <v-row justify="center" style="margin: 20px">
                 <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn color="primary" dark  v-bind="attrs" v-on="on">
-                        เปลี่ยนรหัสผ่าน
-                      </v-btn>
-                    </template>
-                    <v-layout column>
-                      <v-card>
-                        <v-card-text>
-                          <!-- <v-text-field
-                            
-                            label="Name"
-                          ></v-text-field> -->
-                          <v-text-field
-                            
-                            label="Old password"
-                          ></v-text-field>
-                          <v-text-field
-                            
-                            label="New password"
-                          ></v-text-field>
-                          <v-text-field
-                            
-                            label="Confirm new password"
-                          ></v-text-field>
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn
-                            color="primary"
-                            dark
-                            justify="center"
-                          >
-                            ยืนยันแก้ไข
-                          </v-btn>
-                          <v-btn
-                            color="blue darken-1"
-                            text
-                            @click="dialog = false"
-                          >
-                            Close
-                          </v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-layout>
-                  </v-dialog>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                      เปลี่ยนรหัสผ่าน
+                    </v-btn>
+                  </template>
+                  <v-layout column>
+                    <v-card>
+                      <v-card-text>
+                        <v-text-field
+                          type="password"
+                          label="Old password"
+                          required
+                        ></v-text-field>
+
+                        <v-text-field
+                          v-model="password"
+                          label="New Password"
+                          name="password"
+                          type="password"
+                          :rules="passwordRules"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="confirmPassword"
+                          label="Confirm New Password"
+                          name="confirmPassword"
+                          type="password"
+                          :rules="confirmPasswordRules"
+                          required
+                        ></v-text-field>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" dark justify="center" text>
+                          เปลี่ยนรหัสผ่าน
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="dialog = false"
+                        >
+                          Close
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-layout>
+                </v-dialog>
               </v-row>
             </v-container>
           </v-col>
@@ -101,29 +98,38 @@
 </template>
 
 <script>
-import AuthUser from '@/store/AuthUser'
+import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
       info: {},
       dialog: false,
+      password: "",
+      confirmPassword: "",
+      passwordRules: [
+        (value) => !!value || "Please type password.",
+        (value) => (value && value.length >= 6) || "minimum 6 characters",
+      ],
+      confirmPasswordRules: [
+        (value) => !!value || "type confirm password",
+        (value) =>
+          value === this.password ||
+          "The password confirmation does not match.",
+      ],
     };
   },
   created() {
-    console.log(AuthUser.getters.user.api_token)
+    console.log(AuthUser.getters.user.api_token);
     // รับ token user or admin ใหม่ทุกรอบ (AuthUser.getters.user.api_token เราลองอันนี้แต่ติด 400)
     const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzYyMzUzOCwiZXhwIjoxNjMzNjU5NTM4fQ.XhneMg8KXO-EU3pAq7B7YARIwfJomX-a-Se_7D59ncI";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
 
     this.$http
-      .get(
-        "http://127.0.0.1:8000/api/user/me",
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      )
+      .get("http://127.0.0.1:8000/api/user/me", {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
       .then((response) => {
         if (response.status == 200) {
           this.info = response.data;
@@ -135,6 +141,24 @@ export default {
         console.log(response.response);
       });
   },
+  methods: {
+    updateUser() {
+      const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
+      this.$http
+        .put("http://127.0.0.1:8000/api/user/me", this.editUser, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            this.user[this.editUser.index] = this.editUser;
+          } else {
+            console.log(response.error);
+          }
+        });
+    },
+  },
+
 };
 </script>
 

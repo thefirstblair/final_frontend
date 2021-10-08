@@ -78,12 +78,12 @@
                 margin-left: 5px;
                 margin-bottom: 10px;
               "
-              v-for="(v, index) in data_review_lists"
+              v-for="(v, index) in reviews"
               :key="index"
               class="white--text"
             >
               <v-row style="padding: 1vh; padding-left: 3vh">
-                {{ v.name_customer }}
+                {{ v.review_detail }}
               </v-row>
               <v-row class="align-center; justify-center" style="padding: 2vh">
                 {{ v.review_desc }}
@@ -154,6 +154,7 @@ export default {
       ],
       services: [],
       type_name: "",
+      reviews: [],
     };
   },
   methods: {
@@ -177,6 +178,16 @@ export default {
           this.type_name = response.data.name;
           this.services = response.data.services;
           this.getListData(response.data.services[0].id);
+        } else {
+          console.log(response.error);
+        }
+      });
+
+      this.$http
+      .get("http://127.0.0.1:8000/api/review")
+      .then((response) => {
+        if (response.status == 200) {
+          this.reviews = response.data.reviews;
         } else {
           console.log(response.error);
         }
