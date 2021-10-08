@@ -11,7 +11,10 @@
           v-for="(v, index) in services"
           :key="index"
           :class="{ active: index == lists_select }"
-          @click="lists_select = index; getListData(v.id)"
+          @click="
+            lists_select = index;
+            getListData(v.id);
+          "
         >
           {{ v.name }}
         </div>
@@ -78,13 +81,12 @@
                 margin-left: 5px;
                 margin-bottom: 10px;
               "
-              v-for="(v, index) in reviews"
+              v-for="(v, index) in data.reviews"
               :key="index"
-              
               class="white--text"
             >
               <v-row style="padding: 1vh; padding-left: 3vh">
-                {{ v.name }}
+                {{ v.coupon_name }}
               </v-row>
               <v-row class="align-center; justify-center" style="padding: 2vh">
                 {{ v.review_detail }}
@@ -93,7 +95,7 @@
                 class="align-center; justify-end"
                 style="padding: 1vh; padding-right: 3vh"
               >
-                {{ v.service_customer }}
+                {{ v.name }}
               </v-row>
             </v-col>
           </v-row>
@@ -164,20 +166,12 @@ export default {
         .get("http://127.0.0.1:8000/api/service/" + id)
         .then((response) => {
           if (response.status == 200) {
-            this.data = response.data
+            this.data = response.data;
+            console.log(this.data)
           } else {
             console.log(response.error);
           }
         });
-      this.$http
-      .get("http://127.0.0.1:8000/api/review")
-      .then((response) => {
-        if (response.status == 200) {
-          this.reviews = response.data;
-        } else {
-          console.log(response.error);
-        }
-      });
     },
   },
   created() {
@@ -193,15 +187,15 @@ export default {
         }
       });
 
-      // this.$http
-      // .get("http://127.0.0.1:8000/api/review")
-      // .then((response) => {
-      //   if (response.status == 200) {
-      //     this.reviews = response.data.reviews;
-      //   } else {
-      //     console.log(response.error);
-      //   }
-      // });
+    // this.$http
+    // .get("http://127.0.0.1:8000/api/review")
+    // .then((response) => {
+    //   if (response.status == 200) {
+    //     this.reviews = response.data.reviews;
+    //   } else {
+    //     console.log(response.error);
+    //   }
+    // });
   },
 };
 </script>
