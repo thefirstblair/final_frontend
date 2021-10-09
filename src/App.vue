@@ -38,7 +38,7 @@
 
         <v-btn icon @click="dialog_cart = true">
           <v-badge left
-            ><span slot="badge">5</span>
+            ><span slot="badge">{{ this.service_lists.length }}</span>
             <v-icon>mdi-cart</v-icon>
           </v-badge>
         </v-btn>
@@ -197,7 +197,7 @@
       <v-dialog
         transition="dialog-top-transition"
         max-width="600"
-        v-model="dialog_cart"
+        v-model="dialog_cart" 
       >
         <template v-slot:default="dialog">
           <v-card>
@@ -218,7 +218,7 @@
                 <v-row>
                   <v-col cols="9" style="margin-left: 15px">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.coupon }}
+                      Coupon name : {{ v.name }}
                     </v-row>
                     <v-row style="padding: 3px"> Price : {{ v.price }} </v-row>
                     <v-row style="padding: 3px"> Time : {{ v.time }} </v-row>
@@ -226,16 +226,18 @@
 
                   <v-col cols="2" class="align-center justify-center">
                     {{ v.count }} ชิ้น
+                   <button style="margin-top: 20px; color:red" @click="deleteCoupon(v)">delete</button>
                   </v-col>
                 </v-row>
+                
               </v-col>
               <v-row style="margin-top: 15px" class="justify-center">
-                <v-btn color="success" larger style="float: right"
+                <v-btn color="success" larger style="float: right" @click="cash()"
                   >ชำระเงิน</v-btn
                 >
               </v-row>
             </v-col>
-
+            
             <!-- button -->
             <v-card-actions class="justify-end">
               <v-btn text @click="dialog.value = false">Close</v-btn>
@@ -256,6 +258,7 @@
 <script>
 import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser";
+
 export default {
   name: "App",
   data() {
@@ -308,30 +311,30 @@ export default {
       ],
 
       service_lists: [
-        {
-          coupon: "สระไดร์ + ตัดผม",
-          price: 350,
-          time: 45,
-          count: 1,
-        },
-        {
-          coupon: "ทาสีเล็บมือ + เล็บเท้า",
-          price: 200,
-          time: 20,
-          count: 2,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
+        // {
+        //   coupon: "สระไดร์ + ตัดผม",
+        //   price: 350,
+        //   time: 45,
+        //   count: 1,
+        // },
+        // {
+        //   coupon: "ทาสีเล็บมือ + เล็บเท้า",
+        //   price: 200,
+        //   time: 20,
+        //   count: 2,
+        // },
+        // {
+        //   coupon: "นวดคอ บ่า ไหล่",
+        //   price: 300,
+        //   time: 60,
+        //   count: 4,
+        // },
+        // {
+        //   coupon: "นวดคอ บ่า ไหล่",
+        //   price: 300,
+        //   time: 60,
+        //   count: 4,
+        // },
       ],
       form_login: {
         username: "",
@@ -348,6 +351,12 @@ export default {
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
     },
+  },
+  mounted(){
+    const thisInstance = this
+    this.$root.$on('addToCartEvent', function(v){
+      thisInstance.addToCart(v)
+    });
   },
   methods: {
     validate() {
@@ -450,6 +459,38 @@ export default {
         }
       }
     },
+
+    addToCart(payload){
+      let i=0;
+      this.service_lists.forEach(function(data){
+        if (payload.id == data.id){
+          data.count+=1;
+          i=1;
+        }
+      });
+      if (i==0){
+        this.service_lists.push(payload);
+      } 
+    },
+
+    
+    deleteCoupon(v){
+      this.service_lists.forEach(function(data){
+        if (v.id == data.id){
+          data.count-=1;
+        }
+      });
+      if (v.count == 0){
+        let index = this.service_lists.indexOf(v);
+        this.service_lists.splice(index, 1);
+      }
+    },
+
+    cash(){
+      if (this.service_lists.length==0){
+        Swal.fire("กรุณาเลือกคูปองก่อนชำระเงิน");
+      }
+    }
   },
 };
 </script>

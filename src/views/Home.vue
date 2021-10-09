@@ -68,7 +68,7 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn color="#41ad69" text>
+              <v-btn color="#41ad69" text @click="addToCart(v)">
                 Add to cart
               </v-btn>
             </v-card-actions>
@@ -115,6 +115,19 @@ export default {
     //   });
     // },
 
+    addToCart(v){
+      // console.log(v);
+      let payload = {
+        id : v.id,
+        name : v.name,
+        price : v.price,
+        time : v.time,
+        count : 1
+      }
+      // console.log(payload);
+      // app.addToCart(payload);
+      this.$root.$emit('addToCartEvent', payload)
+    },
     changePage(id){
       // this is commit testing
       this.$router.push('/service/' + id);
