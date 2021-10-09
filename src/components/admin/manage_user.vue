@@ -206,16 +206,8 @@ export default {
   },
   methods: {
     confirmed_addUser() {
-      // if (
-      //   this.addUser.name == "" ||
-      //   this.addUser.username == "" ||
-      //   (this.addUser.password == "" &&
-      //     this.checkUsername(this.addUser.username) == true)
-      // ) {
-      //   return;
-      // }
       const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .post("http://127.0.0.1:8000/api/user/", this.addUser, {
@@ -225,7 +217,13 @@ export default {
           if (response.data && response.data.status != "error") {
             this.dialog_AddUser = false;
             Swal.fire("เพิ่มผู้ใช้งานเรียบร้อย", "", "success");
-            this.user.push(response.data);
+            this.user.push(this.addUser);
+            this.addUser = {
+              name: "",
+              username: "",
+              password: "",
+              role: "USER"
+            }
           } else {
             Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
             console.log(response.data.error);
@@ -233,9 +231,8 @@ export default {
         });
     },
     updateUser() {
-      const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
-
+       const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user/" + this.editUser.id,
@@ -247,7 +244,7 @@ export default {
         .then((response) => {
           if (response.data && response.data.status != "error") {
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
-            this.user[this.editUser.index] = response.data;
+            this.user[this.editUser.index] = this.editUser;
           } else {
             Swal.fire("ไม่สามารถแก้ไขผู้ใช่งานได้", "", "error");
             console.log(response.data.error);
@@ -255,8 +252,8 @@ export default {
         });
     },
     deleteUser(id, index) {
-      const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
+     const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
@@ -275,9 +272,8 @@ export default {
   },
   created() {
     // รับ token admin ใหม่ทุกรอบ
-    const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
-
+  const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
     // get all user
     this.$http
       .get("http://127.0.0.1:8000/api/user", {
