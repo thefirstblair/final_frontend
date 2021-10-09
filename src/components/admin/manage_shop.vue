@@ -4,7 +4,7 @@
       <v-col>
         <h1>ตัวจัดการบริการ</h1>
 
-        <v-icon >
+        <v-icon>
           mdi-arrow-left
         </v-icon>
 
@@ -18,11 +18,11 @@
           ></v-text-field>
         </v-card-title>
         <v-data-table :headers="headers" :items="items" :search="search">
-          <template v-slot:[`item.action`]>
-            <v-icon small class="mr-2" @click="selectCategory">
+          <template v-slot:[`item.action`]="{ item, index }">
+            <v-icon small class="mr-2" @click='dialog_editType = true; editType = item; editType.index = index' >
               mdi-pencil
             </v-icon>
-            <v-icon small @click="dialog_fixService = !dialog_fixService" class>
+            <v-icon small>
               mdi-delete
             </v-icon>
           </template>
@@ -100,7 +100,11 @@
                 <v-col>
                   <span
                     >ส่วนจัดการคูปอง
-                    <v-btn text style="font-size:1.5vh; text-decoration:underline;" @click="dialog_addCoupon = !dialog_addCoupon" class
+                    <v-btn
+                      text
+                      style="font-size:1.5vh; text-decoration:underline;"
+                      @click="dialog_addCoupon = !dialog_addCoupon"
+                      class
                       >+เพิ่มคูปอง</v-btn
                     >
                   </span>
@@ -145,9 +149,6 @@
         </v-card>
       </v-dialog>
 
-
-      
-
       <!-- Add Coupon / Fix Coupon -->
       <v-row justify="center">
         <v-dialog v-model="dialog_addCoupon" max-width="600px">
@@ -174,16 +175,23 @@
                       >นาที</v-text-field
                     >
                   </v-col>
-              
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog_addCoupon = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_addCoupon = false"
+              >
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="dialog_addCoupon = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_addCoupon = false"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -211,6 +219,7 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
+                      required
                       label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
                     ></v-text-field>
                   </v-col>
@@ -219,10 +228,67 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog_AddCategory = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_AddCategory = false"
+              >
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="dialog_AddCategory = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_AddCategory = false"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+
+      <!-- Type Fix -->
+      <v-row justify="center">
+        <v-dialog v-model="dialog_editType" max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
+              Edit Type
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">แก้ไข</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field v-model="editType.name" label="ชื่อประเภท" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="editType.type_image_url"
+                      required
+                      label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_editType = false"
+              >
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_editType = false"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -252,29 +318,25 @@
                     <v-text-field label="Description" required></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="URL Image 1"></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="URL Image 2"></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="URL Image 3"></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="URL Image 4"></v-text-field>
+                    <v-text-field label="URL Image"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog_AddService = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_AddService = false"
+              >
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="dialog_AddService = false">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog_AddService = false"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -293,6 +355,7 @@ export default {
       dialog_addCoupon: false,
       dialog_AddCategory: false,
       dialog_AddService: false,
+      dialog_editType:false,
 
       search: "",
       headers: [
@@ -312,83 +375,76 @@ export default {
         image: [],
         services: [],
       },
-      items: [
-        {
-          name: "ซาลอน",
-          service_count: 10,
-          coupon_count: 10,
-        },
-        {
-          name: "ทำเล็บ",
-          service_count: 10,
-          coupon_count: 10,
-        },
-        {
-          name: "ทรีทเมนท์",
-          service_count: 10,
-          coupon_count: 10,
-        },
-      ],
+      editType: {name:'', type_image_url:''},
+      items: [],
     };
   },
   mounted() {
-    this.getListData("cut");
+    // this.getListData("cut");
   },
   methods: {
-    getListData(type) {
-      if (type == "cut") {
-        //api request
-        //api response
-        this.data = {
-          title: "บริการตัดผม",
-          desc: "ขนมป็อกกาแลต",
-          image: [
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-            "https://i.imgur.com/A4R3m2l.jpeg",
-          ],
-          services: [
-            {
-              label: "โกนผม",
-              time: 15,
-              price: 1000,
-            },
-            {
-              label: "ปลูกผม",
-              time: 15,
-              price: 1500,
-            },
-          ],
-        };
+    // getListData(type) {
+    //   if (type == "cut") {
+    //     this.data = {
+    //       title: "บริการตัดผม",
+    //       desc: "ขนมป็อกกาแลต",
+    //       image: [
+    //         "https://i.imgur.com/A4R3m2l.jpeg",
+    //         "https://i.imgur.com/A4R3m2l.jpeg",
+    //         "https://i.imgur.com/A4R3m2l.jpeg",
+    //         "https://i.imgur.com/A4R3m2l.jpeg",
+    //       ],
+    //       services: [
+    //         {
+    //           label: "โกนผม",
+    //           time: 15,
+    //           price: 1000,
+    //         },
+    //         {
+    //           label: "ปลูกผม",
+    //           time: 15,
+    //           price: 1500,
+    //         },
+    //       ],
+    //     };
+    //   }
+    // },
+    // selectCategory() {
+    //   this.headers = [
+    //     {
+    //       text: "ชื่อบริการ",
+    //       align: "start",
+    //       sortable: false,
+    //       value: "name",
+    //     },
+    //     { text: "จำนวนคูปอง", value: "coupon_count" },
+    //     { text: "Action", value: "action" },
+    //   ];
+    //   this.items = [
+    //     {
+    //       name: "บริการตัดผม",
+    //       coupon_count: 10,
+    //     },
+    //     {
+    //       name: "บริการย้อมผม",
+    //       coupon_count: 10,
+    //     },
+    //     {
+    //       name: "บริการสระผม",
+    //       coupon_count: 10,
+    //     },
+    //   ];
+    // },
+  },
+  created() {
+    this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {
+      if (response.status == 200) {
+        this.items = response.data;
+        console.log(this.items);
+      } else {
+        console.log(response.error);
       }
-    },
-    selectCategory() {
-      this.headers = [
-        {
-          text: "ชื่อบริการ",
-          align: "start",
-          sortable: false,
-          value: "name",
-        },
-        { text: "จำนวนคูปอง", value: "coupon_count" },
-        { text: "Action", value: "action" },
-      ];
-      this.items = [
-        {
-          name: "บริการตัดผม",
-          coupon_count: 10,
-        },
-        {
-          name: "บริการย้อมผม",
-          coupon_count: 10,
-        },
-        {
-          name: "บริการสระผม",
-          coupon_count: 10,
-        },
-      ];
-    },
+    });
   },
 };
 </script>
