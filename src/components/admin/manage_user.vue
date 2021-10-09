@@ -15,86 +15,88 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col>
-        <v-dialog v-model="dialog_AddUser" max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              class="mx-2"
-              dark
-              outlined
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>
-                mdi-plus
-              </v-icon>
-              Add New User
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">เพิ่มผู้ใช้</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      required
-                      label="Name"
-                      v-model="addUser.name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      required
-                      label="Username"
-                      v-model="addUser.username"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      required
-                      label="Passowrd"
-                      :rules="passwordRules"
-                      v-model="addUser.password"
-                      hint="At least 8 characters"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="6">
-                    <v-select
-                      :items="items"
-                      label="Permission"
-                      v-model="addUser.role"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :disabled="
-                  addUser.name == '' ||
-                    addUser.username == '' ||
-                    addUser.password == ''
-                "
-                @click="confirmed_addUser"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog></v-col
-      ></v-row
+    <v-btn
+      color="primary"
+      class="mx-2"
+      dark
+      outlined
+      @click="dialog_AddUser = !dialog_AddUser"
     >
+      <v-icon>
+        mdi-plus
+      </v-icon>
+      Add New User
+    </v-btn>
+
+    <!-- ADD USER -->
+    <v-dialog v-model="dialog_AddUser" max-width="600px">
+      <v-card>
+        <v-form ref="addUser" @submit.prevent="confirmed_addUser" v-model="valid" lazy-validation> 
+          <v-card-title>
+            <span class="text-h5">เพิ่มผู้ใช้</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Name"
+                    v-model="addUser.name"
+                    :rules="[rules.required, rules.min]"
+                     hint="At least 8 characters"
+                    maxlength="20"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Username"
+                    :rules="[rules.required, rules.min]"
+                    v-model="addUser.username"
+                     hint="At least 8 characters"
+                    maxlength="20"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Passowrd"
+                    :rules="[rules.required, rules.min]"
+                    v-model="addUser.password"
+                    hint="At least 8 characters"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show1 ? 'text' : 'password'"
+                    @click:append="show1 = !show1"
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" sm="6">
+                  <v-select
+                    :items="items"
+                    label="Permission"
+                    v-model="addUser.role"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              type="submit"
+              :disabled="addUser.name == '' || addUser.username == '' || addUser.password == ''" 
+            >
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
 
     <v-row>
       <v-col cols="12">
@@ -177,6 +179,7 @@ export default {
       dialogDelete: false,
       search: "",
       items: ["ADMIN", "USER"],
+      valid: true,
       headers: [
         {
           text: "Username",
@@ -194,58 +197,44 @@ export default {
         password: "",
         role: "USER",
       },
-      passwordRules: [
-        (value) => !!value || "Please type password.",
-        (value) => (value && value.length >= 6) || "minimum 6 characters",
-      ],
+      show1: false,
+      rules: {
+        required: (value) => !!value || "Required.",
+        min: (v) => (v && v.length >= 8) || "Min 8 characters",
+      },
     };
   },
   methods: {
-    checkUsername() {
-      for (let i = 1; i <= this.user.count(); i++) {
-        if (this.addUser.username == this.user.username[i]) {
-          console.log("success");
-          return true;
-        } else {
-          console.log("loop" + [i]);
-
-          return false;
-        }
-      }
-    },
-    async reset() {
-      location.reload();
-    },
-
     confirmed_addUser() {
-      if (
-        this.addUser.name == "" ||
-        this.addUser.username == "" ||
-        (this.addUser.password == "" &&
-          this.checkUsername(this.addUser.username) == true)
-      ) {
-        return;
-      }
+      // if (
+      //   this.addUser.name == "" ||
+      //   this.addUser.username == "" ||
+      //   (this.addUser.password == "" &&
+      //     this.checkUsername(this.addUser.username) == true)
+      // ) {
+      //   return;
+      // }
       const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzcwNzAwOCwiZXhwIjoxNjMzNzQzMDA4fQ.XaCaPw5J_c_Hc77rsUJxgNzBS2f6IHgJBRXXflDuEHU";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
 
       this.$http
         .post("http://127.0.0.1:8000/api/user/", this.addUser, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
-          if (response.status == 200) {
+          if (response.data && response.data.status != "error") {
             this.dialog_AddUser = false;
             Swal.fire("เพิ่มผู้ใช้งานเรียบร้อย", "", "success");
-            this.user.push(this.addUser);
+            this.user.push(response.data);
           } else {
-            console.log(response.error);
+            Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
+            console.log(response.data.error);
           }
         });
     },
     updateUser() {
       const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzcwNzAwOCwiZXhwIjoxNjMzNzQzMDA4fQ.XaCaPw5J_c_Hc77rsUJxgNzBS2f6IHgJBRXXflDuEHU";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
 
       this.$http
         .put(
@@ -256,28 +245,30 @@ export default {
           }
         )
         .then((response) => {
-          if (response.status == 200) {
+          if (response.data && response.data.status != "error") {
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
-            this.user[this.editUser.index] = this.editUser;
+            this.user[this.editUser.index] = response.data;
           } else {
-            console.log(response.error);
+            Swal.fire("ไม่สามารถแก้ไขผู้ใช่งานได้", "", "error");
+            console.log(response.data.error);
           }
         });
     },
     deleteUser(id, index) {
       const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzcwNzAwOCwiZXhwIjoxNjMzNzQzMDA4fQ.XaCaPw5J_c_Hc77rsUJxgNzBS2f6IHgJBRXXflDuEHU";
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
 
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
-          if (response.status == 200) {
+          if (response.data && response.data.status != "error") {
             Swal.fire("ลบผู้ใช้นี้เรียบร้อย", "", "success");
             this.user.splice(index, 1);
           } else {
-            console.log(response.error);
+            Swal.fire("ไม่สามารถลบผู้ใช่งานได้", "", "error");
+            console.log(response.data.error);
           }
         });
     },
@@ -285,7 +276,7 @@ export default {
   created() {
     // รับ token admin ใหม่ทุกรอบ
     const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzcwNjg0OCwiZXhwIjoxNjMzNzQyODQ4fQ.BWeFNnKY46shhpRP8WCFnfp-gN01Ua3JuDM6439DWq4";
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc3NzEzMCwiZXhwIjoxNjMzODEzMTMwfQ.HNdfcwNaONkANFIKEcSgpmYdP5Moh3sbbotcqN1tVNI";
 
     // get all user
     this.$http
@@ -293,10 +284,10 @@ export default {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {
-        if (response.status == 200) {
+        if (response.data && response.data.status != "error") {
           this.user = response.data;
         } else {
-          console.log(response.error);
+          console.log(response.data.error);
         }
       });
   },
