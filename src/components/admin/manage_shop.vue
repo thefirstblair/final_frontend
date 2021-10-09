@@ -19,6 +19,9 @@
         </v-card-title>
         <v-data-table :headers="headers" :items="items" :search="search">
           <template v-slot:[`item.action`]="{ item, index }">
+            <v-icon small @click="selectCategory()"> mdi-magnify-plus </v-icon>
+            
+            
             <v-icon small class="mr-2" @click='dialog_editType = true; editType = item; editType.index = index' >
               mdi-pencil
             </v-icon>
@@ -409,32 +412,32 @@ export default {
     //     };
     //   }
     // },
-    // selectCategory() {
-    //   this.headers = [
-    //     {
-    //       text: "ชื่อบริการ",
-    //       align: "start",
-    //       sortable: false,
-    //       value: "name",
-    //     },
-    //     { text: "จำนวนคูปอง", value: "coupon_count" },
-    //     { text: "Action", value: "action" },
-    //   ];
-    //   this.items = [
-    //     {
-    //       name: "บริการตัดผม",
-    //       coupon_count: 10,
-    //     },
-    //     {
-    //       name: "บริการย้อมผม",
-    //       coupon_count: 10,
-    //     },
-    //     {
-    //       name: "บริการสระผม",
-    //       coupon_count: 10,
-    //     },
-    //   ];
-    // },
+    selectCategory() {
+      this.headers = [
+        {
+          text: "ชื่อบริการ",
+          align: "start",
+          sortable: false,
+          value: "name",
+        },
+        { text: "จำนวนคูปอง", value: "coupon_count" },
+        { text: "Action", value: "action" },
+      ];
+      this.items = [
+        {
+          name: "บริการตัดผม",
+          coupon_count: 10,
+        },
+        {
+          name: "บริการย้อมผม",
+          coupon_count: 10,
+        },
+        {
+          name: "บริการสระผม",
+          coupon_count: 10,
+        },
+      ];
+    },
   },
   created() {
     this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {

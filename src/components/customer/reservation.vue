@@ -6,34 +6,22 @@
     <v-row>
       <v-col>
         <v-row>
-          <!-- LOOP -->
           <v-col ref="vcol" v-for="item in items" :key="item.id" cols="12">
-            <!-- เอามาจาก data น่าจะส่ง data นี้มาด้วย -->
             <v-card color="blue" dark style="margin:10px;">
               <v-card-title class="text-h6">
-                <label for="name">
-                  <td>{{ item.name }}</td>
+                <label>
+                  <td>{{ item.user_coupon.name }}</td>
                 </label>
               </v-card-title>
-
               <v-card-subtitle>
-                <label for="description">
+                <label>
                   <td>
-                    {{ item.description }}
+                    {{ item.coupon }}
                   </td></label
                 >
               </v-card-subtitle>
 
-              <v-card-subtitle>
-                <label for="code">
-                  รหัสคูปอง :
-                  <td>
-                    {{ item.code }}
-                  </td></label
-                >
-              </v-card-subtitle>
-
-              <label for="status">
+              <label>
                 <v-card-subtitle
                   >สถานะ:
                   <td>{{ item.status }}</td>
@@ -67,7 +55,7 @@
                       <v-btn color="blue darken-1" text @click="dialog = false">
                         Close
                       </v-btn>
-                      <!-- ส่งค่า -->
+
                       <v-btn color="blue darken-1" text @click="dialog = false">
                         Save
                       </v-btn>
@@ -88,22 +76,32 @@ export default {
   data() {
     return {
       items: [
-        {
-          name: "สระผม",
-          description: "สระผมพร้อมนวด 90 นาที",
-          code: "25223",
-          status: "ใช้แล้ว",
-        },
-        {
-          name: "ทำเล็บ",
-          description: "ทำเล็บเจล",
-          code: "15923",
-          status: "ยังไม่ได้ใช้",
-        },
+       
       ],
 
       dialog: false,
     };
+  },
+  created() {
+    const token =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzgxMzA5NCwiZXhwIjoxNjMzODQ5MDk0fQ.Y-nTmX0AXnFR8yCGDUSy2tKH7e4DkrLc2ei5y4G4o6A";
+
+    this.$http
+      .get("http://127.0.0.1:8000/api/user/me", {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          this.info = response.data;
+        } else {
+          console.log(response.error);
+        }
+      })
+      .catch((response) => {
+        console.log(response.response);
+      });
   },
 };
 </script>
