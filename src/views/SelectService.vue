@@ -79,7 +79,7 @@
                 background: #979292;
                 margin-right: 5px;
                 margin-left: 5px;
-                margin-bottom: 10px;
+                margin-bottom: 30px;
               "
               v-for="(v, index) in data.reviews"
               :key="index"
