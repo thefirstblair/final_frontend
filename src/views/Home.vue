@@ -82,6 +82,7 @@
 <script>
 // import axios from 'axios';
 import CartStore from '@/store/CartStore'
+import AuthUser from '@/store/AuthUser'
 export default {
   data() {
     return {
@@ -137,8 +138,8 @@ export default {
         quantity : 1
       }
       // console.log(payload)
-      await CartStore.dispatch('addProductToCart', payload);
-      
+      let res = await CartStore.dispatch('addProductToCart', payload);
+      await AuthUser.dispatch('update', res);
     },
 
     changePage(id){

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthService from '@/services/AuthService'
+import CartService from '@/services/CartService'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,9 @@ export default new Vuex.Store({
   state: initialState,
   mutations: {
       loginSuccess(state,user){
-          state.user=user
+          // console.log(state.user)
+          state.user=user.user
+          // console.log(user)
         //   console.log(jwt)
         //   state.jwt=jwt
           state.isAuthen=true
@@ -42,7 +45,7 @@ export default new Vuex.Store({
       async logout({commit}){
           AuthService.logout()
           commit('logoutSuccess')
-
+          
       },
       async register({commit},{username,name,password}){
           
@@ -55,7 +58,14 @@ export default new Vuex.Store({
 
           }
           return res
-      }
+      },
+
+      async update({commit}, payload){
+        //console.log(payload)
+        let res = await CartService.storeCart(payload);
+        commit("loginSuccess",res);
+    },
+
   },
   getters:{
       user: (state)=>state.user,
