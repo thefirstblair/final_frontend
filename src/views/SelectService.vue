@@ -60,7 +60,7 @@
               <v-col>
                 <v-row class="align-center justify-end">
                   <b>฿ {{ v.price }}</b>
-                  <button class="buy_btn">เพิ่มลงตะกร้า</button>
+                  <button class="buy_btn" @click="addToCart(v)">เพิ่มลงตะกร้า</button>
                 </v-row>
               </v-col>
             </v-row>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import CartStore from '@/store/CartStore'
 export default {
   data() {
     return {
@@ -173,6 +174,17 @@ export default {
           }
         });
     },
+    // เพิ่มของลงตะกร้า
+    async addToCart(v){
+      let payload = {
+        product : v,
+        quantity : 1
+      }
+      // console.log(payload)
+      await CartStore.dispatch('addProductToCart', payload);
+      
+    },
+    
   },
   created() {
     this.$http
@@ -186,7 +198,7 @@ export default {
           console.log(response.error);
         }
       });
-
+      
     // this.$http
     // .get("http://127.0.0.1:8000/api/review")
     // .then((response) => {

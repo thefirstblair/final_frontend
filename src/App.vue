@@ -38,7 +38,7 @@
 
         <v-btn icon @click="dialog_cart = true">
           <v-badge left
-            ><span slot="badge">{{ this.service_lists.length }}</span>
+            ><span slot="badge">{{ cartItemCount }}</span>
             <v-icon>mdi-cart</v-icon>
           </v-badge>
         </v-btn>
@@ -212,35 +212,40 @@
                   margin-top: 10px;
                   margin-bottom: 10px;
                 "
-                v-for="(v, index) in service_lists"
+                v-for="(v, index) in cart"
                 :key="index"
               >
                 <v-row>
                   <v-col cols="9" style="margin-left: 15px">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.name }}
+                      Coupon name : {{ v.product.name }}
                     </v-row>
-                    <v-row style="padding: 3px"> Price : {{ v.price }} </v-row>
-                    <v-row style="padding: 3px"> Time : {{ v.time }} </v-row>
+                    <v-row style="padding: 3px">
+                      Price : {{ v.product.price }}
+                    </v-row>
+                    <v-row style="padding: 3px">
+                      Time : {{ v.product.time }}
+                    </v-row>
                   </v-col>
 
                   <v-col cols="2" class="align-center justify-center">
-                    {{ v.count }} ชิ้น
+                    {{ v.quantity }} ชิ้น
                     <button
-                      style="margin-top: 20px; color: red"
-                      @click="deleteCoupon(v)"
+                      style="margin-top: 20px; color:red"
+                      @click.prevent="deleteCoupon(v.product)"
                     >
                       delete
                     </button>
                   </v-col>
                 </v-row>
               </v-col>
+
+              <v-card-actions class="justify-end">
+                <v-row> Total : {{ cartTotalPrice }} </v-row>
+              </v-card-actions>
+
               <v-row style="margin-top: 15px" class="justify-center">
-                <v-btn
-                  color="success"
-                  larger
-                  style="float: right"
-                  @click="cash()"
+                <v-btn color="success" larger style="float: right"
                   >ชำระเงิน</v-btn
                 >
               </v-row>
@@ -258,10 +263,8 @@
     </v-main>
 
     <v-footer padless>
-      
       <v-card
         flat
-        
         tile
         width="100%"
         class="text-center"
@@ -274,23 +277,24 @@
 
         <v-col class="white--text">
           <!-- {{ new Date().getFullYear() }} -->
-          <strong>GoWasabi!</strong> — ติดต่อสอบถาม โทร. XXX-XXX-XXXX 
+          <strong>GoWasabi!</strong> — ติดต่อสอบถาม โทร. XXX-XXX-XXXX
         </v-col>
         <v-col class="white--text" style="margin-top: -15px">
-          ที่ตั้งร้าน. เลขที่ 176 หมู่ที่ 10 ตำบลบ้านยาง อำเภอเกษตรสมบูรณ์ จังหวัดชัยภูมิ 36120
+          ที่ตั้งร้าน. เลขที่ 176 หมู่ที่ 10 ตำบลบ้านยาง อำเภอเกษตรสมบูรณ์
+          จังหวัดชัยภูมิ 36120
         </v-col>
         <v-col class="white--text" style="margin-top: -15px">
           จัดทำโดย : คุโรมิ และแก็งค์ศัตรูของมายเมโลดี้
         </v-col>
       </v-card>
     </v-footer>
-
   </v-app>
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser";
+import CartStore from "@/store/CartStore";
 
 export default {
   name: "App",
@@ -384,13 +388,24 @@ export default {
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
     },
+    cart() {
+      return CartStore.state.data;
+    },
+    cartTotalPrice() {
+      return CartStore.getters.cartTotalPrice;
+    },
+    cartItemCount() {
+      return CartStore.getters.cartItemCount;
+    },
   },
-  mounted() {
-    const thisInstance = this;
-    this.$root.$on("addToCartEvent", function (v) {
-      thisInstance.addToCart(v);
-    });
-  },
+
+  // mounted(){
+  //   const thisInstance = this
+  //   this.$root.$on('addToCartEvent', function(v){
+  //     thisInstance.addToCart(v)
+  //   });
+  // },
+
   methods: {
     validate() {
       if (this.$refs.loginForm.validate()) {
@@ -493,36 +508,16 @@ export default {
       }
     },
 
-    addToCart(payload) {
-      let i = 0;
-      this.service_lists.forEach(function (data) {
-        if (payload.id == data.id) {
-          data.count += 1;
-          i = 1;
-        }
-      });
-      if (i == 0) {
-        this.service_lists.push(payload);
-      }
+    // ลบของออกจากตะกร้า
+    deleteCoupon(product) {
+      CartStore.dispatch("deleteCoupon", product);
     },
 
-    deleteCoupon(v) {
-      this.service_lists.forEach(function (data) {
-        if (v.id == data.id) {
-          data.count -= 1;
-        }
-      });
-      if (v.count == 0) {
-        let index = this.service_lists.indexOf(v);
-        this.service_lists.splice(index, 1);
-      }
-    },
-
-    cash() {
-      if (this.service_lists.length == 0) {
-        Swal.fire("กรุณาเลือกคูปองก่อนชำระเงิน");
-      }
-    },
+    // cash(){
+    //   if (this.service_lists.length==0){
+    //     Swal.fire("กรุณาเลือกคูปองก่อนชำระเงิน");
+    //   }
+    // }
   },
 };
 </script>

@@ -81,6 +81,7 @@
 
 <script>
 // import axios from 'axios';
+import CartStore from '@/store/CartStore'
 export default {
   data() {
     return {
@@ -115,19 +116,31 @@ export default {
     //   });
     // },
 
-    addToCart(v){
-      // console.log(v);
+    // addToCart(v){
+    //   // console.log(v);
+    //   let payload = {
+    //     id : v.id,
+    //     name : v.name,
+    //     price : v.price,
+    //     time : v.time,
+    //     count : 1
+    //   }
+    //   // console.log(payload);
+    //   // app.addToCart(payload);
+    //   this.$root.$emit('addToCartEvent', payload)
+    // },
+
+    // เพิ่มของลงตะกร้า
+    async addToCart(v){
       let payload = {
-        id : v.id,
-        name : v.name,
-        price : v.price,
-        time : v.time,
-        count : 1
+        product : v,
+        quantity : 1
       }
-      // console.log(payload);
-      // app.addToCart(payload);
-      this.$root.$emit('addToCartEvent', payload)
+      // console.log(payload)
+      await CartStore.dispatch('addProductToCart', payload);
+      
     },
+
     changePage(id){
       // this is commit testing
       this.$router.push('/service/' + id);
