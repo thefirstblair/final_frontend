@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -83,8 +84,8 @@ export default {
     };
   },
   created() {
-    const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzgxMzA5NCwiZXhwIjoxNjMzODQ5MDk0fQ.Y-nTmX0AXnFR8yCGDUSy2tKH7e4DkrLc2ei5y4G4o6A";
+    const token =AuthUser.getters.user.api_token
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzgxMzA5NCwiZXhwIjoxNjMzODQ5MDk0fQ.Y-nTmX0AXnFR8yCGDUSy2tKH7e4DkrLc2ei5y4G4o6A";
 
     this.$http
       .get("http://127.0.0.1:8000/api/user/me", {

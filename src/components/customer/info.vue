@@ -123,10 +123,10 @@ export default {
     };
   },
   created() {
-    console.log(AuthUser.getters.user.api_token);
+    // console.log(AuthUser.getters.user.api_token);
     // รับ token user or admin ใหม่ทุกรอบ (AuthUser.getters.user.api_token เราลองอันนี้แต่ติด 400)
-    const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
+    const token =AuthUser.getters.user.api_token
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
 
     this.$http
       .get("http://127.0.0.1:8000/api/user/me", {
@@ -147,8 +147,8 @@ export default {
   },
   methods: {
     updatePassword() {
-      const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
+      const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
       this.$http
         .put("http://127.0.0.1:8000/api/user/me", {
           oldpassword:this.oldpassword,

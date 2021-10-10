@@ -170,6 +170,7 @@
 </template>
 
 <script>
+import AuthUser from "@/store/AuthUser";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -206,8 +207,8 @@ export default {
   },
   methods: {
     confirmed_addUser() {
-      const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .post("http://127.0.0.1:8000/api/user/", this.addUser, {
@@ -231,8 +232,8 @@ export default {
         });
     },
     updateUser() {
-       const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+       const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user/" + this.editUser.id,
@@ -252,8 +253,8 @@ export default {
         });
     },
     deleteUser(id, index) {
-     const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+     const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
@@ -272,8 +273,8 @@ export default {
   },
   created() {
     // รับ token admin ใหม่ทุกรอบ
-  const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+  const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
     // get all user
     this.$http
       .get("http://127.0.0.1:8000/api/user", {

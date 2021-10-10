@@ -27,6 +27,7 @@
 
 <script>
 // import axios from 'axios';
+import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -52,8 +53,8 @@ export default {
   },
   methods: {
     updateCouponStatus(id, index, status) {
-      const token =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token =AuthUser.getters.user.api_token
+        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user_coupon/" + id,
@@ -77,8 +78,8 @@ export default {
   },
   created() {
     // รับ token admin ใหม่ทุกรอบ
-    const token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+    const token =AuthUser.getters.user.api_token
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
     this.$http
       .get("http://127.0.0.1:8000/api/user_coupon/", {
