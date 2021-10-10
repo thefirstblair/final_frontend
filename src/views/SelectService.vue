@@ -44,11 +44,16 @@
             </v-row> -->
           </v-col>
         </v-row>
-
         <v-row>
+          <v-col>
+            <h1>คูปอง</h1>
+            <v-divider></v-divider>
+          </v-col>
+        </v-row>
+        <v-row style="overflow-y:auto; max-height:600px;">
           <v-col
             cols="12"
-            style="background: #f1f1f1; margin-bottom: 5px"
+            style="background: #f1f1f1; margin-top:10px"
             v-for="(v, index) in data.coupons"
             :key="index"
           >
@@ -86,7 +91,7 @@
               class="white--text"
             >
               <v-row style="padding: 1vh; padding-left: 3vh">
-                {{ v.coupon_name }}
+                {{ v.coupon.name }}
               </v-row>
               <v-row class="align-center; justify-center" style="padding: 2vh">
                 {{ v.review_detail }}
@@ -95,7 +100,7 @@
                 class="align-center; justify-end"
                 style="padding: 1vh; padding-right: 3vh"
               >
-                {{ v.name }}
+                {{ v.user.name }}
               </v-row>
             </v-col>
           </v-row>
@@ -113,49 +118,14 @@ export default {
       category_name: "salon",
       category_label: "ซาลอน",
       lists_select: 0,
-      category_lists: [
-        {
-          type_name: "cut",
-          type_label: "บริการตัดผม",
-        },
-        {
-          type_name: "dyehair",
-          type_label: "บริการย้อมผม",
-        },
-        {
-          type_name: "washhair",
-          type_label: "บริการสระผม",
-        },
-        {
-          type_name: "treatmenthair",
-          type_label: "บริการทรีทเม้นต์เส้นผม",
-        },
-      ],
+      category_lists: [],
       data: {
         name: "",
         description: "",
         service_image_url: [],
         coupons: [],
       },
-      data_review_lists: [
-        {
-          name_customer: "yok",
-          review_desc:
-            "first and yok love bankky so much manow have house" +
-            " that have many of cats too such as bunroad",
-          service_customer: "สระผม",
-        },
-        {
-          name_customer: "first",
-          review_desc: "dsfsdfsedfesdfsdfs",
-          service_customer: "ตัดผม",
-        },
-        {
-          name_customer: "manow",
-          review_desc: "dsfsdfsedfesdfsdf",
-          service_customer: "ย้อมผม",
-        },
-      ],
+      data_review_lists: [],
       services: [],
       type_name: "",
       reviews: [],
@@ -168,7 +138,7 @@ export default {
         .then((response) => {
           if (response.status == 200) {
             this.data = response.data;
-            console.log(this.data)
+            console.log(this.data);
           } else {
             console.log(response.error);
           }

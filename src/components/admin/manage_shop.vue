@@ -4,7 +4,7 @@
       <v-col>
         <h1>ตัวจัดการบริการ</h1>
 
-        <v-icon>
+        <v-icon v-if="isInType" @click="backToType">
           mdi-arrow-left
         </v-icon>
 
@@ -19,13 +19,20 @@
         </v-card-title>
         <v-data-table :headers="headers" :items="items" :search="search">
           <template v-slot:[`item.action`]="{ item, index }">
-            <v-icon small @click="selectCategory()"> mdi-magnify-plus </v-icon>
-            
-            
-            <v-icon small class="mr-2" @click='dialog_editType = true; editType = item; editType.index = index' >
+            <v-icon v-if="!isInType" small @click="selectType(item.id)">
+              mdi-magnify-plus
+            </v-icon>
+            <v-icon
+              small
+              @click="
+                dialog_editType = true;
+                editType = item;
+                editType.index = index;
+              "
+            >
               mdi-pencil
             </v-icon>
-            <v-icon small>
+            <v-icon small @click="removeType(item.id)">
               mdi-delete
             </v-icon>
           </template>
@@ -34,7 +41,6 @@
     </v-row>
 
     <!-- dialog -->
-
     <v-row justify="center" class="align-center">
       <v-dialog v-model="dialog_fixService" scrollable max-width="80%">
         <template v-slot:activator="{ on, attrs }">
@@ -266,7 +272,11 @@
               <v-container>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field v-model="editType.name" label="ชื่อประเภท" required></v-text-field>
+                    <v-text-field
+                      v-model="editType.name"
+                      label="ชื่อประเภท"
+                      required
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
@@ -358,8 +368,8 @@ export default {
       dialog_addCoupon: false,
       dialog_AddCategory: false,
       dialog_AddService: false,
-      dialog_editType:false,
-
+      dialog_editType: false,
+      isInType: false,
       search: "",
       headers: [
         {
@@ -378,7 +388,7 @@ export default {
         image: [],
         services: [],
       },
-      editType: {name:'', type_image_url:''},
+      editType: { name: "", type_image_url: "" },
       items: [],
     };
   },
@@ -412,7 +422,13 @@ export default {
     //     };
     //   }
     // },
-    selectCategory() {
+    removeType(id) {
+      console.log(id);
+      // api delete Type
+    },
+    selectType(id) {
+      this.items = [];
+      this.isInType = true;
       this.headers = [
         {
           text: "ชื่อบริการ",
@@ -423,31 +439,44 @@ export default {
         { text: "จำนวนคูปอง", value: "coupon_count" },
         { text: "Action", value: "action" },
       ];
-      this.items = [
+
+      this.$http.get("http://127.0.0.1:8000/api/type/" + id).then((response) => {
+        if (response.status == 200) {
+          this.items = response.data.services;
+        } else {
+          console.log(response.error);
+        }
+      });
+    },
+    backToType() {
+      this.isInType = false;
+      this.headers = [
         {
-          name: "บริการตัดผม",
-          coupon_count: 10,
+          text: "หมวดหมู่",
+          align: "start",
+          sortable: false,
+          value: "name",
         },
-        {
-          name: "บริการย้อมผม",
-          coupon_count: 10,
-        },
-        {
-          name: "บริการสระผม",
-          coupon_count: 10,
-        },
+        { text: "จำนวนบริการ", value: "service_count" },
+        { text: "จำนวนคูปอง", value: "coupon_count" },
+        { text: "Action", value: "action" },
       ];
+      this.items = [];
+      this.getAllType();
+    },
+    getAllType() {
+      this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {
+        if (response.status == 200) {
+          this.items = response.data;
+          console.log(this.items);
+        } else {
+          console.log(response.error);
+        }
+      });
     },
   },
   created() {
-    this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {
-      if (response.status == 200) {
-        this.items = response.data;
-        console.log(this.items);
-      } else {
-        console.log(response.error);
-      }
-    });
+    this.getAllType();
   },
 };
 </script>

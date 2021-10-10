@@ -5,69 +5,103 @@
 
     <v-row>
       <v-col>
-        <v-row>
-          <v-col ref="vcol" v-for="item in items" :key="item.id" cols="12">
+        <v-row style="overflow:auto; max-height:800px">
+          <v-col
+            ref="vcol"
+            v-for="(item, index) in items"
+            :key="index"
+            cols="12"
+          >
+          
             <v-card color="blue" dark style="margin:10px;">
               <v-card-title class="text-h6">
                 <label>
-                  <td>{{ item.user_coupon.name }}</td>
+                  <td>{{ item.service.name }}</td>
                 </label>
               </v-card-title>
               <v-card-subtitle>
                 <label>
                   <td>
-                    {{ item.coupon }}
-                  </td></label
-                >
+                    {{ item.coupon.name }}
+                  </td>
+                  <br />
+                  ช่างที่คุณเลือก : _____________
+                </label>
               </v-card-subtitle>
 
               <label>
                 <v-card-subtitle
-                  >สถานะ:
-                  <td>{{ item.status }}</td>
+                  >สถานะ :
+                  {{ item.coupon_status }}
                 </v-card-subtitle>
               </label>
 
               <v-row justify="center">
-                <v-dialog v-model="dialog" persistent max-width="600px">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                      รีวิวเลย!
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      <span class="text-h5">รีวิวบริการ</span>
-                    </v-card-title>
-                    <v-card-text>
-                      <v-container>
-                        <v-col cols="12" md="6">
-                          <v-textarea
-                            outlined
-                            label="Outlined textarea"
-                            rows="5"
-                          ></v-textarea>
-                        </v-col>
-                      </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="dialog = false">
-                        Close
-                      </v-btn>
-
-                      <v-btn color="blue darken-1" text @click="dialog = false">
-                        Save
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-btn
+                  color="primary"
+                  v-if="item.coupon_status == 'used' && !item.reviewed"
+                  dark
+                  @click="
+                    review_dialog = true;
+                    review.service_id = item.service.id;
+                    review.coupon_id = item.coupon.id;
+                    review.user_coupon_id = item.id;
+                    review.index = index;
+                  "
+                >
+                  รีวิวเลย!
+                </v-btn>
               </v-row>
             </v-card>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="review_dialog" persistent max-width="600px">
+      <v-form>
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">รีวิวบริการ</span>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-container>
+              <v-col cols="12">
+                <v-row>
+                  <v-card-subtitle class="text-h5">เรตติ้ง : </v-card-subtitle>
+                  <v-rating
+                    required
+                    v-model="review.score"
+                    background-color="orange lighten-3"
+                    color="yellow darken-1"
+                    large
+                  ></v-rating>
+                </v-row>
+
+                <v-textarea
+                  v-model="review.review_detail"
+                  required
+                  outlined
+                  label="เขียนรีวิวที่นี่"
+                  style="margin-top:30px"
+                ></v-textarea>
+              </v-col>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="review_dialog = false">
+              Close
+            </v-btn>
+
+            <v-btn color="blue darken-1" text @click="addReview">
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -76,16 +110,51 @@ import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
-      items: [
-       
-      ],
-
-      dialog: false,
+      rating: 0,
+      items: [],
+      review: {
+        index: 0,
+        user_coupon_id: 0,
+        score: 0,
+        review_detail: "",
+        service_id: 0,
+        coupon_id: 0,
+        user_id: AuthUser.getters.user.id,
+      },
+      review_dialog: false,
     };
   },
+  methods: {
+    addReview() {
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .post("http://127.0.0.1:8000/api/review/", this.review, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            this.review_dialog = false;
+
+            this.review = {
+              index: 0,
+              user_coupon_id: 0,
+              score: 0,
+              review_detail: "",
+              service_id: 0,
+              coupon_id: 0,
+              user_id: AuthUser.getters.user.id,
+            };
+            this.items[this.review.index].reviewed = true;
+          } else {
+            console.log(response.data.error);
+          }
+        });
+    },
+  },
   created() {
-    const token =AuthUser.getters.user.api_token
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzgxMzA5NCwiZXhwIjoxNjMzODQ5MDk0fQ.Y-nTmX0AXnFR8yCGDUSy2tKH7e4DkrLc2ei5y4G4o6A";
+    const token = AuthUser.getters.user.api_token;
+    // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzgxMzA5NCwiZXhwIjoxNjMzODQ5MDk0fQ.Y-nTmX0AXnFR8yCGDUSy2tKH7e4DkrLc2ei5y4G4o6A";
 
     this.$http
       .get("http://127.0.0.1:8000/api/user/me", {
@@ -95,7 +164,8 @@ export default {
       })
       .then((response) => {
         if (response.status == 200) {
-          this.info = response.data;
+          this.items = response.data.user_coupon;
+          console.log(this.items);
         } else {
           console.log(response.error);
         }
@@ -107,4 +177,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
