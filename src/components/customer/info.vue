@@ -17,7 +17,7 @@
 
         <v-row>
           <v-col col="5">
-            <v-container fluid style="height: 100vh">
+            <v-container fluid style="height: 50vh">
               <v-layout column>
                 <v-card>
                   <v-card-text>

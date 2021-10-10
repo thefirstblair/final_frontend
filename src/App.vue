@@ -197,7 +197,7 @@
       <v-dialog
         transition="dialog-top-transition"
         max-width="600"
-        v-model="dialog_cart" 
+        v-model="dialog_cart"
       >
         <template v-slot:default="dialog">
           <v-card>
@@ -226,18 +226,26 @@
 
                   <v-col cols="2" class="align-center justify-center">
                     {{ v.count }} ชิ้น
-                   <button style="margin-top: 20px; color:red" @click="deleteCoupon(v)">delete</button>
+                    <button
+                      style="margin-top: 20px; color: red"
+                      @click="deleteCoupon(v)"
+                    >
+                      delete
+                    </button>
                   </v-col>
                 </v-row>
-                
               </v-col>
               <v-row style="margin-top: 15px" class="justify-center">
-                <v-btn color="success" larger style="float: right" @click="cash()"
+                <v-btn
+                  color="success"
+                  larger
+                  style="float: right"
+                  @click="cash()"
                   >ชำระเงิน</v-btn
                 >
               </v-row>
             </v-col>
-            
+
             <!-- button -->
             <v-card-actions class="justify-end">
               <v-btn text @click="dialog.value = false">Close</v-btn>
@@ -247,11 +255,36 @@
       </v-dialog>
       <!-- Show Page -->
       <router-view />
-      
     </v-main>
 
-    
-    
+    <v-footer padless>
+      
+      <v-card
+        flat
+        
+        tile
+        width="100%"
+        class="text-center"
+        style="
+          background: #41ad69;
+
+        "
+      >
+        <v-divider></v-divider>
+
+        <v-col class="white--text">
+          <!-- {{ new Date().getFullYear() }} -->
+          <strong>GoWasabi!</strong> — ติดต่อสอบถาม โทร. XXX-XXX-XXXX 
+        </v-col>
+        <v-col class="white--text" style="margin-top: -15px">
+          ที่ตั้งร้าน. เลขที่ 176 หมู่ที่ 10 ตำบลบ้านยาง อำเภอเกษตรสมบูรณ์ จังหวัดชัยภูมิ 36120
+        </v-col>
+        <v-col class="white--text" style="margin-top: -15px">
+          จัดทำโดย : คุโรมิ และแก็งค์ศัตรูของมายเมโลดี้
+        </v-col>
+      </v-card>
+    </v-footer>
+
   </v-app>
 </template>
 
@@ -352,10 +385,10 @@ export default {
       return () => this.password === this.verify || "Password must match";
     },
   },
-  mounted(){
-    const thisInstance = this
-    this.$root.$on('addToCartEvent', function(v){
-      thisInstance.addToCart(v)
+  mounted() {
+    const thisInstance = this;
+    this.$root.$on("addToCartEvent", function (v) {
+      thisInstance.addToCart(v);
     });
   },
   methods: {
@@ -460,37 +493,36 @@ export default {
       }
     },
 
-    addToCart(payload){
-      let i=0;
-      this.service_lists.forEach(function(data){
-        if (payload.id == data.id){
-          data.count+=1;
-          i=1;
+    addToCart(payload) {
+      let i = 0;
+      this.service_lists.forEach(function (data) {
+        if (payload.id == data.id) {
+          data.count += 1;
+          i = 1;
         }
       });
-      if (i==0){
+      if (i == 0) {
         this.service_lists.push(payload);
-      } 
+      }
     },
 
-    
-    deleteCoupon(v){
-      this.service_lists.forEach(function(data){
-        if (v.id == data.id){
-          data.count-=1;
+    deleteCoupon(v) {
+      this.service_lists.forEach(function (data) {
+        if (v.id == data.id) {
+          data.count -= 1;
         }
       });
-      if (v.count == 0){
+      if (v.count == 0) {
         let index = this.service_lists.indexOf(v);
         this.service_lists.splice(index, 1);
       }
     },
 
-    cash(){
-      if (this.service_lists.length==0){
+    cash() {
+      if (this.service_lists.length == 0) {
         Swal.fire("กรุณาเลือกคูปองก่อนชำระเงิน");
       }
-    }
+    },
   },
 };
 </script>
