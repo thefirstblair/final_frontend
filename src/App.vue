@@ -33,9 +33,9 @@
                 <v-list-item-title>Admin Dashboard</v-list-item-title>
               </v-list-item>
 
-               <v-list-item v-if="isEmployee()" to="/employee">
+               <!-- <v-list-item v-if="isEmployee()" to="/employee">
                 <v-list-item-title>Employee</v-list-item-title>
-              </v-list-item>
+              </v-list-item> -->
             </v-list>
           </v-menu>
         </div>
