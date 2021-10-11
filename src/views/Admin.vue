@@ -14,11 +14,15 @@
         <div class="type_select_btn" @click="current_component = 'manage_user'">
           จัดการผู้ใช้งาน
         </div>
+        <div class="type_select_btn" @click="current_component = 'manage_discount'">
+          จัดการคูปองส่วนลด
+        </div>
       </v-col>
       <v-col>
         <manageShop v-if="current_component == 'manage_shop'" />
         <manageService v-else-if="current_component == 'manage_service'" />
         <manageUser v-else-if="current_component == 'manage_user'" />
+        <manageDiscount v-else-if="current_component == 'manage_discount'" />
 
       </v-col>
     </v-row>
@@ -29,9 +33,10 @@
 import manageShop from "@/components/admin/manage_shop.vue";
 import manageService from "@/components/admin/manage_service.vue";
 import manageUser from "@/components/admin/manage_user.vue";
+import manageDiscount from "@/components/admin/manage_discount.vue";
 
 export default {
-  components: { manageShop, manageService, manageUser },
+  components: { manageShop, manageService, manageUser, manageDiscount},
   data() {
     return {
       current_component: "manage_shop",
