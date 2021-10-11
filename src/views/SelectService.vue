@@ -136,8 +136,9 @@
               <v-row>
                 <v-col class="d-flex" cols="12">
                   <v-select
-                    :items="employee"
+                    :items="employees"
                     label="พนักงาน"
+                    item-text="name"
                     dense
                     outlined
                   ></v-select>
@@ -170,7 +171,7 @@
 export default {
   data() {
     return {
-      employee: ["Foo", "Bar", "Fizz", "Buzz"],
+      employees: [],
       dialog_SelectEmployee: false,
       category_name: "salon",
       category_label: "ซาลอน",
@@ -213,6 +214,7 @@ export default {
         if (response.status == 200) {
           this.type_name = response.data.name;
           this.services = response.data.services;
+          this.employees = response.data.employees;
           this.getListData(response.data.services[0].id);
         } else {
           console.log(response.error);
