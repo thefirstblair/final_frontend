@@ -17,6 +17,23 @@
             hide-details
           ></v-text-field>
         </v-card-title>
+        <v-row>
+          <v-col>
+            <v-btn
+              color="primary"
+              class="mx-2"
+              dark
+              outlined
+              @click="dialog_addType = !dialog_addType"
+            >
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              Add Type
+            </v-btn></v-col
+          ></v-row
+        >
+
         <v-data-table :headers="headers" :items="items" :search="search">
           <template v-slot:[`item.action`]="{ item, index }">
             <v-icon v-if="!isInType" small @click="selectType(item.id)">
@@ -208,50 +225,58 @@
         </v-dialog>
       </v-row>
 
-      <!-- Add Categories -->
+      <!-- Add Type -->
       <v-row justify="center">
-        <v-dialog v-model="dialog_AddCategory" max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Add Category
-            </v-btn>
-          </template>
+        <v-dialog v-model="dialog_addType" max-width="600px">
           <v-card>
-            <v-card-title>
-              <span class="text-h5">เพิ่มประเภท</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="ชื่อประเภท" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      required
-                      label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_AddCategory = false"
-              >
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_AddCategory = false"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
+            <v-form
+              ref="addType"
+              @submit.prevent="confirmed_addType"
+              v-model="valid"
+              lazy-validation
+            >
+              <v-card-title>
+                <span class="text-h5">เพิ่มประเภท</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        label="ชื่อประเภท"
+                        required
+                        v-model="addType.name"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="addType.type_image_url"
+                        required
+                        label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog_addType = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  type="submit"
+                  :disabled="addType.name == '' || addType.type_image_url == ''"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-row>
@@ -259,11 +284,6 @@
       <!-- Type Fix -->
       <v-row justify="center">
         <v-dialog v-model="dialog_editType" max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Edit Type
-            </v-btn>
-          </template>
           <v-card>
             <v-card-title>
               <span class="text-h5">แก้ไข</span>
@@ -361,14 +381,18 @@
 </template>
 
 <script>
+import AuthUser from "@/store/AuthUser";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      valid: true,
       dialog_fixService: false,
       dialog_addCoupon: false,
-      dialog_AddCategory: false,
+      dialog_addType: false,
       dialog_AddService: false,
       dialog_editType: false,
+
       isInType: false,
       search: "",
       headers: [
@@ -389,42 +413,57 @@ export default {
         services: [],
       },
       editType: { name: "", type_image_url: "" },
+      addType: {
+        name: "",
+        type_image_url: "",
+        service_count: 0,
+        coupon_count: 0,
+      },
       items: [],
     };
   },
-  mounted() {
-    // this.getListData("cut");
-  },
+  mounted() {},
   methods: {
-    // getListData(type) {
-    //   if (type == "cut") {
-    //     this.data = {
-    //       title: "บริการตัดผม",
-    //       desc: "ขนมป็อกกาแลต",
-    //       image: [
-    //         "https://i.imgur.com/A4R3m2l.jpeg",
-    //         "https://i.imgur.com/A4R3m2l.jpeg",
-    //         "https://i.imgur.com/A4R3m2l.jpeg",
-    //         "https://i.imgur.com/A4R3m2l.jpeg",
-    //       ],
-    //       services: [
-    //         {
-    //           label: "โกนผม",
-    //           time: 15,
-    //           price: 1000,
-    //         },
-    //         {
-    //           label: "ปลูกผม",
-    //           time: 15,
-    //           price: 1500,
-    //         },
-    //       ],
-    //     };
-    //   }
-    // },
-    removeType(id) {
-      console.log(id);
-      // api delete Type
+    // Type
+    confirmed_addType() {
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .post("http://127.0.0.1:8000/api/type/", this.addType, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            this.dialog_addType = false;
+            Swal.fire("เพิ่มเรียบร้อย", "", "success");
+            this.items.push(this.addType);
+            this.addUser = {
+              name: "",
+              type_image_url: "",
+            };
+          } else {
+            Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+
+    removeType(id, index) {
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .delete("http://127.0.0.1:8000/api/type/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("ลบเรียบร้อย", "", "success");
+            this.items.splice(index, 1);
+          } else {
+            Swal.fire("ไม่สามารถลบได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
     },
     selectType(id) {
       this.items = [];
@@ -440,13 +479,15 @@ export default {
         { text: "Action", value: "action" },
       ];
 
-      this.$http.get("http://127.0.0.1:8000/api/type/" + id).then((response) => {
-        if (response.status == 200) {
-          this.items = response.data.services;
-        } else {
-          console.log(response.error);
-        }
-      });
+      this.$http
+        .get("http://127.0.0.1:8000/api/type/" + id)
+        .then((response) => {
+          if (response.status == 200) {
+            this.items = response.data.services;
+          } else {
+            console.log(response.error);
+          }
+        });
     },
     backToType() {
       this.isInType = false;
