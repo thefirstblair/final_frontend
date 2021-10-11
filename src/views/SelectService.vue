@@ -65,7 +65,9 @@
               <v-col>
                 <v-row class="align-center justify-end">
                   <b>฿ {{ v.price }}</b>
-                  <button class="buy_btn" @click="addToCart(v)">เพิ่มลงตะกร้า</button>
+                  <button class="buy_btn" @click="addToCart(v)">
+                    เพิ่มลงตะกร้า
+                  </button>
                 </v-row>
               </v-col>
             </v-row>
@@ -90,6 +92,13 @@
               :key="index"
               class="white--text"
             >
+              <v-rating
+                readonly
+                v-model="v.score"
+                background-color="white"
+                color="yellow darken"
+                large
+              ></v-rating>
               <v-row style="padding: 1vh; padding-left: 3vh">
                 {{ v.coupon.name }}
               </v-row>
@@ -147,7 +156,7 @@ export default {
         });
     },
 
-    // comment 
+    // comment
     // async addToCart(v){
     //   let payload = {
     //     product : v,
@@ -156,7 +165,6 @@ export default {
     //   let res = await CartStore.dispatch('addProductToCart', payload);
     //   await AuthUser.dispatch('update', res);
     // },
-    
   },
   created() {
     this.$http
@@ -170,7 +178,6 @@ export default {
           console.log(response.error);
         }
       });
-
   },
 };
 </script>

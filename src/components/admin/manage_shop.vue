@@ -24,6 +24,7 @@
               class="mx-2"
               dark
               outlined
+              v-if="!isInType"
               @click="dialog_addType = !dialog_addType"
             >
               <v-icon>
@@ -34,22 +35,50 @@
           ></v-row
         >
 
+        <v-row>
+          <v-col>
+            <v-btn
+              color="primary"
+              class="mx-2"
+              dark
+              outlined
+              v-if="isInType"
+              @click="dialog_addService = !dialog_addService"
+            >
+              <v-icon>
+                mdi-plus
+              </v-icon>
+              Add Service
+            </v-btn></v-col
+          ></v-row
+        >
+
         <v-data-table :headers="headers" :items="items" :search="search">
           <template v-slot:[`item.action`]="{ item, index }">
-            <v-icon v-if="!isInType" small @click="selectType(item.id)">
+            <v-icon
+              v-if="!isInType"
+              small
+              @click="
+                selectType(item.id);
+                current_type = item.id;
+              "
+            >
               mdi-magnify-plus
             </v-icon>
             <v-icon
               small
               @click="
-                dialog_editType = true;
-                editType = item;
-                editType.index = index;
+                !isInType
+                  ? openEditType(item, index)
+                  : openEditService(item, index)
               "
             >
               mdi-pencil
             </v-icon>
-            <v-icon small @click="removeType(item.id)">
+            <v-icon
+              small
+              @click="!isInType ? removeType(item.id) : removeService(item.id)"
+            >
               mdi-delete
             </v-icon>
           </template>
@@ -57,21 +86,17 @@
       </v-col>
     </v-row>
 
-    <!-- dialog -->
+    <!-- Edit Service -->
     <v-row justify="center" class="align-center">
-      <v-dialog v-model="dialog_fixService" scrollable max-width="80%">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on">
-            แก้ไขบริการ
-          </v-btn>
-        </template>
+      <v-dialog v-model="dialog_editService" scrollable max-width="80%">
         <v-card>
           <v-card-text>
             <v-container>
               <v-row class="align-center">
                 <v-col>
                   <img
-                    src="https://i.imgur.com/A4R3m2l.jpeg"
+                  
+                    v-on:src="editService.service_image_url"
                     style="width: 80%"
                   />
                 </v-col>
@@ -79,16 +104,12 @@
                   <v-row class="align-center">
                     <v-col cols="12">
                       <!-- <input type="text" value="หัวข้อของเนื้อหา" /> -->
-                      <h2>หัวข้อของเนื้อหา</h2>
+                      <h2>{{editService.name}}</h2>
                     </v-col>
                     <v-col cols="12">
                       <!-- <textarea style="width:100%;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus officia cupiditate veritatis voluptas. Adipisci assumenda ullam modi exercitationem enim consequatur dolorem. Quos vitae quisquam doloribus accusamus consequuntur? Esse, voluptas unde.</textarea> -->
                       <p>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing
-                        elit. Animi omnis magnam deleniti quas, totam illo
-                        accusantium voluptatem debitis ipsa enim dolorum
-                        accusamus molestias aut voluptas molestiae fuga nam,
-                        corporis quos.
+                        {{editService.description}}
                       </p>
                       <br />
                       <span style="font-size:1.5vh; text-decoration:underline;"
@@ -98,7 +119,7 @@
                       <span style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;">ยกเลิกการแก้ไข</span> -->
                     </v-col>
                   </v-row>
-                  <v-row>
+                  <!-- <v-row>
                     <v-col>
                       <img
                         src="https://i.imgur.com/A4R3m2l.jpeg"
@@ -117,7 +138,7 @@
                         style="width: 100%"
                       />
                     </v-col>
-                  </v-row>
+                  </v-row> -->
                 </v-col>
               </v-row>
 
@@ -281,7 +302,7 @@
         </v-dialog>
       </v-row>
 
-      <!-- Type Fix -->
+      <!-- Edit Type -->
       <v-row justify="center">
         <v-dialog v-model="dialog_editType" max-width="600px">
           <v-card>
@@ -331,48 +352,66 @@
 
       <!-- Add Service -->
       <v-row justify="center">
-        <v-dialog v-model="dialog_AddService" max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Add Service
-            </v-btn>
-          </template>
+        <v-dialog v-model="dialog_addService" max-width="600px">
           <v-card>
-            <v-card-title>
-              <span class="text-h5">เพิ่ม Service</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field label="ชื่อ Service" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field label="Description" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="URL Image"></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_AddService = false"
-              >
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_AddService = false"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
+            <v-form
+              ref="addService"
+              @submit.prevent="confirmed_addService"
+              v-model="valid"
+              lazy-validation
+            >
+              <v-card-title>
+                <span class="text-h5">เพิ่ม Service</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="addService.name"
+                        label="ชื่อ Service"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="addService.description"
+                        label="Description"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="addService.service_image_url"
+                        label="URL Image"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog_addService = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  type="submit"
+                  :disabled="
+                    addService.name == '' ||
+                      addService.description == '' ||
+                      addService.service_image_url == ''
+                  "
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-row>
@@ -387,11 +426,12 @@ export default {
   data() {
     return {
       valid: true,
-      dialog_fixService: false,
+      dialog_editService: false,
       dialog_addCoupon: false,
       dialog_addType: false,
-      dialog_AddService: false,
+      dialog_addService: false,
       dialog_editType: false,
+      current_type: 0,
 
       isInType: false,
       search: "",
@@ -412,6 +452,7 @@ export default {
         image: [],
         services: [],
       },
+      // Type
       editType: { name: "", type_image_url: "" },
       addType: {
         name: "",
@@ -419,11 +460,25 @@ export default {
         service_count: 0,
         coupon_count: 0,
       },
+      // Service
+
+      addService: {
+        name: "",
+        description: "",
+        service_image_url: "",
+        coupon_count: 0,
+      },
+
+      editService: { name: "", description: "", service_image_url: "" },
       items: [],
     };
   },
-  mounted() {},
   methods: {
+    openEditService(item, index) {
+      this.dialog_editService = true;
+      console.log(item, index);
+    },
+
     // Type
     confirmed_addType() {
       const token = AuthUser.getters.user.api_token;
@@ -437,22 +492,69 @@ export default {
             this.dialog_addType = false;
             Swal.fire("เพิ่มเรียบร้อย", "", "success");
             this.items.push(this.addType);
-            this.addUser = {
+            this.addType = {
               name: "",
               type_image_url: "",
             };
           } else {
-            Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
+            Swal.fire("ไม่สามารถเพิ่ม Type ได้", "", "error");
             console.log(response.data.error);
           }
         });
     },
-
+    openEditType(item, index) {
+      this.dialog_editType = true;
+      this.editType = item;
+      this.editType.index = index;
+    },
     removeType(id, index) {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
         .delete("http://127.0.0.1:8000/api/type/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("ลบเรียบร้อย", "", "success");
+            this.items.splice(index, 1);
+          } else {
+            Swal.fire("ไม่สามารถลบได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+
+    // Service
+    confirmed_addService() {
+      const token = AuthUser.getters.user.api_token;
+      this.addService.type_id = this.current_type;
+      this.$http
+        .post("http://127.0.0.1:8000/api/service/", this.addService, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            console.log(response);
+            this.dialog_addService = false;
+            Swal.fire("เพิ่มเรียบร้อย", "", "success");
+            this.items.push(this.addService);
+            this.addService = {
+              name: "",
+              description: "",
+              service_image_url: "",
+            };
+          } else {
+            Swal.fire("ไม่สามารถเพิ่มได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+    removeService(id, index) {
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .delete("http://127.0.0.1:8000/api/service/" + id, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {

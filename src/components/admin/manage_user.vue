@@ -31,7 +31,12 @@
     <!-- ADD USER -->
     <v-dialog v-model="dialog_AddUser" max-width="600px">
       <v-card>
-        <v-form ref="addUser" @submit.prevent="confirmed_addUser" v-model="valid" lazy-validation> 
+        <v-form
+          ref="addUser"
+          @submit.prevent="confirmed_addUser"
+          v-model="valid"
+          lazy-validation
+        >
           <v-card-title>
             <span class="text-h5">เพิ่มผู้ใช้</span>
           </v-card-title>
@@ -44,7 +49,7 @@
                     label="Name"
                     v-model="addUser.name"
                     :rules="[rules.required, rules.min]"
-                     hint="At least 8 characters"
+                    hint="At least 8 characters"
                     maxlength="20"
                   ></v-text-field>
                 </v-col>
@@ -54,7 +59,7 @@
                     label="Username"
                     :rules="[rules.required, rules.min]"
                     v-model="addUser.username"
-                     hint="At least 8 characters"
+                    hint="At least 8 characters"
                     maxlength="20"
                   ></v-text-field>
                 </v-col>
@@ -89,7 +94,11 @@
               color="blue darken-1"
               text
               type="submit"
-              :disabled="addUser.name == '' || addUser.username == '' || addUser.password == ''" 
+              :disabled="
+                addUser.name == '' ||
+                  addUser.username == '' ||
+                  addUser.password == ''
+              "
             >
               Save
             </v-btn>
@@ -207,8 +216,8 @@ export default {
   },
   methods: {
     confirmed_addUser() {
-      const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token = AuthUser.getters.user.api_token;
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .post("http://127.0.0.1:8000/api/user/", this.addUser, {
@@ -223,8 +232,8 @@ export default {
               name: "",
               username: "",
               password: "",
-              role: "USER"
-            }
+              role: "USER",
+            };
           } else {
             Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
             console.log(response.data.error);
@@ -232,8 +241,8 @@ export default {
         });
     },
     updateUser() {
-       const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token = AuthUser.getters.user.api_token;
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user/" + this.editUser.id,
@@ -253,8 +262,8 @@ export default {
         });
     },
     deleteUser(id, index) {
-     const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token = AuthUser.getters.user.api_token;
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
 
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
@@ -273,8 +282,8 @@ export default {
   },
   created() {
     // รับ token admin ใหม่ทุกรอบ
-  const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+    const token = AuthUser.getters.user.api_token;
+    // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
     // get all user
     this.$http
       .get("http://127.0.0.1:8000/api/user", {
