@@ -42,7 +42,7 @@
 
         <v-btn icon @click="dialog_cart = true">
           <v-badge left
-            ><span slot="badge">{{ cartItemCount }}</span>
+            ><span slot="badge">{{ $store.getters.getCount }}</span>
             <v-icon>mdi-cart</v-icon>
           </v-badge>
         </v-btn>
@@ -207,7 +207,6 @@
           <v-card>
             <v-toolbar color="#41ad69" dark>ตะกร้าของคุณ</v-toolbar>
 
-            <!-- code yokkkk -->
             <v-col>
               <v-col
                 style="
@@ -216,27 +215,26 @@
                   margin-top: 10px;
                   margin-bottom: 10px;
                 "
-                v-for="(v, index) in cart"
+                v-for="(v, index) in $store.getters.getCarts"
                 :key="index"
               >
                 <v-row>
                   <v-col cols="9" style="margin-left: 15px">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.product.name }}
+                      Coupon name : {{ v.name }}
                     </v-row>
                     <v-row style="padding: 3px">
-                      Price : {{ v.product.price }}
+                      Price : {{ v.price }}
                     </v-row>
                     <v-row style="padding: 3px">
-                      Time : {{ v.product.time }}
+                      Time : {{ v.time }}
                     </v-row>
                   </v-col>
 
                   <v-col cols="2" class="align-center justify-center">
-                    {{ v.quantity }} ชิ้น
                     <button
                       style="margin-top: 20px; color:red"
-                      @click.prevent="deleteCoupon(v.product)"
+                      @click="$store.commit('deleteItem',index)"
                     >
                       delete
                     </button>
@@ -245,7 +243,7 @@
               </v-col>
 
               <v-card-actions class="justify-end">
-                <v-row> Total : {{ cartTotalPrice }} </v-row>
+                <v-row> Total Price : {{ $store.getters.getTotalPrice }} </v-row>
               </v-card-actions>
 
               <v-row style="margin-top: 15px" class="justify-center">
@@ -298,7 +296,7 @@
 <script>
 import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser";
-import CartStore from "@/store/CartStore";
+//import CartStore from "@/store/CartStore";
 
 export default {
   name: "App",
@@ -323,60 +321,8 @@ export default {
         required: (value) => !!value || "Required.",
         min: (v) => (v && v.length >= 8) || "Min 8 characters",
       },
-
-      coupons: [
-        {
-          coupon_name: "ตัดผม",
-
-          sub_title:
-            "Our vintage kitchen utenils delight any chef. Made of bamboo by hand",
-          price: 14.99,
-          qty: 1,
-        },
-        {
-          coupon_name: "kitchen-1",
-          title: "QW cooking utensils",
-          sub_title:
-            "Our vintage kitchen utenils delight any chef. Made of bamboo by hand",
-          price: 44.99,
-          qty: 2,
-        },
-        {
-          coupon_name: "kitchen-1",
-          title: "QW cooking utensils",
-          sub_title:
-            "Our vintage kitchen utenils delight any chef. Made of bamboo by hand",
-          price: 64.99,
-          qty: 2,
-        },
-      ],
-
-      service_lists: [
-        // {
-        //   coupon: "สระไดร์ + ตัดผม",
-        //   price: 350,
-        //   time: 45,
-        //   count: 1,
-        // },
-        // {
-        //   coupon: "ทาสีเล็บมือ + เล็บเท้า",
-        //   price: 200,
-        //   time: 20,
-        //   count: 2,
-        // },
-        // {
-        //   coupon: "นวดคอ บ่า ไหล่",
-        //   price: 300,
-        //   time: 60,
-        //   count: 4,
-        // },
-        // {
-        //   coupon: "นวดคอ บ่า ไหล่",
-        //   price: 300,
-        //   time: 60,
-        //   count: 4,
-        // },
-      ],
+      coupons: [],
+      service_lists: [],
       form_login: {
         username: "",
         password: "",
@@ -392,24 +338,11 @@ export default {
     passwordMatch() {
       return () => this.password === this.verify || "Password must match";
     },
-    cart() {
-      return CartStore.state.data;
-    },
-    cartTotalPrice() {
-      return CartStore.getters.cartTotalPrice;
-    },
-    cartItemCount() {
-      return CartStore.getters.cartItemCount;
-    },
   },
-  
   // comment
   // mounted(){
-  //   const thisInstance = this
-  //   this.$root.$on('addToCartEvent', function(v){
-  //     thisInstance.addToCart(v)
-  //   });
-  //   CartStore.dispatch('restoreCart');
+  //   this.$store.commit('clearItem');
+  //   console.log(this.$store.state.carts);
   // },
 
   methods: {
@@ -458,6 +391,7 @@ export default {
     },
     logout() {
       AuthUser.dispatch("logout");
+      this.$store.commit('clearItem');
     },
     isCustomer() {
       //เช็คว่าเป็นผู้ใช้ไม
@@ -513,13 +447,6 @@ export default {
         }
       }
     },
-
-    // ลบของออกจากตะกร้า comment
-    // async deleteCoupon(product) {
-    //   CartStore.dispatch("deleteCoupon", product);
-    //   let cartData =  CartStore.getters.cartData;
-    //   await AuthUser.dispatch('update', cartData);
-    // },
 
     // cash(){
     //   if (this.service_lists.length==0){

@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthService from '@/services/AuthService'
 
-//comment
-// import CartService from '@/services/CartService'
 
 Vue.use(Vuex)
 
@@ -21,7 +19,7 @@ export default new Vuex.Store({
   mutations: {
       loginSuccess(state,user){
           // console.log(state.user)
-          state.user=user.user
+          state.user=user
           // console.log(user)
         //   console.log(jwt)
         //   state.jwt=jwt
@@ -62,12 +60,6 @@ export default new Vuex.Store({
           return res
       },
 
-      // comment
-    //   async update({commit}, payload){
-    //     //console.log(payload)
-    //     let res = await CartService.storeCart(payload);
-    //     commit("loginSuccess",res);
-    // },
 
   },
   getters:{

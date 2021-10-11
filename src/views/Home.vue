@@ -81,7 +81,7 @@
 
 <script>
 // comment
-// import CartStore from "@/store/CartStore";
+//import CartStore from "@/store/CartStore";
 // import AuthUser from "@/store/AuthUser";
 export default {
   data() {
@@ -107,15 +107,9 @@ export default {
   methods: {
     
     //comment
-    // async addToCart(v) {
-    //   let payload = {
-    //     product: v,
-    //     quantity: 1,
-    //   };
-    //   let res = await CartStore.dispatch("addProductToCart", payload);
-    //   await AuthUser.dispatch("update", res);
-    // },
-
+    addToCart(v) {
+      this.$store.commit('addItem',v);
+    },
     changePage(id) {
       this.$router.push("/service/" + id);
     },

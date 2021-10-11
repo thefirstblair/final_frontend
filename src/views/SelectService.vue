@@ -120,9 +120,6 @@
 </template>
 
 <script>
-// comment
-// import CartStore from '@/store/CartStore'
-// import AuthUser from '@/store/AuthUser'
 export default {
   data() {
     return {
@@ -156,15 +153,11 @@ export default {
         });
     },
 
-    // comment
-    // async addToCart(v){
-    //   let payload = {
-    //     product : v,
-    //     quantity : 1
-    //   }
-    //   let res = await CartStore.dispatch('addProductToCart', payload);
-    //   await AuthUser.dispatch('update', res);
-    // },
+    addToCart(v) {
+      this.$store.commit('addItem',v);
+    },
+    
+
   },
   created() {
     this.$http
