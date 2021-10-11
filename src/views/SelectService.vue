@@ -50,10 +50,10 @@
             <v-divider></v-divider>
           </v-col>
         </v-row>
-        <v-row style="overflow-y:auto; max-height:600px;">
+        <v-row style="overflow-y: auto; max-height: 600px">
           <v-col
             cols="12"
-            style="background: #f1f1f1; margin-top:10px"
+            style="background: #f1f1f1; margin-top: 10px"
             v-for="(v, index) in data.coupons"
             :key="index"
           >
@@ -65,9 +65,17 @@
               <v-col>
                 <v-row class="align-center justify-end">
                   <b>฿ {{ v.price }}</b>
-                  <button class="buy_btn" @click="addToCart(v)">
-                    เพิ่มลงตะกร้า
-                  </button>
+
+                  <v-btn
+                    class="buy_btn"
+                    dark
+                    outlined
+                    @click="
+                      (dialog_SelectEmployee = true)
+                    "
+                  >
+                    เลือกพนักงาน
+                  </v-btn>
                 </v-row>
               </v-col>
             </v-row>
@@ -116,6 +124,45 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="dialog_SelectEmployee" max-width="500px">
+      <v-card>
+        <v-form lazy-validation>
+          <v-card-title>
+            <span class="text-h5">เลือกพนักงานที่ท่านต้องการ</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col class="d-flex" cols="12">
+                  <v-select
+                    :items="employee"
+                    label="พนักงาน"
+                    dense
+                    outlined
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="blue darken-1" text >
+              เพิ่มลงตะกร้าสินค้า
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialog_SelectEmployee = false"
+            >
+              ยกเลิก
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -123,6 +170,8 @@
 export default {
   data() {
     return {
+      employee: ["Foo", "Bar", "Fizz", "Buzz"],
+      dialog_SelectEmployee: false,
       category_name: "salon",
       category_label: "ซาลอน",
       lists_select: 0,
@@ -154,10 +203,8 @@ export default {
     },
 
     addToCart(v) {
-      this.$store.commit('addItem',v);
+      this.$store.commit("addItem", v);
     },
-    
-
   },
   created() {
     this.$http
