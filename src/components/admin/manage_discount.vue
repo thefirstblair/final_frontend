@@ -29,7 +29,7 @@
     <!-- ADD Discount Coupon -->
     <v-dialog v-model="dialog_AddDiscount" max-width="600px">
       <v-card>
-        <v-form ref="addUser" v-model="valid" lazy-validation>
+        <v-form ref="addUser" lazy-validation>
           <v-card-title>
             <span class="text-h5">เพิ่มคูปองส่วนลด</span>
           </v-card-title>
