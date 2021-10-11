@@ -122,14 +122,6 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field label="Discount percent"
-                >Discount Percent</v-text-field
-              >
-            </v-row>
-            <v-row>
-              <v-text-field label="Minimum">Minimum</v-text-field>
-            </v-row>
-            <v-row>
               <v-text-field label="Amount"></v-text-field>
             </v-row>
           </v-container>
