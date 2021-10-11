@@ -111,8 +111,9 @@
 </template>
 
 <script>
-import CartStore from '@/store/CartStore'
-import AuthUser from '@/store/AuthUser'
+// comment
+// import CartStore from '@/store/CartStore'
+// import AuthUser from '@/store/AuthUser'
 export default {
   data() {
     return {
@@ -145,16 +146,16 @@ export default {
           }
         });
     },
-    // เพิ่มของลงตะกร้า
-    async addToCart(v){
-      let payload = {
-        product : v,
-        quantity : 1
-      }
-      // console.log(payload)
-      let res = await CartStore.dispatch('addProductToCart', payload);
-      await AuthUser.dispatch('update', res);
-    },
+
+    // comment 
+    // async addToCart(v){
+    //   let payload = {
+    //     product : v,
+    //     quantity : 1
+    //   }
+    //   let res = await CartStore.dispatch('addProductToCart', payload);
+    //   await AuthUser.dispatch('update', res);
+    // },
     
   },
   created() {
@@ -169,16 +170,7 @@ export default {
           console.log(response.error);
         }
       });
-      
-    // this.$http
-    // .get("http://127.0.0.1:8000/api/review")
-    // .then((response) => {
-    //   if (response.status == 200) {
-    //     this.reviews = response.data.reviews;
-    //   } else {
-    //     console.log(response.error);
-    //   }
-    // });
+
   },
 };
 </script>

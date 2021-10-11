@@ -398,14 +398,15 @@ export default {
       return CartStore.getters.cartItemCount;
     },
   },
-
-  mounted(){
-    // const thisInstance = this
-    // this.$root.$on('addToCartEvent', function(v){
-    //   thisInstance.addToCart(v)
-    // });
-    CartStore.dispatch('restoreCart');
-  },
+  
+  // comment
+  // mounted(){
+  //   const thisInstance = this
+  //   this.$root.$on('addToCartEvent', function(v){
+  //     thisInstance.addToCart(v)
+  //   });
+  //   CartStore.dispatch('restoreCart');
+  // },
 
   methods: {
     validate() {
@@ -509,12 +510,12 @@ export default {
       }
     },
 
-    // ลบของออกจากตะกร้า
-    async deleteCoupon(product) {
-      CartStore.dispatch("deleteCoupon", product);
-      let cartData =  CartStore.getters.cartData;
-      await AuthUser.dispatch('update', cartData);
-    },
+    // ลบของออกจากตะกร้า comment
+    // async deleteCoupon(product) {
+    //   CartStore.dispatch("deleteCoupon", product);
+    //   let cartData =  CartStore.getters.cartData;
+    //   await AuthUser.dispatch('update', cartData);
+    // },
 
     // cash(){
     //   if (this.service_lists.length==0){

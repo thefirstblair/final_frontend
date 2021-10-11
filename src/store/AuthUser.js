@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthService from '@/services/AuthService'
-import CartService from '@/services/CartService'
+
+//comment
+// import CartService from '@/services/CartService'
 
 Vue.use(Vuex)
 
@@ -60,11 +62,12 @@ export default new Vuex.Store({
           return res
       },
 
-      async update({commit}, payload){
-        //console.log(payload)
-        let res = await CartService.storeCart(payload);
-        commit("loginSuccess",res);
-    },
+      // comment
+    //   async update({commit}, payload){
+    //     //console.log(payload)
+    //     let res = await CartService.storeCart(payload);
+    //     commit("loginSuccess",res);
+    // },
 
   },
   getters:{

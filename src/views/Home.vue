@@ -80,9 +80,9 @@
 </template>
 
 <script>
-// import axios from 'axios';
-import CartStore from '@/store/CartStore'
-import AuthUser from '@/store/AuthUser'
+// comment
+// import CartStore from "@/store/CartStore";
+// import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -100,98 +100,47 @@ export default {
           src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
         },
       ],
-      types:[],
-      random_coupon:[],
+      types: [],
+      random_coupon: [],
     };
   },
   methods: {
-    // api แบบแรก ใส่ใน created ด้วย
-
-    // getType(){
-    //   this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
-    //     if(response.status == 200){
-    //       this.types = response.data
-    //     }else{
-    //       console.log(response.error)
-    //     }
-    //   });
-    // },
-
-    // addToCart(v){
-    //   // console.log(v);
+    
+    //comment
+    // async addToCart(v) {
     //   let payload = {
-    //     id : v.id,
-    //     name : v.name,
-    //     price : v.price,
-    //     time : v.time,
-    //     count : 1
-    //   }
-    //   // console.log(payload);
-    //   // app.addToCart(payload);
-    //   this.$root.$emit('addToCartEvent', payload)
+    //     product: v,
+    //     quantity: 1,
+    //   };
+    //   let res = await CartStore.dispatch("addProductToCart", payload);
+    //   await AuthUser.dispatch("update", res);
     // },
 
-    // เพิ่มของลงตะกร้า
-    async addToCart(v){
-      let payload = {
-        product : v,
-        quantity : 1
-      }
-      // console.log(payload)
-      let res = await CartStore.dispatch('addProductToCart', payload);
-      await AuthUser.dispatch('update', res);
+    changePage(id) {
+      this.$router.push("/service/" + id);
     },
-
-    changePage(id){
-      // this is commit testing
-      this.$router.push('/service/' + id);
+    randomCoupon() {
+      this.$http
+        .get("http://127.0.0.1:8000/api/coupon/random")
+        .then((response) => {
+          if (response.status == 200) {
+            this.random_coupon = response.data;
+          } else {
+            console.log(response.error);
+          }
+        });
     },
-    randomCoupon(){
-      this.$http.get("http://127.0.0.1:8000/api/coupon/random").then((response) => {
-        if(response.status == 200){
-          this.random_coupon = response.data
-        }else{
-          console.log(response.error)
-        }
-      });
-    }
   },
   created() {
-
-    // this.getType();
     this.randomCoupon();
 
-    // fetch
-
-    // fetch("http://127.0.0.1:8000/api/user/login", {
-    //   method: "post",
-    // headers: {
-    //   "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjUsImlhdCI6MTYzMzU0MTE2OCwiZXhwIjoxNjMzNTc3MTY4fQ.JxmoVXy7ZDBgS96V-E_dUD-ZsSwlImXd-Bhut8QotKk"
-    // },
-    // }).then((response) =>{
-    //   console.log(response);
-    // });
-
-    // axios
-
-    // this.$http.get("http://127.0.0.1:8000/api/type",{},{
-    //   "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjUsImlhdCI6MTYzMzU0MTE2OCwiZXhwIjoxNjMzNTc3MTY4fQ.JxmoVXy7ZDBgS96V-E_dUD-ZsSwlImXd-Bhut8QotKk"
-    // }).then((response) => {
-    //   console.log(response.data);
-    // });
-
-
-    // อีกแบบใส่ในนี้เลย
-    
-      this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
-        if(response.status == 200){
-          this.types = response.data
-        }else{
-          console.log(response.error)
-        }
-      });
-    
-
+    this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
+      if (response.status == 200) {
+        this.types = response.data;
+      } else {
+        console.log(response.error);
+      }
+    });
   },
 };
 </script>
