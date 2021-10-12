@@ -212,7 +212,9 @@
 </template>
 
 <script>
-// import DiscountCoupon from '@/store/DiscountCouponStore';
+import DiscountCoupon from '@/store/DiscountCouponStore';
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
@@ -311,12 +313,69 @@ export default {
       ],
     };
   },
+  created(){
+    this.fetchDiscount()
+  },
   methods:{
+    fetchDiscount(){
+      DiscountCoupon.dispatch('fetchCoupon')
+    },
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
-    // checkCode(code_user){
-    //   console.log(code_user);
-    //   DiscountCoupon.dispatch('check', code_user);
-    // }
+    checkCode(){
+
+      console.log(this.code_user);
+      this.cost=250;
+      DiscountCoupon.dispatch('checkCoupon', this.code_user);
+      if(DiscountCoupon.getters.success==true){
+        // DiscountCoupon.getters.thisCoupon
+        if(DiscountCoupon.getters.thisCoupon.quantity>0){
+          if(this.cost>=DiscountCoupon.getters.thisCoupon.minimum_cost){
+            
+            let percent=(this.cost*DiscountCoupon.getters.thisCoupon.discount_percent)/100
+            this.cost=this.cost-percent
+            
+            // console.log(this.cost)
+            Swal.fire({
+              icon: "success",
+              title: "สามารถใช้โค้ดส่วนลดได้",
+              showConfirmButton: false,
+               timer: 1500,
+             });
+             this.code_user=""
+
+          }
+          else{
+          Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+            text: "เนื่องจากยอดชำระไม่ถึง "+DiscountCoupon.getters.thisCoupon.minimum_cost + " บาท",
+          });
+          }
+        }
+        else{
+          Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+            text: "เนื่องจากโค้ดส่วนลดหมด",
+          });
+
+        }
+        // console.log(DiscountCoupon.getters.thisCoupon)
+      }
+      else{
+          Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+            text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
+          });
+
+      }
+      
+      // console.log(discount)
+      
+      // DiscountCoupon.dispatch('deleteCoupon',1);
+    }
+    // ใส่ตรงชำระเงินเสร็จแล้ว => DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
   },
 };
 </script>
