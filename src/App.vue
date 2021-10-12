@@ -33,9 +33,9 @@
                 <v-list-item-title>Admin Dashboard</v-list-item-title>
               </v-list-item>
 
-               <!-- <v-list-item v-if="isEmployee()" to="/employee">
+               <v-list-item v-if="isEmployee()" to="/employee">
                 <v-list-item-title>Employee</v-list-item-title>
-              </v-list-item> -->
+              </v-list-item>
             </v-list>
           </v-menu>
         </div>
@@ -374,7 +374,7 @@ export default {
 
         this.clearFormLogin();
       } else {
-        if (res.message == 1) {
+       if (res.message == 1) {
           //แสดงข้อความ error
           console.log(res.data.error);
           Swal.fire({
@@ -383,11 +383,24 @@ export default {
             text: res.data.error,
           });
         }
-      }
+        else{
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: res.message,
+          });
+        }
+      } 
     },
     isAuthen() {
-      //เช็คว่าเข้าสู้ระบบอยู่
-      return AuthUser.getters.isAuthen;
+      //เช็คว่าเข้าสู่ระบบอยู่
+      if(AuthUser.getters.user===undefined){
+        return false;
+      }
+      else{
+        return AuthUser.getters.isAuthen;
+      }
+      
     },
     logout() {
       AuthUser.dispatch("logout");
@@ -395,21 +408,15 @@ export default {
     },
     isCustomer() {
       //เช็คว่าเป็นผู้ใช้ไม
-      if (AuthUser.getters.user == null) {
-        //  console.log("BBB")
-        return this.isAuthen() == true;
-      } else {
-        //  console.log("AAA")
         return this.isAuthen() == true && AuthUser.getters.user.role == "USER";
-      }
     },
     isAdmin() {
       //เช็คว่าเป็น Adminไม
-      if (AuthUser.getters.user == null) {
-        return this.isAuthen() == true;
-      } else {
         return this.isAuthen() == true && AuthUser.getters.user.role == "ADMIN";
-      }
+    },
+    isEmployee(){
+       //เช็คว่าเป็น Employeeไม
+        return this.isAuthen() == true && AuthUser.getters.user.role == "EMPLOYEE";
     },
     clearFormLogin() {
       this.loginUsername = "";
@@ -437,12 +444,24 @@ export default {
       } else {
         if (res.message == 2) {
           //แสดงข้อความ error
+          let tmp="มีข้อมูลของ ";
           console.log(res.data.error);
+          for(let error in res.data.error){
+             tmp =tmp+" "+ error;
+         }
+         tmp=tmp+" ไม่สามารถอ่านได้"
 
           Swal.fire({
             icon: "error",
             title: "เกิดข้อผิดพลาด",
-            text: res.data.error.username[0],
+            text: tmp,
+          });
+        }
+        else{
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: res.message,
           });
         }
       }
