@@ -53,7 +53,7 @@
           v-if="isAuthen()"
           icon
           @click="
-            dialog = true;
+            dialog = false;
             logout();
           "
         >
@@ -404,6 +404,7 @@ export default {
     logout() {
       AuthUser.dispatch("logout");
       this.$store.commit('clearItem');
+      this.$router.push({ path: '/' }).catch(()=>{})
     },
     isCustomer() {
       //เช็คว่าเป็นผู้ใช้ไม
