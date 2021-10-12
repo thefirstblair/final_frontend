@@ -14,8 +14,6 @@
           <!--หน้าหลัก-->
         </v-btn>
 
-        <v-btn to="/payment"> หน้าชำระเงิน </v-btn>
-
         <div v-if="isAuthen()" class="text-center">
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
@@ -221,13 +219,13 @@
                 <v-row>
                   <v-col cols="9" style="margin-left: 15px">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.name }}
+                      Coupon name : {{ v.item.name }}
                     </v-row>
                     <v-row style="padding: 3px">
-                      Price : {{ v.price }}
+                      Price : {{ v.item.price }}
                     </v-row>
                     <v-row style="padding: 3px">
-                      Time : {{ v.time }}
+                      Employee : {{ v.employee.name }}
                     </v-row>
                   </v-col>
 
@@ -248,7 +246,7 @@
 
               <v-row style="margin-top: 15px" class="justify-center">
                 <v-btn color="success" larger style="float: right" 
-                @click="goToPayment(), dialog.value = false"
+                @click="goToPayment(); dialog.value = false"
                   >ชำระเงิน</v-btn
                 >
               </v-row>
@@ -342,7 +340,7 @@ export default {
   },
   // comment
   // mounted(){
-  //   this.$store.commit('clearItem');
+  //   // this.$store.commit('clearItem');
   //   console.log(this.$store.state.carts);
   // },
 
@@ -468,16 +466,16 @@ export default {
       }
     },
 
-    // goToPayment(){
-    //   if (this.$store.state.carts.length > 0){
-    //     this.$router.push('/payment');
-    //   }
-    //   else{
-    //     Swal.fire({
-    //         title: "กรุณาเลือกคูปองก่อนชำระเงิน",
-    //       });
-    //   }
-    // }
+    goToPayment(){
+      if (this.$store.state.carts.length > 0){
+        this.$router.push('/payment');
+      }
+      else{
+        Swal.fire({
+            title: "กรุณาเลือกคูปองก่อนชำระเงิน",
+          });
+      }
+    }
   },
 };
 </script>

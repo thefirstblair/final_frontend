@@ -1,11 +1,11 @@
 <template>
   <v-container>
-    <span style="font-size:40px;">GoWasabi</span>
-    <span style="font-size:20px"> เว็ปจองบริการเสริมความงาม</span>
+    <span style="font-size: 40px">GoWasabi</span>
+    <span style="font-size: 20px"> เว็ปจองบริการเสริมความงาม</span>
 
     <v-row justify="center">
       <v-col cols="10"
-        ><v-carousel :show-arrows="false" style="margin-top:20px">
+        ><v-carousel :show-arrows="false" style="margin-top: 20px">
           <v-carousel-item
             v-for="(item, i) in items"
             :key="i"
@@ -16,7 +16,7 @@
 
     <v-row>
       <v-col>
-        <span class="font-weight-black" style="font-size: 2.5em;">
+        <span class="font-weight-black" style="font-size: 2.5em">
           ประเภทบริการ
         </span>
         <v-divider></v-divider>
@@ -37,7 +37,7 @@
               v-on="on"
               @click="changePage(v.id)"
             >
-              <img style="width:70%;" :src="v.type_image_url" />
+              <img style="width: 70%" :src="v.type_image_url" />
             </v-btn>
           </template>
           <span>{{ v.name }}</span>
@@ -47,7 +47,7 @@
 
     <v-row>
       <v-col>
-        <span class="font-weight-black" style="font-size: 2.5em;">
+        <span class="font-weight-black" style="font-size: 2.5em">
           Recommend Coupon
         </span>
 
@@ -58,7 +58,7 @@
     <div>
       <v-row>
         <v-col v-for="(v, index) in random_coupon" :key="index" cols="3">
-          <v-card class="mx-auto " width="400" height="200">
+          <v-card class="mx-auto" width="400" height="200">
             <v-card-title class="pb-0"> ชื่อคูปอง : {{ v.name }} </v-card-title>
 
             <v-card-text class="text--primary">
@@ -68,14 +68,76 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn color="#41ad69" text @click="addToCart(v)">
+              <!-- <v-btn color="#41ad69" text @click="addToCart(v)">
                 Add to cart
-              </v-btn>
+              </v-btn> -->
+
+              <v-row justify="center">
+                <v-btn
+                  class="buy_btn"
+                  dark
+                  outlined
+                  @click="
+                    dialog_SelectEmployee = true;
+                    employees = v.employee;
+                    select_current.item = v;
+                    select_current.employee = {};
+                  "
+                >
+                  เลือกพนักงาน
+                </v-btn>
+              </v-row>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
     </div>
+
+    <v-dialog v-model="dialog_SelectEmployee" max-width="500px">
+      <v-card>
+        <v-form lazy-validation>
+          <v-card-title>
+            <span class="text-h5">เลือกพนักงานที่ท่านต้องการ</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col class="d-flex" cols="12">
+                  <v-select
+                    :items="employees"
+                    v-model="select_current.employee"
+                    label="พนักงาน"
+                    item-text="name"
+                    dense
+                    outlined
+                    return-object
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              :disabled="!select_current.employee.name"
+              @click="addToCart"
+            >
+              เพิ่มลงตะกร้าสินค้า
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialog_SelectEmployee = false"
+            >
+              ยกเลิก
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -86,6 +148,12 @@
 export default {
   data() {
     return {
+      employees: [],
+      select_current: {
+        employee: {},
+        item: {},
+      },
+      dialog_SelectEmployee: false,
       items: [
         {
           src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
@@ -105,10 +173,14 @@ export default {
     };
   },
   methods: {
-    
     //comment
-    addToCart(v) {
-      this.$store.commit('addItem',v);
+    addToCart() {
+      this.$store.commit("addItem", this.select_current);
+      this.select_current = {
+        employee: {},
+        item: {},
+      };
+      this.dialog_SelectEmployee = false;
     },
     changePage(id) {
       this.$router.push("/service/" + id);
@@ -139,4 +211,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.buy_btn {
+  margin-left: 5vh;
+  margin-right: 2vh;
+  padding: 1vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  background: #2bd598;
+}
+</style>

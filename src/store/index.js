@@ -17,7 +17,7 @@ export default new Vuex.Store({
     getTotalPrice(state){
       var totalprice = 0
       state.carts.forEach(item => {
-        totalprice += item.price
+        totalprice += item.item.price
       });
       return totalprice
     }

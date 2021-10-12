@@ -71,7 +71,8 @@
                     dark
                     outlined
                     @click="
-                      (dialog_SelectEmployee = true)
+                      dialog_SelectEmployee = true;
+                      select_current.item = v;
                     "
                   >
                     เลือกพนักงาน
@@ -139,8 +140,10 @@
                     :items="employees"
                     label="พนักงาน"
                     item-text="name"
+                    v-model="select_current.employee"
                     dense
                     outlined
+                    return-object
                   ></v-select>
                 </v-col>
               </v-row>
@@ -149,8 +152,12 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-
-            <v-btn color="blue darken-1" text >
+            <v-btn
+              color="blue darken-1"
+              :disabled="!select_current.employee.name"
+              @click="addToCart"
+              text
+            >
               เพิ่มลงตะกร้าสินค้า
             </v-btn>
             <v-btn
@@ -172,6 +179,10 @@ export default {
   data() {
     return {
       employees: [],
+      select_current: {
+        employee: {},
+        item: {},
+      },
       dialog_SelectEmployee: false,
       category_name: "salon",
       category_label: "ซาลอน",
@@ -202,9 +213,10 @@ export default {
           }
         });
     },
-
-    addToCart(v) {
-      this.$store.commit("addItem", v);
+    addToCart() {
+      // console.log(this.select_current);
+      this.$store.commit("addItem", this.select_current);
+      this.dialog_SelectEmployee = false;
     },
   },
   created() {

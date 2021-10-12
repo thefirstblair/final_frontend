@@ -41,13 +41,13 @@
                 <v-row>
                   <v-col cols="10" style="">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.name }}
+                      Coupon name : {{ v.item.name }}
                     </v-row>
                     <v-row style="padding: 3px">
-                      Price : {{ v.price }} บาท
+                      Price : {{ v.item.price }} บาท
                     </v-row>
                     <v-row style="padding: 3px">
-                      Time : {{ v.time }} นาที
+                      Employee : {{ v.employee.name }}
                     </v-row>
                   </v-col>
 
@@ -212,7 +212,7 @@
 </template>
 
 <script>
-import DiscountCoupon from '@/store/DiscountCouponStore';
+// import DiscountCoupon from '@/store/DiscountCouponStore';
 export default {
   data() {
     return {
