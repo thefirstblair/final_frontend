@@ -247,7 +247,8 @@
               </v-card-actions>
 
               <v-row style="margin-top: 15px" class="justify-center">
-                <v-btn color="success" larger style="float: right"
+                <v-btn color="success" larger style="float: right" 
+                @click="goToPayment(), dialog.value = false"
                   >ชำระเงิน</v-btn
                 >
               </v-row>
@@ -467,9 +468,14 @@ export default {
       }
     },
 
-    // cash(){
-    //   if (this.service_lists.length==0){
-    //     Swal.fire("กรุณาเลือกคูปองก่อนชำระเงิน");
+    // goToPayment(){
+    //   if (this.$store.state.carts.length > 0){
+    //     this.$router.push('/payment');
+    //   }
+    //   else{
+    //     Swal.fire({
+    //         title: "กรุณาเลือกคูปองก่อนชำระเงิน",
+    //       });
     //   }
     // }
   },

@@ -22,7 +22,7 @@
           style="margin-top: 1vh"
           class="scroll"
         >
-          <v-card-title> ยอดรวมทั้งหมด {{ cost }} บาท </v-card-title>
+          <v-card-title> ยอดรวมทั้งหมด {{ $store.getters.getTotalPrice }} บาท </v-card-title>
 
           <v-divider></v-divider>
 
@@ -35,13 +35,13 @@
                   margin-top: 10px;
                   margin-bottom: 10px;
                 "
-                v-for="(v, index) in service_lists"
+                v-for="(v, index) in $store.getters.getCarts"
                 :key="index"
               >
                 <v-row>
                   <v-col cols="10" style="">
                     <v-row style="padding: 3px">
-                      Coupon name : {{ v.coupon }}
+                      Coupon name : {{ v.name }}
                     </v-row>
                     <v-row style="padding: 3px">
                       Price : {{ v.price }} บาท
@@ -51,12 +51,12 @@
                     </v-row>
                   </v-col>
 
-                  <v-col cols="2" style="">
+                  <!-- <v-col cols="2" style="">
                     <v-row> </v-row>
                     <v-row style="text-align: right" class="align-right">
                       {{ v.count }} ชิ้น
                     </v-row>
-                  </v-col>
+                  </v-col> -->
                 </v-row>
               </v-col>
             </v-col>
@@ -102,7 +102,7 @@
 
                   <v-row justify="center">
                     <v-btn
-                      
+                      @click="checkCode(code_user)"
                       :disabled="
                         code_user == '' 
                       "
@@ -212,6 +212,7 @@
 </template>
 
 <script>
+import DiscountCoupon from '@/store/DiscountCouponStore';
 export default {
   data() {
     return {
@@ -237,78 +238,85 @@ export default {
         "December",
       ],
       service_lists: [
-        {
-          coupon: "สระไดร์ + ตัดผม",
-          price: 350,
-          time: 45,
-          count: 1,
-        },
+        // {
+        //   coupon: "สระไดร์ + ตัดผม",
+        //   price: 350,
+        //   time: 45,
+        //   count: 1,
+        // },
 
-        {
-          coupon: "ทาสีเล็บมือ + เล็บเท้า",
-          price: 200,
-          time: 20,
-          count: 2,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-        {
-          coupon: "นวดคอ บ่า ไหล่",
-          price: 300,
-          time: 60,
-          count: 4,
-        },
-      ],
-      discount: [
-        {
-          code: "5345436978978",
-          discount_percent: 20,
-          minimum: 1,
-          amount: 1,
-        },
+      //   {
+      //     coupon: "ทาสีเล็บมือ + เล็บเท้า",
+      //     price: 200,
+      //     time: 20,
+      //     count: 2,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      //   {
+      //     coupon: "นวดคอ บ่า ไหล่",
+      //     price: 300,
+      //     time: 60,
+      //     count: 4,
+      //   },
+      // ],
+      // discount: [
+      //   {
+      //     code: "5345436978978",
+      //     discount_percent: 20,
+      //     minimum: 1,
+      //     amount: 1,
+      //   },
 
-        {
-          code: "80872324234",
-          discount_percent: 10,
-          minimum: 2,
-          amount: 3,
-        },
-        {
-          code: "054025343542542",
-          discount_percent: 15,
-          minimum: 1,
-          amount: 4,
-        },
+      //   {
+      //     code: "80872324234",
+      //     discount_percent: 10,
+      //     minimum: 2,
+      //     amount: 3,
+      //   },
+      //   {
+      //     code: "054025343542542",
+      //     discount_percent: 15,
+      //     minimum: 1,
+      //     amount: 4,
+      //   },
       ],
     };
+  },
+  methods:{
+    // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
+    // checkCode(code_user){
+    //   console.log(code_user);
+    //   DiscountCoupon.dispatch('check', code_user);
+    // }
   },
 };
 </script>
