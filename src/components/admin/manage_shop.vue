@@ -70,7 +70,8 @@
               @click="
                 !isInType
                   ? openEditType(item, index)
-                  : openEditService(item, index)
+                  : openEditService(item, index),
+                  (current_service = item.id)
               "
             >
               mdi-pencil
@@ -94,55 +95,62 @@
             <v-container>
               <v-row class="align-center">
                 <v-col>
-                  <img
-                  
-                    v-on:src="editService.service_image_url"
+                  <v-img
+                    :src="editService.service_image_url"
                     style="width: 80%"
                   />
                 </v-col>
                 <v-col>
                   <v-row class="align-center">
                     <v-col cols="12">
-                      <!-- <input type="text" value="หัวข้อของเนื้อหา" /> -->
-                      <h2>{{editService.name}}</h2>
+                      <h1>หัวข้อบริการ</h1>
+                      <br />
+                      <v-text-field
+                        v-if="edit"
+                        type="text"
+                        v-model="editService.name"
+                        value="editService.name"
+                      />
+                      <h2 v-if="!edit">{{ editService.name }}</h2>
+                      <br />
                     </v-col>
+
                     <v-col cols="12">
-                      <!-- <textarea style="width:100%;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus officia cupiditate veritatis voluptas. Adipisci assumenda ullam modi exercitationem enim consequatur dolorem. Quos vitae quisquam doloribus accusamus consequuntur? Esse, voluptas unde.</textarea> -->
-                      <p>
-                        {{editService.description}}
+                      <h1>รายละเอียด</h1>
+                      <v-textarea
+                        auto-grow
+                        v-if="edit"
+                        style="max-height:200px; max-width:600px"
+                        v-model="editService.description"
+                        value="editService.description"
+                      ></v-textarea>
+                      <p v-if="!edit">
+                        {{ editService.description }}
                       </p>
                       <br />
-                      <span style="font-size:1.5vh; text-decoration:underline;"
+                      <span
+                        v-if="!edit"
+                        style="font-size:1.5vh; text-decoration:underline;"
+                        @click="edit = true"
                         >แก้ไขเนื้อหา</span
                       >
-                      <!-- <span style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;">บันทึก</span>
-                      <span style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;">ยกเลิกการแก้ไข</span> -->
+                      <span
+                        v-if="edit"
+                        style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;"
+                        @click="confirmed_editService"
+                        >บันทึก</span
+                      >
+                      <span
+                        v-if="edit"
+                        @click="edit = false"
+                        style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;"
+                        >ยกเลิกการแก้ไข</span
+                      >
                     </v-col>
                   </v-row>
-                  <!-- <v-row>
-                    <v-col>
-                      <img
-                        src="https://i.imgur.com/A4R3m2l.jpeg"
-                        style="width: 100%"
-                      />
-                    </v-col>
-                    <v-col>
-                      <img
-                        src="https://i.imgur.com/A4R3m2l.jpeg"
-                        style="width: 100%"
-                      />
-                    </v-col>
-                    <v-col>
-                      <img
-                        src="https://i.imgur.com/A4R3m2l.jpeg"
-                        style="width: 100%"
-                      />
-                    </v-col>
-                  </v-row> -->
                 </v-col>
               </v-row>
 
-              <!-- จัดการคูปอง เดี้ยวเอาไปใส่ -->
               <v-row>
                 <v-col>
                   <span
@@ -157,20 +165,19 @@
                   </span>
                 </v-col>
               </v-row>
-
               <v-divider />
               <v-row style="margin-top:2vh">
                 <v-col
                   cols="12"
                   style="background: #f1f1f1; margin-bottom: 5px"
-                  v-for="(v, index) in data.services"
+                  v-for="(item, index) in coupons"
                   :key="index"
                 >
                   <v-row class="align-center">
                     <v-col cols="8">
-                      <h2>{{ v.label }}</h2>
-                      <h3>เวลาที่ใช้ {{ v.time }} นาที</h3>
-                      <b>฿ {{ v.price }}</b>
+                      <h2>{{ item.name }}</h2>
+                      <h3>เวลาที่ใช้ {{ item.time }} นาที</h3>
+                      <b>฿ {{ item.price }}</b>
                     </v-col>
                     <v-col>
                       <v-row
@@ -179,11 +186,17 @@
                       >
                         <span
                           style="font-size:1.5vh; text-decoration:underline;"
+                          @click="
+                            dialog_editCoupon = !dialog_editCoupon;
+                            editCoupon = item;
+                            editCoupon.index = index;
+                          "
                           >แก้ไข</span
                         >
                         <v-spacer></v-spacer>
                         <span
                           style="font-size:1.5vh; text-decoration:underline;"
+                          @click="removeCoupon(item.id, index)"
                           >ลบ</span
                         >
                       </v-row>
@@ -196,52 +209,141 @@
         </v-card>
       </v-dialog>
 
-      <!-- Add Coupon / Fix Coupon -->
+      <!-- Add Coupon-->
       <v-row justify="center">
         <v-dialog v-model="dialog_addCoupon" max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Add Coupon
-            </v-btn>
-          </template>
+          <v-form
+            ref="AddCoupon"
+            @submit.prevent="confirmed_addCoupon"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">เพิ่มคูปอง</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="addCoupon.name"
+                        value="addCoupon.name"
+                        label="ชื่อคูปอง"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="addCoupon.price"
+                        type="number"
+                        value="addCoupon.price"
+                        label="ราคา"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="addCoupon.time"
+                        type="number"
+                        value="addCoupon.time"
+                        label="เวลาที่ใช้ (หน่วยเป็นนาที)"
+                        required
+                        >นาที</v-text-field
+                      >
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog_addCoupon = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  type="submit"
+                  :disabled="
+                    addCoupon.name == '' ||
+                      addCoupon.time == '' ||
+                      addCoupon.price == ''
+                  "
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-form>
+        </v-dialog>
+      </v-row>
+
+      <!-- Edit Coupon -->
+      <v-row justify="center">
+        <v-dialog v-model="dialog_editCoupon" max-width="600px">
           <v-card>
-            <v-card-title>
-              <span class="text-h5">เพิ่มคูปอง</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="ชื่อคูปอง" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="ราคา"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="เวลาที่ใช้ (หน่วยเป็นนาที)"
-                      >นาที</v-text-field
-                    >
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_addCoupon = false"
-              >
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_addCoupon = false"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
+            <v-form
+              ref="editCoupon"
+              @submit.prevent="confirmed_editCoupon"
+              v-model="valid"
+              lazy-validation
+            >
+              <v-card-title>
+                <span class="text-h5">แก้ไขคูปอง</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        label="ชื่อคูปอง"
+                        required
+                        v-model="editCoupon.name"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editCoupon.price"
+                        label="ราคา"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editCoupon.time"
+                        label="เวลาที่ใช้ (หน่วยเป็นนาที)"
+                        >นาที</v-text-field
+                      >
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog_editCoupon = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  type="submit"
+                  :disabled="
+                    editCoupon.name == '' ||
+                      editCoupon.price == 0 ||
+                      editCoupon.time == 0
+                  "
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-row>
@@ -431,7 +533,11 @@ export default {
       dialog_addType: false,
       dialog_addService: false,
       dialog_editType: false,
+      dialog_editCoupon: false,
       current_type: 0,
+      current_service: 0,
+
+      edit: false,
 
       isInType: false,
       search: "",
@@ -452,6 +558,7 @@ export default {
         image: [],
         services: [],
       },
+
       // Type
       editType: { name: "", type_image_url: "" },
       addType: {
@@ -460,8 +567,8 @@ export default {
         service_count: 0,
         coupon_count: 0,
       },
-      // Service
 
+      // Service
       addService: {
         name: "",
         description: "",
@@ -469,14 +576,32 @@ export default {
         coupon_count: 0,
       },
 
-      editService: { name: "", description: "", service_image_url: "" },
+      editService: {},
+
+      // Coupon
+      addCoupon: {
+        name: "",
+        price: 0,
+        time: 0,
+      },
+      editCoupon: { name: "", price: 0, time: 0 },
+      coupons: [],
       items: [],
     };
   },
   methods: {
-    openEditService(item, index) {
+    openEditService(item) {
       this.dialog_editService = true;
-      console.log(item, index);
+      this.editService = item;
+      this.$http
+        .get("http://127.0.0.1:8000/api/service/" + item.id)
+        .then((response) => {
+          if (response.status == 200) {
+            this.coupons = response.data.coupons;
+          } else {
+            console.log(response.error);
+          }
+        });
     },
 
     // Type
@@ -567,6 +692,99 @@ export default {
           }
         });
     },
+
+    confirmed_editService() {
+      this.edit = false;
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .put(
+          "http://127.0.0.1:8000/api/service/" + this.editService.id,
+          this.editService,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("แก้ไขเรียบร้อย", "", "success");
+            this.service[this.editService.index] = this.Service;
+          } else {
+            Swal.fire("ไม่สามารถแก้ไขได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+    // Coupon
+    confirmed_addCoupon() {
+      const token = AuthUser.getters.user.api_token;
+      this.addCoupon.service_id = this.current_service;
+      this.addCoupon.type_id = this.current_type;
+      this.addCoupon.price = Number(this.addCoupon.price);
+      this.addCoupon.time = Number(this.addCoupon.time);
+      
+      this.$http
+        .post("http://127.0.0.1:8000/api/coupon/", this.addCoupon, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            this.dialog_addCoupon = false;
+            Swal.fire("เพิ่มเรียบร้อย", "", "success");
+            this.coupons.push(response.data);
+            this.addCoupon = {
+              name: "",
+              price: 0,
+              time: 0,
+            };
+          } else {
+            Swal.fire("ไม่สามารถเพิ่มได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+    confirmed_editCoupon() {
+      const token = AuthUser.getters.user.api_token;
+      this.editCoupon.price = Number(this.editCoupon.price);
+      this.editCoupon.time = Number(this.editCoupon.time);
+      this.$http
+        .put(
+          "http://127.0.0.1:8000/api/coupon/" + this.editCoupon.id,
+          this.editCoupon,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("แก้ไขเรียบร้อย", "", "success");
+            this.coupons[this.editCoupon.index] = this.editCoupon;
+            this.dialog_editCoupon = false;
+          } else {
+            Swal.fire("ไม่สามารถแก้ไขได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+    removeCoupon(id, index) {
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .delete("http://127.0.0.1:8000/api/coupon/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("ลบคูปองนี้เรียบร้อย", "", "success");
+            this.coupons.splice(index, 1);
+          } else {
+            Swal.fire("ไม่สามารถลบคูปองได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+
+    // etc ..
     selectType(id) {
       this.items = [];
       this.isInType = true;
