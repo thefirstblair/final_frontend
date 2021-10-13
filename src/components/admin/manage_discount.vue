@@ -106,7 +106,8 @@
               small
               @click="
                 dialog_editDiscount = !dialog_editDiscount;
-                editDiscount = item;
+                editDiscount.id = item.id;
+                editDiscount.quantity = item.quantity;
                 editDiscount.index = index;
               "
             >
@@ -137,6 +138,7 @@
                 <v-col cols=3>
                 <v-text-field 
                   v-model="editDiscount.quantity"
+                  type="number"
                   label="Amount"
                   :rules="[rules.number]"
                   ></v-text-field>
@@ -182,7 +184,6 @@ export default {
         { text: "Amount", value: "quantity" },
         { text: "Action", value: "actions" },
       ],
-      user: [],
       items:[],
       addDiscount: {
         specific_code: "",
@@ -190,8 +191,10 @@ export default {
         minimum_cost: 0,
         quantity: 0,
       },
-      editDiscount: {quantity: 0},
-      show1: false,
+      editDiscount: {
+        quantity: 0
+      },
+
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => (v && v.length >= 8) || "Min 8 characters",
@@ -221,7 +224,7 @@ export default {
         if (response.data && response.data.status != "error") {
           this.dialog_addDiscount = false;
           Swal.fire("เพิ่มคูปองส่วนลดเรียบร้อย", "", "success");
-          this.items.push(this.addDiscount);
+          this.items.push(response.data);
           this.addDiscount = {
             specific_code : "",
             discount_percent : "",
@@ -252,8 +255,8 @@ export default {
       .then((response) => {
         if (response.data && response.data.status != "error") {
           Swal.fire("แก้ไขคูปองส่วนลดเรียบร้อย", "", "success");
-          this.items[this.editDiscount.index] = this.editDiscount;
-          // console.log(this.editDiscount.quantity)
+          this.items.splice(this.editDiscount.index, 1, response.data)
+            this.dialog_editDiscount = false;
         } 
         else {
           Swal.fire("ไม่สามารถแก้ไขคูปองส่วนลดได้", "", "error");
@@ -294,6 +297,7 @@ export default {
       }).then((response) => {
         if (response.status == 200) {
           this.items = response.data;
+          console.log(this.items);
           // console.log(this.items);
         } else {
           console.log(response.error);
