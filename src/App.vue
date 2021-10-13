@@ -4,7 +4,7 @@
       <!-- Task Bar -->
       <v-app-bar app color="#41ad69" dark height="70px">
         <div class="d-flex align-center">
-          <h3>GoWasabi!</h3>
+          <h3><a href="/" style="color:white">GoWasabi!</a></h3>
         </div>
 
         <v-spacer></v-spacer>

@@ -68,9 +68,6 @@
             </v-card-text>
 
             <v-card-actions>
-              <!-- <v-btn color="#41ad69" text @click="addToCart(v)">
-                Add to cart
-              </v-btn> -->
 
               <v-row justify="center">
                 <v-btn

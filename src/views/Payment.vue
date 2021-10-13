@@ -22,7 +22,9 @@
           style="margin-top: 1vh"
           class="scroll"
         >
-          <v-card-title> ยอดรวมทั้งหมด {{ $store.getters.getTotalPrice }} บาท </v-card-title>
+          <v-card-title>
+            ยอดรวมทั้งหมด {{ $store.getters.getTotalPrice }} บาท
+          </v-card-title>
 
           <v-divider></v-divider>
 
@@ -103,9 +105,7 @@
                   <v-row justify="center">
                     <v-btn
                       @click="checkCode(code_user)"
-                      :disabled="
-                        code_user == '' 
-                      "
+                      :disabled="code_user == ''"
                     >
                       ใช้โค้ด
                     </v-btn>
@@ -130,79 +130,141 @@
         </v-col>
 
         <v-col cols="12" v-if="selected === 'Credit Card'">
-          <v-card max-width="800" max-height="350">
-            <v-card-title
-              class="green darken-1 white--text font-weight-black title"
+          <v-form
+            ref="creditCard"
+            @submit.prevent="confirmTest"
+            v-model="isFormValid"
+            lazy-validation
+          >
+            <v-card max-width="800" max-height="350">
+              <v-card-title
+                class="green darken-1 white--text font-weight-black title"
+              >
+                PAYMENT DETAILS<v-spacer></v-spacer>
+              </v-card-title>
+
+              <v-card-text class="pb-10">
+                <v-row>
+                  <v-col cols="6">
+                    <v-subheader
+                      class="grey--text text--lighten-1 pl-0 subheader"
+                      >CARDHOLDER’S NAME</v-subheader
+                    >
+                    <v-text-field
+                      v-model="credit.cardHolderName"
+                      :rules="[rules.required]"
+                      hint="At least 8 characters"
+                      required
+                      single-line
+                      outlined
+                      label="Johny Relative"
+                      hide-details
+                    />
+                  </v-col>
+
+                  <v-col cols="6">
+                    <v-subheader
+                      class="grey--text text--lighten-1 pl-0 subheader"
+                      >CARD NUMBER</v-subheader
+                    >
+                    <v-text-field
+                      v-model="credit.cardNumber"
+                      :rules="[rules.required, rules.minNumber]"
+                      hint="At least 8 characters"
+                      required
+                      single-line
+                      outlined
+                      mask="credit-card"
+                      label="**** **** **** ****"
+                      hide-details
+                    />
+                  </v-col>
+
+                  <v-col col="4">
+                    <v-subheader
+                      class="grey--text text--lighten-1 pl-0 subheader"
+                      >EXPIRE DATE</v-subheader
+                    >
+                    <v-select
+                      required
+                      :rules="[rules.required]"
+                      v-model="credit.expireMonth"
+                      :items="monthList"
+                      label="Month"
+                      outlined
+                      hide-details
+                    />
+                  </v-col>
+
+                  <v-col col="4">
+                    <v-subheader
+                      class="grey--text text--lighten-1 pl-0 subheader"
+                    ></v-subheader>
+                    <v-select
+                      required
+                      :rules="[rules.required]"
+                      hint="At least 8 characters"
+                      v-model="credit.expireYear"
+                      :items="yearlist"
+                      label="Year"
+                      outlined
+                      hide-details
+                    />
+                  </v-col>
+
+                  <v-col col="4">
+                    <v-subheader
+                      required
+                      class="grey--text text--lighten-1 pl-0 subheader"
+                      >CVV</v-subheader
+                    >
+                    <v-text-field
+                      v-model="credit.cvv"
+                      :rules="[rules.required, rules.minCVV]"
+                      hint="At least 8 characters"
+                      single-line
+                      outlined
+                      hide-details
+                    />
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+
+            <v-row
+              align="center"
+              justify="space-around"
+              style="margin-top: 5px"
             >
-              PAYMENT DETAILS<v-spacer></v-spacer>
-            </v-card-title>
-
-            <v-card-text class="pb-10">
-              <v-row>
-                <v-col cols="6">
-                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                    >CARDHOLDER’S NAME</v-subheader
-                  >
-                  <v-text-field
-                    single-line
-                    outlined
-                    label="Johny Relative"
-                    hide-details
-                  />
-                </v-col>
-
-                <v-col cols="6">
-                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                    >CARD NUMBER</v-subheader
-                  >
-                  <v-text-field
-                    single-line
-                    outlined
-                    mask="credit-card"
-                    label="**** **** ****"
-                    v-model="valueOfCardNumber"
-                    hide-details
-                  />
-                </v-col>
-
-                <v-col col="4">
-                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                    >EXPIRE DATE</v-subheader
-                  >
-                  <v-select
-                    :items="monthList"
-                    label="Month"
-                    outlined
-                    hide-details
-                  />
-                </v-col>
-
-                <v-col col="4">
-                  <v-subheader
-                    class="grey--text text--lighten-1 pl-0 subheader"
-                  ></v-subheader>
-                  <v-select
-                    :items="yearlist"
-                    label="Year"
-                    outlined
-                    hide-details
-                  />
-                </v-col>
-
-                <v-col col="4">
-                  <v-subheader class="grey--text text--lighten-1 pl-0 subheader"
-                    >CVV</v-subheader
-                  >
-                  <v-text-field single-line outlined hide-details />
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-
-          <v-divider></v-divider>
+              <v-btn
+                :disabled="
+                  !isFormValid ||
+                    this.credit.cardHolderName == '' ||
+                    this.credit.cardNumber == '' ||
+                    this.credit.expireMonth == '' ||
+                    this.credit.expireYear == '' ||
+                    this.credit.cvv == ''
+                "
+                type="submit"
+                x-large
+                color="success"
+                style="margin-top: 10px"
+                >ยืนยันการสั่งซื้อ
+              </v-btn>
+            </v-row>
+          </v-form>
         </v-col>
-        <v-row align="center" justify="space-around" style="margin-top: 5px">
-          <v-btn x-large color="success" style="margin-top: 10px" @click="confirm()"
+        <v-row
+          v-if="selected == 'Cash'"
+          align="center"
+          justify="space-around"
+          style="margin-top: 5px"
+        >
+          <v-btn
+            @click="confirmTest"
+            x-large
+            color="success"
+            style="margin-top: 10px"
             >ยืนยันการสั่งซื้อ</v-btn
           >
         </v-row>
@@ -212,16 +274,30 @@
 </template>
 
 <script>
-import DiscountCoupon from '@/store/DiscountCouponStore';
+import DiscountCoupon from "@/store/DiscountCouponStore";
 import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
+      isFormValid: false,
+      valid: true,
       code_user: "",
       dialog: false,
       search: "",
+      credit: {
+        cardHolderName: "",
+        cardNumber: "",
+        expireMonth: "",
+        expireYear: "",
+        cvv: "",
+      },
       cost: 0.0,
+      rules: {
+        required: (value) => !!value || "Required.",
+        minNumber: (v) => (v && v.length == 16) || "16 digits",
+        minCVV: (v) => (v && v.length == 3) || "3 digits",
+      },
       selected: "Cash",
       payments: ["Cash", "Credit Card"],
       yearlist: ["2030", "2029", "2028", "2027"],
@@ -246,148 +322,146 @@ export default {
         //   time: 45,
         //   count: 1,
         // },
-
-      //   {
-      //     coupon: "ทาสีเล็บมือ + เล็บเท้า",
-      //     price: 200,
-      //     time: 20,
-      //     count: 2,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      //   {
-      //     coupon: "นวดคอ บ่า ไหล่",
-      //     price: 300,
-      //     time: 60,
-      //     count: 4,
-      //   },
-      // ],
-      // discount: [
-      //   {
-      //     code: "5345436978978",
-      //     discount_percent: 20,
-      //     minimum: 1,
-      //     amount: 1,
-      //   },
-
-      //   {
-      //     code: "80872324234",
-      //     discount_percent: 10,
-      //     minimum: 2,
-      //     amount: 3,
-      //   },
-      //   {
-      //     code: "054025343542542",
-      //     discount_percent: 15,
-      //     minimum: 1,
-      //     amount: 4,
-      //   },
+        //   {
+        //     coupon: "ทาสีเล็บมือ + เล็บเท้า",
+        //     price: 200,
+        //     time: 20,
+        //     count: 2,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        //   {
+        //     coupon: "นวดคอ บ่า ไหล่",
+        //     price: 300,
+        //     time: 60,
+        //     count: 4,
+        //   },
+        // ],
+        // discount: [
+        //   {
+        //     code: "5345436978978",
+        //     discount_percent: 20,
+        //     minimum: 1,
+        //     amount: 1,
+        //   },
+        //   {
+        //     code: "80872324234",
+        //     discount_percent: 10,
+        //     minimum: 2,
+        //     amount: 3,
+        //   },
+        //   {
+        //     code: "054025343542542",
+        //     discount_percent: 15,
+        //     minimum: 1,
+        //     amount: 4,
+        //   },
       ],
     };
   },
-  created(){
-    this.fetchDiscount()
+
+  created() {
+    this.fetchDiscount();
   },
-  methods:{
-    fetchDiscount(){
-      DiscountCoupon.dispatch('fetchCoupon')
-    },
-    // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
-    checkCode(){
-
-      console.log(this.code_user);
-      this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
-      console.log(this.cost)
-      DiscountCoupon.dispatch('checkCoupon', this.code_user);
-      if(DiscountCoupon.getters.success==true){
-        // DiscountCoupon.getters.thisCoupon
-        if(DiscountCoupon.getters.thisCoupon.quantity>0){
-          if(this.cost>=DiscountCoupon.getters.thisCoupon.minimum_cost){
-            
-            let percent=(this.cost*DiscountCoupon.getters.thisCoupon.discount_percent)/100
-            this.cost=this.cost-percent
-            console.log(this.cost)
-            // console.log(this.cost)
-            Swal.fire({
-              icon: "success",
-              title: "สามารถใช้โค้ดส่วนลดได้",
-              showConfirmButton: false,
-               timer: 1500,
-             });
-             this.code_user=""
-
-          }
-          else{
-          Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-            text: "เนื่องจากยอดชำระไม่ถึง "+DiscountCoupon.getters.thisCoupon.minimum_cost + " บาท",
-          });
-          }
-        }
-        else{
-          Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-            text: "เนื่องจากโค้ดส่วนลดหมด",
-          });
-
-        }
-        // console.log(DiscountCoupon.getters.thisCoupon)
-      }
-      else{
-          Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-            text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
-          });
-
-      }
-      
-      // console.log(discount)
-      
-      // DiscountCoupon.dispatch('deleteCoupon',1);
-    },
-    // ใส่ตรงชำระเงินเสร็จแล้ว => DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
-    confirm(){
-      console.log(DiscountCoupon.getters.thisCoupon.id);
-      DiscountCoupon.dispatch('useDiscountCoupon', DiscountCoupon.getters.thisCoupon.id);
-      // this.$router.push('/customer')  // ชำระเงินเสร็จให้ไปหน้าประวัติการจองหรือประวัติการชำระเงิน
+  methods: {
+    confirmTest() {
+      console.log(
+        this.credit.cardHolderName,
+        this.credit.cardNumber,
+        this.credit.expireMonth,
+        this.credit.expireYear,
+        this.credit.cvv
+      );
       Swal.fire({
         icon: "success",
         title: "ชำระเงินสำเร็จ",
         showConfirmButton: false,
       });
+    },
+    fetchDiscount() {
+      DiscountCoupon.dispatch("fetchCoupon");
+    },
+    // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
+    checkCode() {
+      console.log(this.code_user);
+      this.cost = 250;
+      DiscountCoupon.dispatch("checkCoupon", this.code_user);
+      if (DiscountCoupon.getters.success == true) {
+        // DiscountCoupon.getters.thisCoupon
+        if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
+          if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
+            let percent =
+              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
+              100;
+            this.cost = this.cost - percent;
 
-    }
+            // console.log(this.cost)
+            Swal.fire({
+              icon: "success",
+              title: "สามารถใช้โค้ดส่วนลดได้",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.code_user = "";
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+              text:
+                "เนื่องจากยอดชำระไม่ถึง " +
+                DiscountCoupon.getters.thisCoupon.minimum_cost +
+                " บาท",
+            });
+          }
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+            text: "เนื่องจากโค้ดส่วนลดหมด",
+          });
+        }
+        // console.log(DiscountCoupon.getters.thisCoupon)
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+          text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
+        });
+      }
+
+      // console.log(discount)
+
+      // DiscountCoupon.dispatch('deleteCoupon',1);
+    },
+    // ใส่ตรงชำระเงินเสร็จแล้ว => DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
   },
 };
 </script>
