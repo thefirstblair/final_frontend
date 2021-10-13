@@ -26,22 +26,22 @@
             <img :src="data.service_image_url" style="width: 100%" />
           </v-col>
           <v-col>
-            <v-row>
-              <h2>{{ data.name }}</h2>
+            <v-row justify="left" style="margin-top:10px">
+              <h1>ชื่อบริการ : {{ data.name }}</h1>
             </v-row>
             <v-row>
-              <p>
-                {{ data.description }}
-              </p>
+              <h3>
+               รายละเอียด : {{ data.description }}
+              </h3>
             </v-row>
-            <!-- <v-row>
-              <v-col
+            <v-row>
+              <!-- <v-col
                 v-for="(v, index) in data.image.slice(1, data.image.length)"
                 :key="index"
               >
                 <img :src="v" style="width: 100%" />
-              </v-col>
-            </v-row> -->
+              </v-col> -->
+            </v-row>
           </v-col>
         </v-row>
         <v-row>
@@ -50,7 +50,21 @@
             <v-divider></v-divider>
           </v-col>
         </v-row>
-        <v-row style="overflow-y: auto; max-height: 600px">
+
+
+        <v-row
+          style="overflow-y: auto; max-height: 600px"
+          v-if="data.coupons == 0"
+        >
+          <v-col cols="12" style="background: #f1f1f1; margin-top: 10px">
+            <h2 style="text-align: center">ไม่มีคูปองให้แสดง</h2>
+          </v-col>
+        </v-row>
+
+        <v-row
+          style="overflow-y: auto; max-height: 600px"
+          v-else-if="data.coupons != []"
+        >
           <v-col
             cols="12"
             style="background: #f1f1f1; margin-top: 10px"
@@ -83,12 +97,17 @@
           </v-col>
         </v-row>
 
+
         <v-row>
           <p style="margin-top: 10px">รีวิวจากผู้ใช้บริการล่าสุด 3 ท่าน</p>
         </v-row>
 
         <v-row>
-          <v-row>
+        <v-row v-if="data.reviews == 0">
+          <v-col cols="12">
+            <h2 style="text-align: center;  background: #f1f1f1; height:50px;" >บริการนี้ยังไม่มีรีวิว</h2>
+            </v-col> </v-row>
+          <v-row v-else-if="data.reviews != []">
             <v-col
               cols="3.5"
               style="

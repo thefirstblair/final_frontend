@@ -94,12 +94,19 @@
           <v-card-text>
             <v-container>
               <v-row class="align-center">
-                <v-col>
+                <v-col v-if="!edit">
                   <v-img
                     :src="editService.service_image_url"
                     style="width: 80%"
                   />
                 </v-col>
+
+                <v-col v-if="edit">
+                  <h4>แก้ไขรูปภาพ</h4>
+                  <v-text-field v-model="editService.service_image_url"
+                  />
+                </v-col>
+
                 <v-col>
                   <v-row class="align-center">
                     <v-col cols="12">
@@ -128,6 +135,11 @@
                         {{ editService.description }}
                       </p>
                       <br />
+
+
+
+
+
                       <span
                         v-if="!edit"
                         style="font-size:1.5vh; text-decoration:underline;"

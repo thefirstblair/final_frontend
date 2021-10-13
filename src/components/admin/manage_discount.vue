@@ -122,7 +122,9 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field label="Amount"></v-text-field>
+              <v-col cols=3>
+              <v-text-field v-model="user.amount" label="Amount"></v-text-field>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
