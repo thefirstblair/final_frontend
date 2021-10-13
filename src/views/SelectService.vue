@@ -235,6 +235,10 @@ export default {
     addToCart() {
       // console.log(this.select_current);
       this.$store.commit("addItem", this.select_current);
+      this.select_current = {
+        employee: {},
+        item: {},
+      };
       this.dialog_SelectEmployee = false;
     },
   },
