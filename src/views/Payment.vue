@@ -202,7 +202,7 @@
           <v-divider></v-divider>
         </v-col>
         <v-row align="center" justify="space-around" style="margin-top: 5px">
-          <v-btn x-large color="success" style="margin-top: 10px"
+          <v-btn x-large color="success" style="margin-top: 10px" @click="confirm()"
             >ยืนยันการสั่งซื้อ</v-btn
           >
         </v-row>
@@ -324,7 +324,8 @@ export default {
     checkCode(){
 
       console.log(this.code_user);
-      this.cost=250;
+      this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
+      console.log(this.cost)
       DiscountCoupon.dispatch('checkCoupon', this.code_user);
       if(DiscountCoupon.getters.success==true){
         // DiscountCoupon.getters.thisCoupon
@@ -333,7 +334,7 @@ export default {
             
             let percent=(this.cost*DiscountCoupon.getters.thisCoupon.discount_percent)/100
             this.cost=this.cost-percent
-            
+            console.log(this.cost)
             // console.log(this.cost)
             Swal.fire({
               icon: "success",
@@ -374,8 +375,19 @@ export default {
       // console.log(discount)
       
       // DiscountCoupon.dispatch('deleteCoupon',1);
-    }
+    },
     // ใส่ตรงชำระเงินเสร็จแล้ว => DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
+    confirm(){
+      console.log(DiscountCoupon.getters.thisCoupon.id);
+      DiscountCoupon.dispatch('useDiscountCoupon', DiscountCoupon.getters.thisCoupon.id);
+      // this.$router.push('/customer')  // ชำระเงินเสร็จให้ไปหน้าประวัติการจองหรือประวัติการชำระเงิน
+      Swal.fire({
+        icon: "success",
+        title: "ชำระเงินสำเร็จ",
+        showConfirmButton: false,
+      });
+
+    }
   },
 };
 </script>
