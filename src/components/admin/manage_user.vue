@@ -117,6 +117,11 @@
                 dialog_editUser = !dialog_editUser;
                 editUser = item;
                 editUser.index = index;
+                defaultItem.name = editUser.name;
+             
+                defaultItem.username = editUser.username;
+                defaultItem.role = editUser.role;
+                
               "
             >
               mdi-pencil
@@ -160,6 +165,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+
+          <v-btn color="blue darken-1" text @click="close">
+            Close
+          </v-btn>
           <v-btn
             color="blue darken-1"
             text
@@ -184,6 +193,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      defaultItem: { name: "", username: "",  role: "" },
       dialog_AddUser: false,
       dialog_editUser: false,
       dialogDelete: false,
@@ -215,10 +225,17 @@ export default {
     };
   },
   methods: {
+    close() {
+      this.dialog_editUser = false;
+      this.$nextTick(() => {
+        this.editUser.name = this.defaultItem.name
+        this.editUser.username = this.defaultItem.username
+        this.editUser.role = this.defaultItem.role
+        this.editUser.index = -1;
+      })
+    },
     confirmed_addUser() {
       const token = AuthUser.getters.user.api_token;
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
-
       this.$http
         .post("http://127.0.0.1:8000/api/user/", this.addUser, {
           headers: { Authorization: `${token}` },
@@ -242,7 +259,6 @@ export default {
     },
     updateUser() {
       const token = AuthUser.getters.user.api_token;
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user/" + this.editUser.id,
@@ -263,8 +279,6 @@ export default {
     },
     deleteUser(id, index) {
       const token = AuthUser.getters.user.api_token;
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
-
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
           headers: { Authorization: `${token}` },
@@ -281,10 +295,7 @@ export default {
     },
   },
   created() {
-    // รับ token admin ใหม่ทุกรอบ
     const token = AuthUser.getters.user.api_token;
-    // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
-    // get all user
     this.$http
       .get("http://127.0.0.1:8000/api/user", {
         headers: { Authorization: `${token}` },
