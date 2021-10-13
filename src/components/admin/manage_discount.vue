@@ -86,9 +86,9 @@
               text
               :disabled="
                 addDiscount.specific_code == '' ||
-                addDiscount.discount_percent == '' ||
-                addDiscount.minimum_cost == '' ||
-                addDiscount.quantity == ''
+                addDiscount.discount_percent == '' || addDiscount.discount_percent > 100 || addDiscount.discount_percent <= 0 ||
+                addDiscount.minimum_cost == '' || addDiscount.minimum_cost > 999 || addDiscount.minimum_cost <=0 ||
+                addDiscount.quantity == '' || addDiscount.quantity > 999 || addDiscount.quantity <= 0
               "
             >
               Save
@@ -101,17 +101,24 @@
     <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="items" :search="search">
-          <template v-slot:[`item.actions`]="{ }">
+          <template v-slot:[`item.actions`]="{ item, index }">
             <v-icon
               small
               @click="
                 dialog_editDiscount = !dialog_editDiscount;
+                editDiscount = item;
+                editDiscount.index = index;
               "
             >
               mdi-pencil
             </v-icon>
 
-            <v-icon small> mdi-delete </v-icon>
+            <v-icon 
+                small
+                @click="deleteDiscount(item.id, index)"
+            > 
+              mdi-delete 
+            </v-icon>
           </template>
         </v-data-table>
       </v-col>
@@ -121,11 +128,6 @@
 
     <v-dialog persistent v-model="dialog_editDiscount" max-width="600px">
       <v-card>
-        <v-form
-          ref="editDiscount"
-          @submit.prevent="confirmed_editDiscount"
-          lazy-validation
-        >
           <v-card-title>
             <span class="text-h5">แก้ไข</span>
           </v-card-title>
@@ -134,8 +136,9 @@
               <v-row>
                 <v-col cols=3>
                 <v-text-field 
-                  v-model="user.amount" 
+                  v-model="editDiscount.quantity"
                   label="Amount"
+                  :rules="[rules.number]"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -143,12 +146,15 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text> Save </v-btn>
+            <v-btn color="blue darken-1" text
+              type="submit"
+              @click="confirmed_editDiscount"
+              :disabled="editDiscount.quantity == 0"
+            > Save </v-btn>
             <v-btn color="blue darken-1" text @click="dialog_editDiscount = false">
               Close
             </v-btn>
           </v-card-actions>
-        </v-form>
       </v-card>
     </v-dialog>
 
@@ -179,22 +185,23 @@ export default {
       user: [],
       items:[],
       addDiscount: {
-        code: "",
-        discount: 0,
-        minimum: 0,
-        amount: 0,
+        specific_code: "",
+        discount_percent: 0,
+        minimum_cost: 0,
+        quantity: 0,
       },
+      editDiscount: {quantity: 0},
       show1: false,
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => (v && v.length >= 8) || "Min 8 characters",
         numberDiscount: (v) => {
-          if (!v.trim()) return true;
+          if (!v.trim) return true;
           if (!isNaN(parseFloat(v)) && v >= 0 && v <= 100) return true;
           return "Number has to be between 0 and 100";
         },
         number: (v) => {
-          if (!v.trim()) return true;
+          if (!v.trim) return true;
           if (!isNaN(parseFloat(v)) && v >= 0 && v <= 999) return true;
           return "Only numeric and not too much";
         },
@@ -207,7 +214,7 @@ export default {
     const token = AuthUser.getters.user.api_token;
 
     this.$http
-      .post("http://127.0.0.1:8000/api/discount_coupon", this.addDiscount, {
+      .post("http://127.0.0.1:8000/api/discount_coupon/", this.addDiscount, {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {
@@ -221,13 +228,59 @@ export default {
             minimun_cost : "",
             quantity : "",
           };
-          console.log(this.addDiscount)
+          // console.log(this.addDiscount)
         } 
         else {
           Swal.fire("ไม่สามารถเพิ่มคูปองส่วนลดได้", "", "error");
           console.log(response.data.error);
         }
       });
+  },
+  // แก้ไขจำนวนคูปองส่วนลด
+  confirmed_editDiscount(){
+    // console.log(this.editDiscount.quantity)
+    // console.log(this.editDiscount)
+    // console.log(this.editDiscount.index)
+    const token = AuthUser.getters.user.api_token;
+      
+    this.$http
+      .put("http://127.0.0.1:8000/api/discount_coupon/" + this.editDiscount.id, this.editDiscount,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      )
+      .then((response) => {
+        if (response.data && response.data.status != "error") {
+          Swal.fire("แก้ไขคูปองส่วนลดเรียบร้อย", "", "success");
+          this.items[this.editDiscount.index] = this.editDiscount;
+          // console.log(this.editDiscount.quantity)
+        } 
+        else {
+          Swal.fire("ไม่สามารถแก้ไขคูปองส่วนลดได้", "", "error");
+          console.log(response.data.error);
+        }
+      });
+  },
+  // ลบคูปองส่วนลด
+  deleteDiscount(id, index){
+    // console.log(id)
+    // console.log(index)
+
+    const token = AuthUser.getters.user.api_token;
+
+      this.$http
+        .delete("http://127.0.0.1:8000/api/discount_coupon/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("ลบคูปองส่วนลดเรียบร้อย", "", "success");
+            this.items.splice(index, 1);
+          } else {
+            Swal.fire("ไม่สามารถลบคูปองส่วนลดได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
   }
 },
   // ดึงข้อมูลจาก discount coupon
