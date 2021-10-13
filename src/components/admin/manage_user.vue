@@ -109,19 +109,17 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :headers="headers" :items="user" :search="search">
+        <v-data-table :headers="headers" :items="getUser" :search="search">
           <template v-slot:[`item.actions`]="{ item, index }">
             <v-icon
               small
               @click="
                 dialog_editUser = !dialog_editUser;
-                editUser = item;
+                editUser.id = item.id;
+                editUser.name = item.name;
+                editUser.username = item.username;
+                editUser.role = item.role;
                 editUser.index = index;
-                defaultItem.name = editUser.name;
-             
-                defaultItem.username = editUser.username;
-                defaultItem.role = editUser.role;
-                
               "
             >
               mdi-pencil
@@ -166,7 +164,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="close">
+          <v-btn color="blue darken-1" text @click="dialog_editUser = false">
             Close
           </v-btn>
           <v-btn
@@ -182,8 +180,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Add User for Admin -->
   </v-container>
 </template>
 
@@ -193,7 +189,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      defaultItem: { name: "", username: "",  role: "" },
+      defaultItem: { name: "", username: "", role: "" },
       dialog_AddUser: false,
       dialog_editUser: false,
       dialogDelete: false,
@@ -224,16 +220,12 @@ export default {
       },
     };
   },
-  methods: {
-    close() {
-      this.dialog_editUser = false;
-      this.$nextTick(() => {
-        this.editUser.name = this.defaultItem.name
-        this.editUser.username = this.defaultItem.username
-        this.editUser.role = this.defaultItem.role
-        this.editUser.index = -1;
-      })
+  computed: {
+    getUser() {
+      return this.user;
     },
+  },
+  methods: {
     confirmed_addUser() {
       const token = AuthUser.getters.user.api_token;
       this.$http
@@ -269,8 +261,9 @@ export default {
         )
         .then((response) => {
           if (response.data && response.data.status != "error") {
+            this.user.splice(this.editUser.index, 1, response.data);
+
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
-            this.user[this.editUser.index] = this.editUser;
           } else {
             Swal.fire("ไม่สามารถแก้ไขผู้ใช่งานได้", "", "error");
             console.log(response.data.error);

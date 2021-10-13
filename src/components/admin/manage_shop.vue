@@ -65,13 +65,13 @@
             >
               mdi-magnify-plus
             </v-icon>
+
             <v-icon
               small
               @click="
                 !isInType
                   ? openEditType(item, index)
-                  : openEditService(item, index),
-                  (current_service = item.id)
+                  : openEditService(item, index)
               "
             >
               mdi-pencil
@@ -103,8 +103,7 @@
 
                 <v-col v-if="edit">
                   <h4>แก้ไขรูปภาพ</h4>
-                  <v-text-field v-model="editService.service_image_url"
-                  />
+                  <v-text-field v-model="editService_edit.service_image_url" />
                 </v-col>
 
                 <v-col>
@@ -115,10 +114,9 @@
                       <v-text-field
                         v-if="edit"
                         type="text"
-                        v-model="editService.name"
-                        value="editService.name"
+                        v-model="editService_edit.name"
                       />
-                      <h2 v-if="!edit">{{ editService.name }}</h2>
+                      <h2 v-else>{{ editService.name }}</h2>
                       <br />
                     </v-col>
 
@@ -128,22 +126,24 @@
                         auto-grow
                         v-if="edit"
                         style="max-height:200px; max-width:600px"
-                        v-model="editService.description"
-                        value="editService.description"
+                        v-model="editService_edit.description"
                       ></v-textarea>
-                      <p v-if="!edit">
+                      <p v-else>
                         {{ editService.description }}
                       </p>
                       <br />
 
-
-
-
-
                       <span
                         v-if="!edit"
                         style="font-size:1.5vh; text-decoration:underline;"
-                        @click="edit = true"
+                        @click="
+                          edit = true;
+                          editService_edit.name = editService.name;
+                          editService_edit.description =
+                            editService.description;
+                          editService_edit.service_image_url =
+                            editService.service_image_url;
+                        "
                         >แก้ไขเนื้อหา</span
                       >
                       <span
@@ -200,7 +200,10 @@
                           style="font-size:1.5vh; text-decoration:underline;"
                           @click="
                             dialog_editCoupon = !dialog_editCoupon;
-                            editCoupon = item;
+                            editCoupon.id = item.id;
+                            editCoupon.name = item.name;
+                            editCoupon.price = item.price;
+                            editCoupon.time = item.time;
                             editCoupon.index = index;
                           "
                           >แก้ไข</span
@@ -419,48 +422,58 @@
       <!-- Edit Type -->
       <v-row justify="center">
         <v-dialog v-model="dialog_editType" max-width="600px">
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">แก้ไข</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editType.name"
-                      label="ชื่อประเภท"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editType.type_image_url"
-                      required
-                      label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_editType = false"
-              >
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog_editType = false"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <v-form
+            ref="editType"
+            @submit.prevent="confirmed_editType"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">แก้ไข</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="editType.name"
+                        label="ชื่อประเภท"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="editType.type_image_url"
+                        required
+                        label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog_editType = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  type="submit"
+                  :disabled="
+                    editType.name == '' || editType.type_server_url == ''
+                  "
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-form>
         </v-dialog>
       </v-row>
 
@@ -548,9 +561,7 @@ export default {
       dialog_editCoupon: false,
       current_type: 0,
       current_service: 0,
-
       edit: false,
-
       isInType: false,
       search: "",
       headers: [
@@ -572,7 +583,12 @@ export default {
       },
 
       // Type
-      editType: { name: "", type_image_url: "" },
+      editType: {
+        name: "",
+        type_image_url: "",
+        service_count: 0,
+        coupon_count: 0,
+      },
       addType: {
         name: "",
         type_image_url: "",
@@ -588,7 +604,17 @@ export default {
         coupon_count: 0,
       },
 
-      editService: {},
+      editService: {
+        name: "",
+        description: "",
+        service_image_url: "",
+      },
+
+      editService_edit: {
+        name: "",
+        description: "",
+        service_image_url: "",
+      },
 
       // Coupon
       addCoupon: {
@@ -602,9 +628,14 @@ export default {
     };
   },
   methods: {
-    openEditService(item) {
+    openEditService(item,index) {
       this.dialog_editService = true;
       this.editService = item;
+      this.editService.index = index;
+      this.current_service = item.id;
+
+      console.log(item);
+
       this.$http
         .get("http://127.0.0.1:8000/api/service/" + item.id)
         .then((response) => {
@@ -615,7 +646,6 @@ export default {
           }
         });
     },
-
     // Type
     confirmed_addType() {
       const token = AuthUser.getters.user.api_token;
@@ -628,7 +658,9 @@ export default {
           if (response.data && response.data.status != "error") {
             this.dialog_addType = false;
             Swal.fire("เพิ่มเรียบร้อย", "", "success");
-            this.items.push(this.addType);
+            response.data.coupon_count = 0;
+            response.data.service_count = 0;
+            this.items.push(response.data);
             this.addType = {
               name: "",
               type_image_url: "",
@@ -641,8 +673,33 @@ export default {
     },
     openEditType(item, index) {
       this.dialog_editType = true;
-      this.editType = item;
+      this.editType.id = item.id;
+      this.editType.service_count = item.service_count;
+      this.editType.coupon_count = item.coupon_count;
+      this.editType.name = item.name;
+      this.editType.type_image_url = item.type_image_url;
       this.editType.index = index;
+    },
+    confirmed_editType() {
+      const token = AuthUser.getters.user.api_token;
+      this.$http
+        .put(
+          "http://127.0.0.1:8000/api/type/" + this.editType.id,
+          this.editType,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("แก้ไขเรียบร้อย", "", "success");
+            this.items.splice(this.editType.index, 1, response.data);
+            this.dialog_editType = false;
+          } else {
+            Swal.fire("ไม่สามารถแก้ไขได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
     },
     removeType(id, index) {
       const token = AuthUser.getters.user.api_token;
@@ -675,7 +732,8 @@ export default {
             console.log(response);
             this.dialog_addService = false;
             Swal.fire("เพิ่มเรียบร้อย", "", "success");
-            this.items.push(this.addService);
+            response.data.coupon_count = 0;
+            this.items.push(response.data);
             this.addService = {
               name: "",
               description: "",
@@ -712,7 +770,7 @@ export default {
       this.$http
         .put(
           "http://127.0.0.1:8000/api/service/" + this.editService.id,
-          this.editService,
+          this.editService_edit,
           {
             headers: { Authorization: `${token}` },
           }
@@ -720,7 +778,11 @@ export default {
         .then((response) => {
           if (response.data && response.data.status != "error") {
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
-            this.service[this.editService.index] = this.Service;
+            this.items[this.editService.index].name = response.data.name;
+            this.editService_edit.index = this.editService.index;
+            this.editService = response.data;
+            this.editService.index = this.editService_edit.index;
+            this.editService_edit = {};
           } else {
             Swal.fire("ไม่สามารถแก้ไขได้", "", "error");
             console.log(response.data.error);
@@ -734,7 +796,7 @@ export default {
       this.addCoupon.type_id = this.current_type;
       this.addCoupon.price = Number(this.addCoupon.price);
       this.addCoupon.time = Number(this.addCoupon.time);
-      
+
       this.$http
         .post("http://127.0.0.1:8000/api/coupon/", this.addCoupon, {
           headers: { Authorization: `${token}` },
@@ -770,7 +832,7 @@ export default {
         .then((response) => {
           if (response.data && response.data.status != "error") {
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
-            this.coupons[this.editCoupon.index] = this.editCoupon;
+            this.coupons.splice(this.editCoupon.index, 1, response.data);
             this.dialog_editCoupon = false;
           } else {
             Swal.fire("ไม่สามารถแก้ไขได้", "", "error");
