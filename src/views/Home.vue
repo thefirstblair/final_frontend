@@ -66,26 +66,24 @@
 
               <div>เวลา : {{ v.time }} นาที</div>
             </v-card-text>
-
-            <v-card-actions>
-
-              <v-row justify="center">
-                <v-btn
-                  class="buy_btn"
-                  dark
-                  outlined
-                  @click="
-                    dialog_SelectEmployee = true;
-                    employees = v.employee;
-                    select_current.item = v;
-                    select_current.employee = {};
-                  "
-                >
-                  เลือกพนักงาน
-                </v-btn>
-              </v-row>
-            </v-card-actions>
           </v-card>
+          <v-card-actions>
+            <v-row style="margin-top: -110px; margin-left: -45px" justify="center">
+              <v-btn
+                class="buy_btn"
+                dark
+                outlined
+                @click="
+                  dialog_SelectEmployee = true;
+                  employees = v.employee;
+                  select_current.item = v;
+                  select_current.employee = {};
+                "
+              >
+                เลือกพนักงาน
+              </v-btn>
+            </v-row>
+          </v-card-actions>
         </v-col>
       </v-row>
     </div>

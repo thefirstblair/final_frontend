@@ -28,119 +28,12 @@
 
     <!-- ADD Employee -->
     <v-dialog v-model="dialog_AddUser" max-width="600px">
-      <v-card>
-        <v-form
-          ref="addUser"
-          @submit.prevent="confirmed_addUser"
-          v-model="valid"
-          lazy-validation
-        >
-          <v-card-title>
-            <span class="text-h5">เพิ่มผู้ใช้</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    required
-                    label="Name"
-                    v-model="addUser.name"
-                    :rules="[rules.required, rules.min]"
-                    hint="At least 8 characters"
-                    maxlength="20"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    required
-                    label="Username"
-                    :rules="[rules.required, rules.min]"
-                    v-model="addUser.username"
-                    hint="At least 8 characters"
-                    maxlength="20"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    required
-                    label="Passowrd"
-                    :rules="[rules.required, rules.min]"
-                    v-model="addUser.password"
-                    hint="At least 8 characters"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="show1 ? 'text' : 'password'"
-                    @click:append="show1 = !show1"
-                  ></v-text-field>
-                </v-col>
-                <v-col class="d-flex" cols="12" sm="6"> </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-
-          <v-container fluid>
-            <v-combobox
-              :hide-no-data="!search"
-              :items="items_in_select"
-              :search-input.sync="search_in_select"
-              hide-selected
-              label="Select type"
-              multiple
-              small-chips
-              solo
-              v-model="select"
-            >
-              <template v-slot:no-data>
-                <v-list-item>
-                  <span class="subheading">Create</span>
-                  <v-chip label small>
-                    {{ search }}
-                  </v-chip>
-                </v-list-item>
-              </template>
-              <template v-slot:selection="{ attrs, item, parent, selected }">
-                <v-chip
-                  v-if="item === Object(item)"
-                  v-bind="attrs"
-                  :input-value="selected"
-                  label
-                  small
-                >
-                  <span class="pr-2">
-                    {{ item.text }}
-                  </span>
-                  <v-icon small @click="parent.selectItem(item)">
-                    $delete
-                  </v-icon>
-                </v-chip>
-              </template>
-            </v-combobox>
-          </v-container>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              type="submit"
-              :disabled="
-                addUser.name == '' ||
-                addUser.username == '' ||
-                addUser.password == '' ||
-                select == ''
-              "
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-form>
+      <v-card> 
+        rehdfhgf 
       </v-card>
     </v-dialog>
 
-    <v-row>
+    <!-- <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="user" :search="search">
           <template v-slot:[`item.actions`]="{ item, index }">
@@ -159,9 +52,9 @@
           </template>
         </v-data-table>
       </v-col>
-    </v-row>
+    </v-row> -->
 
-    <v-dialog persistent v-model="dialog_editUser" max-width="600px">
+    <!-- <v-dialog persistent v-model="dialog_editUser" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="text-h5">แก้ไข Permission</span>
@@ -229,9 +122,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-
-    <!-- Add User for Admin -->
+    </v-dialog> -->
   </v-container>
 </template>
 
