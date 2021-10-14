@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <!-- <v-row>
+    <v-row>
       <v-col>
         <span style="font-size: 40px">ประวัติการชำระเงินของฉัน</span>
         <v-divider></v-divider>
@@ -13,7 +13,7 @@
             margin-left: 5px;
             margin-top: 10px;
           "
-          v-for="(v, index) in record_payment_list"
+          v-for="(v, index) in $store.getters.getPaymentRecord"
           :key="index"
         >
             <v-row style="
@@ -39,7 +39,7 @@
                 <strong>Item</strong>
             </v-row>
 
-            <v-col 
+            <!-- <v-col 
                 style="
                     margin-left: 40px;
                     margin-bottom: 1px;
@@ -50,6 +50,18 @@
 
                 <v-row >
                     {{ j.coupon_name }} x{{ j.count }}
+                </v-row>
+
+            </v-col> -->
+
+            <v-col 
+                style="
+                    margin-left: 40px;
+                    margin-bottom: 1px;
+                "
+            >
+                <v-row >
+                    {{ v.item.name }}
                 </v-row>
 
             </v-col>
@@ -66,20 +78,20 @@
         </v-col>
 
       </v-col>
-    </v-row> -->
+    </v-row>
 
-    <v-row>
+    <!-- <v-row>
       <v-col>
         <h1>ประวัติการชำระเงินของฉัน</h1>
         <v-data-table :headers="headers" :items="record_payment_list">
         </v-data-table>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-container>
 </template>
 
 <script>
-import AuthUser from "@/store/AuthUser";
+// import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -128,20 +140,20 @@ export default {
     
   },
   created() {
-    const token = AuthUser.getters.user.api_token
+    // const token = AuthUser.getters.user.api_token
 
-    this.$http
-      .get("http://127.0.0.1:8000/api/payment_record/", {
-        headers: { Authorization: `${token}` },
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          this.record_payment_list = response.data;
-          console.log(this.record_payment_list);
-        } else {
-          console.log(response.error);
-        }
-      });
+    // this.$http
+    //   .get("http://127.0.0.1:8000/api/payment_record/", {
+    //     headers: { Authorization: `${token}` },
+    //   })
+    //   .then((response) => {
+    //     if (response.status == 200) {
+    //       this.record_payment_list = response.data;
+    //       console.log(this.record_payment_list);
+    //     } else {
+    //       console.log(response.error);
+    //     }
+    //   });
   },
 };
 </script>
