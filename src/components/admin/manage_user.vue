@@ -48,8 +48,7 @@
                     required
                     label="Name"
                     v-model="addUser.name"
-                    :rules="[rules.required, rules.min]"
-                    hint="At least 8 characters"
+                    :rules="[rules.required]"
                     maxlength="20"
                   ></v-text-field>
                 </v-col>
@@ -57,9 +56,8 @@
                   <v-text-field
                     required
                     label="Username"
-                    :rules="[rules.required, rules.min]"
+                    :rules="[rules.required]"
                     v-model="addUser.username"
-                    hint="At least 8 characters"
                     maxlength="20"
                   ></v-text-field>
                 </v-col>
@@ -148,7 +146,7 @@
               >
             </v-row>
             <v-row>
-              <v-text-field label="Password" v-model="editUser.password"
+              <v-text-field label="Password" v-model="editUser.password" :rules="[rules.required, rules.min]"
                 >Password</v-text-field
               >
             </v-row>
@@ -194,7 +192,7 @@ export default {
       dialog_editUser: false,
       dialogDelete: false,
       search: "",
-      items: ["ADMIN", "USER"],
+      items: ["ADMIN", "USER", "EMPLOYEE"],
       valid: true,
       headers: [
         {
