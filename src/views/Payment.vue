@@ -26,6 +26,10 @@
             ยอดรวมทั้งหมด {{ $store.getters.getTotalPrice }} บาท
           </v-card-title>
 
+          <!-- <v-card-title>
+            ยอดรวมหลังใช้คูปองทั้งหมด {{ this.cost }} บาท
+          </v-card-title> -->
+
           <v-divider></v-divider>
 
           <div style="overflow: auto; max-height: 62vh">
@@ -51,7 +55,11 @@
                     <v-row style="padding: 3px">
                       Employee : {{ v.employee.name }}
                     </v-row>
+
+                    
                   </v-col>
+
+                  
 
                   <!-- <v-col cols="2" style="">
                     <v-row> </v-row>
@@ -63,6 +71,32 @@
               </v-col>
             </v-col>
           </div>
+          <v-divider></v-divider>
+
+          <div style="overflow: auto; max-height: 62vh">
+            <v-col style="
+                  margin-right: 5px;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                ">
+              <v-col cols="10" style="">
+                <v-row style="padding: 3px">
+                  {{ this.textDiscount }} {{ this.codeName }}
+                </v-row>
+                <!-- <v-row style="padding: 3px">
+                  
+                </v-row> -->
+                <!-- <v-row style="padding: 3px">
+                  {{ this.percent }}
+                </v-row> -->
+              </v-col>
+               <v-card-title>
+                {{ this.textTotalDis }} {{ this.costText }} 
+              </v-card-title>
+            </v-col>
+            
+          </div>
+
         </v-card>
       </v-col>
 
@@ -280,6 +314,10 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      textTotalDis: "",
+      textDiscount: "",
+      costText: "",
+      codeName: "",
       isFormValid: false,
       valid: true,
       code_user: "",
@@ -315,76 +353,7 @@ export default {
         "November",
         "December",
       ],
-      service_lists: [
-        // {
-        //   coupon: "สระไดร์ + ตัดผม",
-        //   price: 350,
-        //   time: 45,
-        //   count: 1,
-        // },
-        //   {
-        //     coupon: "ทาสีเล็บมือ + เล็บเท้า",
-        //     price: 200,
-        //     time: 20,
-        //     count: 2,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        //   {
-        //     coupon: "นวดคอ บ่า ไหล่",
-        //     price: 300,
-        //     time: 60,
-        //     count: 4,
-        //   },
-        // ],
-        // discount: [
-        //   {
-        //     code: "5345436978978",
-        //     discount_percent: 20,
-        //     minimum: 1,
-        //     amount: 1,
-        //   },
-        //   {
-        //     code: "80872324234",
-        //     discount_percent: 10,
-        //     minimum: 2,
-        //     amount: 3,
-        //   },
-        //   {
-        //     code: "054025343542542",
-        //     discount_percent: 15,
-        //     minimum: 1,
-        //     amount: 4,
-        //   },
-      ],
+      service_lists: [],
     };
   },
 
@@ -392,6 +361,7 @@ export default {
     this.fetchDiscount();
   },
   methods: {
+    // ยืนยันการสั่งซื้อ
     confirmTest() {
       console.log(
         this.credit.cardHolderName,
@@ -423,6 +393,9 @@ export default {
       console.log(this.$store.getters.getPaymentRecord);
       this.$store.commit("clearItem");
       // this.$store.commit("clearRecord");
+
+      this.$router.push('/')
+
     },
     fetchDiscount() {
       DiscountCoupon.dispatch("fetchCoupon");
@@ -430,25 +403,30 @@ export default {
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
     checkCode() {
       console.log(this.code_user);
-      this.cost = 250;
+      this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
+      console.log(this.cost)
       DiscountCoupon.dispatch("checkCoupon", this.code_user);
       if (DiscountCoupon.getters.success == true) {
         // DiscountCoupon.getters.thisCoupon
         if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
           if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
             let percent =
-              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
-              100;
-            this.cost = this.cost - percent;
-
-            // console.log(this.cost)
+              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) / 100;
+              this.cost = this.cost - percent;
+              console.log(this.cost)
+              
             Swal.fire({
               icon: "success",
               title: "สามารถใช้โค้ดส่วนลดได้",
-              showConfirmButton: false,
-              timer: 1500,
+              text: "ท่านได้รับส่วนลด " + percent + " บาท",
+              showConfirmButton: true,
             });
+            this.dialog = false;
+            this.codeName = this.code_user;
             this.code_user = "";
+            this.costText = this.cost;
+            this.textDiscount = "คูปองส่วนลด : "
+            this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด"
           } else {
             Swal.fire({
               icon: "error",
