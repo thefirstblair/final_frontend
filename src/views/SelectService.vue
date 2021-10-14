@@ -85,7 +85,7 @@
                     dark
                     outlined
                     @click="
-                      dialog_SelectEmployee = true;
+                      selectEmployee();
                       select_current.item = v;
                     "
                   >
@@ -194,6 +194,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -240,6 +242,20 @@ export default {
         item: {},
       };
       this.dialog_SelectEmployee = false;
+    },
+    selectEmployee(){
+      if(AuthUser.getters.isAuthen){
+        if(AuthUser.getters.user.role==="EMPLOYEE" || AuthUser.getters.user.role ==="ADMIN" ){
+          this.dialog_SelectEmployee=false
+          Swal.fire('ไม่สามารถเลือกพนักงานได้')
+        }
+        else{
+          this.dialog_SelectEmployee=true
+        }
+      }
+      else{
+        Swal.fire('กรุณา Login ก่อน')
+      }
     },
   },
   created() {

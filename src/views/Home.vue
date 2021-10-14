@@ -74,7 +74,7 @@
                 dark
                 outlined
                 @click="
-                  dialog_SelectEmployee = true;
+                  selectEmployee();
                   employees = v.employee;
                   select_current.item = v;
                   select_current.employee = {};
@@ -139,7 +139,8 @@
 <script>
 // comment
 //import CartStore from "@/store/CartStore";
-// import AuthUser from "@/store/AuthUser";
+import AuthUser from "@/store/AuthUser";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -190,6 +191,20 @@ export default {
             console.log(response.error);
           }
         });
+    },
+    selectEmployee(){
+      if(AuthUser.getters.isAuthen){
+        if(AuthUser.getters.user.role==="EMPLOYEE" || AuthUser.getters.user.role ==="ADMIN" ){
+          this.dialog_SelectEmployee=false
+          Swal.fire('ไม่สามารถเลือกพนักงานได้')
+        }
+        else{
+          this.dialog_SelectEmployee=true
+        }
+      }
+      else{
+        Swal.fire('กรุณา Login ก่อน')
+      }
     },
   },
   created() {

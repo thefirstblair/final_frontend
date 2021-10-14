@@ -38,12 +38,14 @@
           </v-menu>
         </div>
 
-        <v-btn icon @click="dialog_cart = true">
+        <v-btn icon @click="showlogin()">
           <v-badge left
             ><span slot="badge">{{ $store.getters.getCount }}</span>
             <v-icon>mdi-cart</v-icon>
           </v-badge>
         </v-btn>
+
+        <p v-if="isAuthen()" class="name">{{showUser()}}</p>
 
         <v-btn v-if="!isAuthen()" icon @click="dialog = true">
           <v-icon>mdi-login</v-icon>
@@ -476,7 +478,26 @@ export default {
             title: "กรุณาเลือกคูปองก่อนชำระเงิน",
           });
       }
-    }
+    },
+    showlogin(){
+       if(this.isAuthen()){
+         if(this.isCustomer()){
+            this.dialog_cart=true
+         }
+         else{
+          Swal.fire({
+            title: "ไม่สามารถดูได้",
+          });
+         }
+       }
+       else{
+         this.dialog_cart=false
+         this.dialog=true
+       }
+  },
+  showUser(){
+      return AuthUser.getters.user.name
+  },
   },
 };
 </script>
@@ -486,5 +507,9 @@ export default {
 
 * {
   font-family: "Kanit", sans-serif;
+}
+.name{
+    font-family: "Kanit", sans-serif;
+    padding: 15px 10px 0px 10px;
 }
 </style>

@@ -48,13 +48,13 @@ router.beforeEach((to, from,next)=>{
   // console.log(to.name)
   // console.log(from)
   // console.log(next)
-  console.log(AuthUser.getters.isAuthen);
-  console.log(AuthUser.getters.user);
+  // console.log(AuthUser.getters.isAuthen);
+  // console.log(AuthUser.getters.user);
   if(AuthUser.getters.isAuthen){
     console.log(AuthUser.getters.user)
     if(AuthUser.getters.user !== undefined){
       if(AuthUser.getters.user.role ==="EMPLOYEE"){
-        if(to.fullPath === "/admin" || to.fullPath==="/customer"){
+        if(to.fullPath === "/admin" || to.fullPath==="/customer" || to.fullPath ==="/payment"){
           next('/');
         }
         else{
@@ -75,8 +75,8 @@ router.beforeEach((to, from,next)=>{
       }
     }
     else{
-      if(to.fullPath ==="/admin" || to.fullPath ==="/customer" || to.fullPath ==="/employee"){
-        console.log("Out")
+      if(to.fullPath ==="/admin" || to.fullPath ==="/customer" || to.fullPath ==="/employee" || to.fullPath==="/payment"){
+        // console.log("Out")
         next('/')
       }
       else{
@@ -86,7 +86,7 @@ router.beforeEach((to, from,next)=>{
   }
   else{
     // console.log("Out1")
-    if(to.fullPath ==="/admin" || to.fullPath ==="/customer" || to.fullPath ==="/employee"){
+    if(to.fullPath ==="/admin" || to.fullPath ==="/customer" || to.fullPath ==="/employee" || to.fullPath==="/payment"){
       // console.log("Out")
       next('/')
     }
