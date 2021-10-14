@@ -4,9 +4,7 @@
       <v-col>
         <h1>ตัวจัดการบริการ</h1>
 
-        <v-icon v-if="isInType" @click="backToType">
-          mdi-arrow-left
-        </v-icon>
+        <v-icon v-if="isInType" @click="backToType"> mdi-arrow-left </v-icon>
 
         <v-card-title>
           <v-text-field
@@ -27,9 +25,7 @@
               v-if="!isInType"
               @click="dialog_addType = !dialog_addType"
             >
-              <v-icon>
-                mdi-plus
-              </v-icon>
+              <v-icon> mdi-plus </v-icon>
               Add Type
             </v-btn></v-col
           ></v-row
@@ -45,9 +41,7 @@
               v-if="isInType"
               @click="dialog_addService = !dialog_addService"
             >
-              <v-icon>
-                mdi-plus
-              </v-icon>
+              <v-icon> mdi-plus </v-icon>
               Add Service
             </v-btn></v-col
           ></v-row
@@ -78,9 +72,23 @@
             </v-icon>
             <v-icon
               small
-              @click="!isInType ? removeType(item.id, index) : removeService(item.id,index)"
+              @click="
+                !isInType
+                  ? removeType(item.id, index)
+                  : removeService(item.id, index)
+              "
             >
               mdi-delete
+            </v-icon>
+            <v-icon
+              v-if="!isInType"
+              small
+              @click="
+                dialog_User = true;
+                employees = item.employees;
+              "
+            >
+              mdi-account
             </v-icon>
           </template>
         </v-data-table>
@@ -125,7 +133,7 @@
                       <v-textarea
                         auto-grow
                         v-if="edit"
-                        style="max-height:200px; max-width:600px"
+                        style="max-height: 200px; max-width: 600px"
                         v-model="editService_edit.description"
                       ></v-textarea>
                       <p v-else>
@@ -135,7 +143,7 @@
 
                       <span
                         v-if="!edit"
-                        style="font-size:1.5vh; text-decoration:underline;"
+                        style="font-size: 1.5vh; text-decoration: underline"
                         @click="
                           edit = true;
                           editService_edit.name = editService.name;
@@ -148,14 +156,22 @@
                       >
                       <span
                         v-if="edit"
-                        style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;"
+                        style="
+                          font-size: 1.5vh;
+                          text-decoration: underline;
+                          margin-left: 1vh;
+                        "
                         @click="confirmed_editService"
                         >บันทึก</span
                       >
                       <span
                         v-if="edit"
                         @click="edit = false"
-                        style="font-size:1.5vh; text-decoration:underline; margin-left:1vh;"
+                        style="
+                          font-size: 1.5vh;
+                          text-decoration: underline;
+                          margin-left: 1vh;
+                        "
                         >ยกเลิกการแก้ไข</span
                       >
                     </v-col>
@@ -169,7 +185,7 @@
                     >ส่วนจัดการคูปอง
                     <v-btn
                       text
-                      style="font-size:1.5vh; text-decoration:underline;"
+                      style="font-size: 1.5vh; text-decoration: underline"
                       @click="dialog_addCoupon = !dialog_addCoupon"
                       class
                       >+เพิ่มคูปอง</v-btn
@@ -178,7 +194,7 @@
                 </v-col>
               </v-row>
               <v-divider />
-              <v-row style="margin-top:2vh">
+              <v-row style="margin-top: 2vh">
                 <v-col
                   cols="12"
                   style="background: #f1f1f1; margin-bottom: 5px"
@@ -194,10 +210,10 @@
                     <v-col>
                       <v-row
                         class="align-center justify-end"
-                        style="margin-right:1vh"
+                        style="margin-right: 1vh"
                       >
                         <span
-                          style="font-size:1.5vh; text-decoration:underline;"
+                          style="font-size: 1.5vh; text-decoration: underline"
                           @click="
                             dialog_editCoupon = !dialog_editCoupon;
                             editCoupon.id = item.id;
@@ -210,7 +226,7 @@
                         >
                         <v-spacer></v-spacer>
                         <span
-                          style="font-size:1.5vh; text-decoration:underline;"
+                          style="font-size: 1.5vh; text-decoration: underline"
                           @click="removeCoupon(item.id, index)"
                           >ลบ</span
                         >
@@ -285,8 +301,8 @@
                   type="submit"
                   :disabled="
                     addCoupon.name == '' ||
-                      addCoupon.time == '' ||
-                      addCoupon.price == ''
+                    addCoupon.time == '' ||
+                    addCoupon.price == ''
                   "
                 >
                   Save
@@ -351,8 +367,8 @@
                   type="submit"
                   :disabled="
                     editCoupon.name == '' ||
-                      editCoupon.price == 0 ||
-                      editCoupon.time == 0
+                    editCoupon.price == 0 ||
+                    editCoupon.time == 0
                   "
                 >
                   Save
@@ -531,14 +547,67 @@
                   type="submit"
                   :disabled="
                     addService.name == '' ||
-                      addService.description == '' ||
-                      addService.service_image_url == ''
+                    addService.description == '' ||
+                    addService.service_image_url == ''
                   "
                 >
                   Save
                 </v-btn>
               </v-card-actions>
             </v-form>
+          </v-card>
+        </v-dialog>
+
+        <!-- edit type employee  -->
+        <v-dialog v-model="dialog_User" max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">เพิ่ม-ลบพนักงาน</span>
+            </v-card-title>
+            <v-divider></v-divider>
+
+            <v-card-title>
+              <v-text-field
+                v-model="employ"
+                label="Add employee"
+                single-line
+                hide-details
+              ></v-text-field>
+              <v-btn class="green_button" style="margin-top: 19px" dark outlined>
+                เพิ่ม
+              </v-btn>
+            </v-card-title>
+
+            <v-col style="margin-top: 10px">
+              <v-row style="margin-left: 20px; margin-bottom: 10px">
+                <v-col
+                  cols="11"
+                  style="background: #f1f1f1; margin-top: 10px"
+                  v-for="(v, index) in employees"
+                  :key="index"
+                >
+                  <v-row>
+                    <v-col cols="2.5">
+                      <v-row style="margin-left: 5px; margin-top: 1px">
+                        Username : {{ v.username }}
+                      </v-row>
+                      <v-row style="margin-left: 5px; margin-bottom: 1px">
+                        Name : {{ v.name }}
+                      </v-row>
+                    </v-col>
+                    <v-btn
+                      class="green_button"
+                      style="margin-top: 19px"
+                      dark
+                      outlined
+                      @click="removeEmployee(v.id)"
+                    >
+                      ลบ
+                    </v-btn>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-card>
         </v-dialog>
       </v-row>
@@ -582,6 +651,12 @@ export default {
         services: [],
       },
 
+      employees: [],
+      addEmployee: {
+        name: "",
+      },
+      dialog_User: false,
+      employ: "",
       // Type
       editType: {
         name: "",
@@ -628,13 +703,13 @@ export default {
     };
   },
   methods: {
-    openEditService(item,index) {
-      console.log(index)
+    openEditService(item, index) {
+      console.log(index);
       this.dialog_editService = true;
       this.editService = item;
       this.editService.index = index;
       this.current_service = item.id;
-       this.$http
+      this.$http
         .get("http://127.0.0.1:8000/api/service/" + item.id)
         .then((response) => {
           if (response.status == 200) {
@@ -659,7 +734,7 @@ export default {
             response.data.coupon_count = 0;
             response.data.service_count = 0;
             this.items.push(response.data);
-            console.log('test' + response.data)
+            console.log("test" + response.data);
             this.addType = {
               name: "",
               type_image_url: "",
@@ -701,7 +776,6 @@ export default {
         });
     },
     removeType(id, index) {
-     
       const token = AuthUser.getters.user.api_token;
 
       this.$http
@@ -749,8 +823,8 @@ export default {
       const token = AuthUser.getters.user.api_token;
       // this.id = id;
       // this.index = index;
-       console.log(id, index)
-       
+      console.log(id, index);
+
       this.$http
         .delete("http://127.0.0.1:8000/api/service/" + id, {
           headers: { Authorization: `${token}` },
@@ -759,7 +833,6 @@ export default {
           if (response.data && response.data.status != "error") {
             Swal.fire("ลบเรียบร้อย", "", "success");
             this.items.splice(index, 1);
-            
           } else {
             Swal.fire("ไม่สามารถลบได้", "", "error");
             console.log(response.data.error);
@@ -913,6 +986,22 @@ export default {
         }
       });
     },
+    removeEmployee(id) {
+      const token = AuthUser.getters.user.api_token;
+      this.$http
+        .delete("http://127.0.0.1:8000/api/employee/" + id, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire("ลบพนักงานเรียบร้อย", "", "success");
+            this.dialog_User = false;
+          } else {
+            Swal.fire("ไม่สามารถลบพนักงานได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
   },
   created() {
     this.getAllType();
@@ -920,4 +1009,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.green_button {
+  margin-left: 5vh;
+  margin-right: 2vh;
+  padding: 1vh;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  background: #2bd598;
+}
+</style>

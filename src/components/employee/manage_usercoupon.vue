@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <!-- จะแสดงคูปองแค่ที่มี id เดียวกับช่าง -->
-      <h1>ประวัติการจองคูปองที่จะทำสวยกับช่าง : Name</h1>
+      <h1>ประวัติการจองคูปองที่จะทำสวยกับช่าง : {{ showUser() }}</h1>
       <v-card-title>
         <v-text-field
           v-model="search"
@@ -52,8 +52,8 @@ export default {
   },
   methods: {
     updateCouponStatus(id, index, status) {
-      const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
+      const token = AuthUser.getters.user.api_token;
+      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user_coupon/" + id,
@@ -74,10 +74,13 @@ export default {
           }
         });
     },
+    showUser() {
+      return AuthUser.getters.user.name;
+    },
   },
   created() {
-    const token =AuthUser.getters.user.api_token
-    
+    const token = AuthUser.getters.user.api_token;
+
     this.$http
       .get("http://127.0.0.1:8000/api/user_coupon/", {
         headers: { Authorization: `${token}` },
