@@ -8,9 +8,11 @@
         <div style="margin: auto; padding: 2vh">
           <v-row>
             <v-col>
-              <v-avatar style="margin-top=1vh" color="primary" size="128"
-                ><v-icon dark x-large> mdi-account-circle </v-icon></v-avatar
-              >
+              <v-row justify="center" style="margin-top: 4px; margin-bottom: 1px;">
+                <v-avatar style="margin-top=1vh" color="primary" size="128"
+                  ><v-icon dark x-large> mdi-account-circle </v-icon></v-avatar
+                >
+              </v-row>
             </v-col>
           </v-row>
         </div>
@@ -31,10 +33,6 @@
                       v-model="info.username"
                       label="Username"
                     ></v-text-field>
-                    <!-- <v-text-field
-                      v-model="info.password"
-                      label="Password"
-                    ></v-text-field> -->
                   </v-card-text>
                 </v-card>
               </v-layout>
