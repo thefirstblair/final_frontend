@@ -405,6 +405,24 @@ export default {
         title: "ชำระเงินสำเร็จ",
         showConfirmButton: false,
       });
+
+      for (let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
+        let d = new Date()
+        let date = d.getDate()
+        let month = d.getMonth() + 1
+        let year = d.getFullYear()
+        let dateTime = `${date}-${month}-${year}`
+        
+        this.$store.getters.getCarts[i].date = dateTime
+        this.$store.commit("addRecord", this.$store.getters.getCarts[i])
+        this.$store.getters.getCarts[i] = {}
+      }
+      // this.$store.getters.getCarts[0] = {}
+      // console.log(this.$store.getters.getCarts[0]);
+      // this.$store.commit("addRecord", this.$store.getters.getCarts);
+      console.log(this.$store.getters.getPaymentRecord);
+      this.$store.commit("clearItem");
+      // this.$store.commit("clearRecord");
     },
     fetchDiscount() {
       DiscountCoupon.dispatch("fetchCoupon");

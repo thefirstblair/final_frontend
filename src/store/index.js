@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    carts: JSON.parse(localStorage.getItem('carts')) || []
+    carts: JSON.parse(localStorage.getItem('carts')) || [],
+    records: JSON.parse(localStorage.getItem('records')) || []
   },
   getters:{
     getCount(state){
@@ -20,12 +21,19 @@ export default new Vuex.Store({
         totalprice += item.item.price
       });
       return totalprice
+    },
+    getPaymentRecord(state) {
+      return state.records
     }
   },
   mutations: {
     addItem(state,payload){
       state.carts.push(payload);
       localStorage.setItem('carts',JSON.stringify(state.carts));
+    },
+    addRecord(state,payload){
+      state.records.push(payload);
+      localStorage.setItem('records',JSON.stringify(state.carts));
     },
     deleteItem(state,index){
       state.carts.splice(index, 1);
@@ -34,6 +42,10 @@ export default new Vuex.Store({
     clearItem(state){
       state.carts = [];
       localStorage.setItem('carts',JSON.stringify([]));
+    },
+    clearRecord(state) {
+      state.records = [];
+      localStorage.setItem('records',JSON.stringify([]));
     }
   },
   actions: {
