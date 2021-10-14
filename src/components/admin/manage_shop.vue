@@ -78,7 +78,7 @@
             </v-icon>
             <v-icon
               small
-              @click="!isInType ? removeType(item.id) : removeService(item.id)"
+              @click="!isInType ? removeType(item.id, index) : removeService(item.id,index)"
             >
               mdi-delete
             </v-icon>
@@ -629,14 +629,12 @@ export default {
   },
   methods: {
     openEditService(item,index) {
+      console.log(index)
       this.dialog_editService = true;
       this.editService = item;
       this.editService.index = index;
       this.current_service = item.id;
-
-      console.log(item);
-
-      this.$http
+       this.$http
         .get("http://127.0.0.1:8000/api/service/" + item.id)
         .then((response) => {
           if (response.status == 200) {
@@ -661,6 +659,7 @@ export default {
             response.data.coupon_count = 0;
             response.data.service_count = 0;
             this.items.push(response.data);
+            console.log('test' + response.data)
             this.addType = {
               name: "",
               type_image_url: "",
@@ -702,6 +701,7 @@ export default {
         });
     },
     removeType(id, index) {
+     
       const token = AuthUser.getters.user.api_token;
 
       this.$http
@@ -747,7 +747,10 @@ export default {
     },
     removeService(id, index) {
       const token = AuthUser.getters.user.api_token;
-
+      // this.id = id;
+      // this.index = index;
+       console.log(id, index)
+       
       this.$http
         .delete("http://127.0.0.1:8000/api/service/" + id, {
           headers: { Authorization: `${token}` },
@@ -756,6 +759,7 @@ export default {
           if (response.data && response.data.status != "error") {
             Swal.fire("ลบเรียบร้อย", "", "success");
             this.items.splice(index, 1);
+            
           } else {
             Swal.fire("ไม่สามารถลบได้", "", "error");
             console.log(response.data.error);

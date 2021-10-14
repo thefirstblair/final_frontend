@@ -64,7 +64,7 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     required
-                    label="Passowrd"
+                    label="Passoword"
                     :rules="[rules.required, rules.min]"
                     v-model="addUser.password"
                     hint="At least 8 characters"
@@ -234,7 +234,9 @@ export default {
           if (response.data && response.data.status != "error") {
             this.dialog_AddUser = false;
             Swal.fire("เพิ่มผู้ใช้งานเรียบร้อย", "", "success");
-            this.user.push(this.addUser);
+            this.user.push(response.data.data);
+            console.log(response.data.data)
+            console.log(this.user)
             this.addUser = {
               name: "",
               username: "",
@@ -242,7 +244,7 @@ export default {
               role: "USER",
             };
           } else {
-            Swal.fire("ไม่สามารถเพิ่มผู้ใช่งานได้", "", "error");
+            Swal.fire("ไม่สามารถเพิ่มผู้ใช้งานได้ โปรดตรวจสอบ Username กับ Password ของท่านอีกครั้ง", "", "error");
             console.log(response.data.error);
           }
         });
@@ -260,16 +262,17 @@ export default {
         .then((response) => {
           if (response.data && response.data.status != "error") {
             this.user.splice(this.editUser.index, 1, response.data);
-
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
           } else {
-            Swal.fire("ไม่สามารถแก้ไขผู้ใช่งานได้", "", "error");
+            Swal.fire("ไม่สามารถแก้ไขผู้ใช้งานได้ โปรดตรวจสอบอีกครั้ง", "", "error");
             console.log(response.data.error);
           }
         });
     },
     deleteUser(id, index) {
       const token = AuthUser.getters.user.api_token;
+      console.log(id)
+      console.log(index)
       this.$http
         .delete("http://127.0.0.1:8000/api/user/" + id, {
           headers: { Authorization: `${token}` },
@@ -279,7 +282,7 @@ export default {
             Swal.fire("ลบผู้ใช้นี้เรียบร้อย", "", "success");
             this.user.splice(index, 1);
           } else {
-            Swal.fire("ไม่สามารถลบผู้ใช่งานได้", "", "error");
+            Swal.fire("ไม่สามารถลบผู้ใช้งานได้", "", "error");
             console.log(response.data.error);
           }
         });
