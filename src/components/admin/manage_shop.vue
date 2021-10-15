@@ -23,7 +23,7 @@
               dark
               outlined
               v-if="!isInType"
-              @click="dialog_addType = !dialog_addType"
+              @click="dialog_addType = true"
             >
               <v-icon> mdi-plus </v-icon>
               Add Type
@@ -39,7 +39,7 @@
               dark
               outlined
               v-if="isInType"
-              @click="dialog_addService = !dialog_addService"
+              @click="dialog_addService = true"
             >
               <v-icon> mdi-plus </v-icon>
               Add Service
@@ -96,12 +96,14 @@
       </v-col>
     </v-row>
 
+    <!-- เดวมาเพิ่มรูปแบบ file ใน Edit Service กับ Add Service-->
     <!-- Edit Service -->
     <v-row justify="center" class="align-center">
       <v-dialog v-model="dialog_editService" scrollable max-width="80%">
         <v-card>
           <v-card-text>
             <v-container>
+              <v-form @submit.prevent="confirmed_editService" v-model="editServiceValid">
               <v-row class="align-center">
                 <v-col v-if="!edit">
                   <v-img
@@ -112,7 +114,7 @@
 
                 <v-col v-if="edit">
                   <h4>แก้ไขรูปภาพ</h4>
-                  <v-text-field v-model="editService_edit.service_image_url" />
+                  <v-text-field v-model="editService_edit.service_image_url" :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"/>
                 </v-col>
 
                 <v-col>
@@ -124,6 +126,8 @@
                         v-if="edit"
                         type="text"
                         v-model="editService_edit.name"
+                        required
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อ']"
                       />
                       <h2 v-else>{{ editService.name }}</h2>
                       <br />
@@ -135,6 +139,8 @@
                         auto-grow
                         v-if="edit"
                         style="max-height: 200px; max-width: 600px"
+                        :rules="[(v) => !!v || 'โปรดใส่รายละเอียด']"
+                        required
                         v-model="editService_edit.description"
                       ></v-textarea>
                       <p v-else>
@@ -162,6 +168,7 @@
                           text-decoration: underline;
                           margin-left: 1vh;
                         "
+                        :disabled="!editServiceValid"
                         @click="confirmed_editService"
                         >บันทึก</span
                       >
@@ -179,6 +186,7 @@
                   </v-row>
                 </v-col>
               </v-row>
+              </v-form>
 
               <v-row>
                 <v-col>
@@ -241,14 +249,12 @@
         </v-card>
       </v-dialog>
 
-      <!-- Add Coupon-->
+      <!-- Add Coupon -->
       <v-row justify="center">
         <v-dialog v-model="dialog_addCoupon" max-width="600px">
           <v-form
-            ref="AddCoupon"
             @submit.prevent="confirmed_addCoupon"
-            v-model="valid"
-            lazy-validation
+            v-model="addCouponValid"
           >
             <v-card>
               <v-card-title>
@@ -260,27 +266,25 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="addCoupon.name"
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อคูปอง']"
                         value="addCoupon.name"
                         label="ชื่อคูปอง"
-                        required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="addCoupon.price"
                         type="number"
-                        value="addCoupon.price"
+                        :rules="[(v) => !!v || 'โปรดใส่ราคาของคูปอง']"
                         label="ราคา"
-                        required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="addCoupon.time"
                         type="number"
-                        value="addCoupon.time"
+                        :rules="[(v) => !!v || 'โปรดใส่เวลาที่ใช้']"
                         label="เวลาที่ใช้ (หน่วยเป็นนาที)"
-                        required
                         >นาที</v-text-field
                       >
                     </v-col>
@@ -300,11 +304,7 @@
                   color="blue darken-1"
                   text
                   type="submit"
-                  :disabled="
-                    addCoupon.name == '' ||
-                    addCoupon.time == '' ||
-                    addCoupon.price == ''
-                  "
+                  :disabled="!addCouponValid"
                 >
                   Save
                 </v-btn>
@@ -319,10 +319,8 @@
         <v-dialog v-model="dialog_editCoupon" max-width="600px">
           <v-card>
             <v-form
-              ref="editCoupon"
               @submit.prevent="confirmed_editCoupon"
-              v-model="valid"
-              lazy-validation
+              v-model="editCouponValid"
             >
               <v-card-title>
                 <span class="text-h5">แก้ไขคูปอง</span>
@@ -333,18 +331,22 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         label="ชื่อคูปอง"
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อคูปอง']"
                         required
                         v-model="editCoupon.name"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
+                      :rules="[(v) => !!v || 'โปรดใส่ราคา']"
                         v-model="editCoupon.price"
                         label="ราคา"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
+                      :rules="[(v) => !!v || 'โปรดใส่เวลา']"
+                      required
                         v-model="editCoupon.time"
                         label="เวลาที่ใช้ (หน่วยเป็นนาที)"
                         >นาที</v-text-field
@@ -367,9 +369,7 @@
                   text
                   type="submit"
                   :disabled="
-                    editCoupon.name == '' ||
-                    editCoupon.price == 0 ||
-                    editCoupon.time == 0
+                    !editCouponValid
                   "
                 >
                   Save
@@ -384,12 +384,7 @@
       <v-row justify="center">
         <v-dialog v-model="dialog_addType" max-width="600px">
           <v-card>
-            <v-form
-              ref="addType"
-              @submit.prevent="confirmed_addType"
-              v-model="valid"
-              lazy-validation
-            >
+            <v-form @submit.prevent="confirmed_addType" v-model="addTypeValid">
               <v-card-title>
                 <span class="text-h5">เพิ่มประเภท</span>
               </v-card-title>
@@ -399,16 +394,24 @@
                     <v-col cols="12">
                       <v-text-field
                         label="ชื่อประเภท"
-                        required
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อประเภท']"
                         v-model="addType.name"
+                        required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
+                      <v-file-input
+                        accept="image/*"
+                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
+                        label="อัพโหลดรูปภาพหน้าประเภท"
+                        v-model="addType.type_image_url"
+                        required
+                      ></v-file-input>
+                      <!-- <v-text-field
                         v-model="addType.type_image_url"
                         required
                         label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
-                      ></v-text-field>
+                      ></v-text-field> -->
                     </v-col>
                   </v-row>
                 </v-container>
@@ -426,7 +429,7 @@
                   color="blue darken-1"
                   text
                   type="submit"
-                  :disabled="addType.name == '' || addType.type_image_url == ''"
+                  :disabled="!addTypeValid"
                 >
                   Save
                 </v-btn>
@@ -439,12 +442,7 @@
       <!-- Edit Type -->
       <v-row justify="center">
         <v-dialog v-model="dialog_editType" max-width="600px">
-          <v-form
-            ref="editType"
-            @submit.prevent="confirmed_editType"
-            v-model="valid"
-            lazy-validation
-          >
+          <v-form @submit.prevent="confirmed_editType" v-model="editTypeValid">
             <v-card>
               <v-card-title>
                 <span class="text-h5">แก้ไข</span>
@@ -456,15 +454,22 @@
                       <v-text-field
                         v-model="editType.name"
                         label="ชื่อประเภท"
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อประเภท']"
                         required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                        v-model="editType.type_image_url"
-                        required
-                        label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
-                      ></v-text-field>
+                      <span>รูปภาพเก่า</span>
+                      <v-img
+                        :src="editType.type_image_url"
+                        style="margin-bottom:10px;"
+                      />
+                      <v-divider></v-divider>
+                      <v-file-input
+                        accept="image/*"
+                        label="อัพโหลดรูปภาพหน้าประเภท แบบใหม่"
+                        v-model="editType.new_type_image_url"
+                      ></v-file-input>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -482,9 +487,7 @@
                   color="blue darken-1"
                   text
                   type="submit"
-                  :disabled="
-                    editType.name == '' || editType.type_server_url == ''
-                  "
+                  :disabled="!editTypeValid"
                 >
                   Save
                 </v-btn>
@@ -499,10 +502,8 @@
         <v-dialog v-model="dialog_addService" max-width="600px">
           <v-card>
             <v-form
-              ref="addService"
               @submit.prevent="confirmed_addService"
-              v-model="valid"
-              lazy-validation
+              v-model="addServiceValid"
             >
               <v-card-title>
                 <span class="text-h5">เพิ่ม Service</span>
@@ -514,12 +515,14 @@
                       <v-text-field
                         v-model="addService.name"
                         label="ชื่อ Service"
+                        :rules="[(v) => !!v || 'โปรดใส่ชื่อ Service']"
                         required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
                       <v-text-field
                         v-model="addService.description"
+                        :rules="[(v) => !!v || 'โปรดใส่รายละเอียด']"
                         label="Description"
                         required
                       ></v-text-field>
@@ -527,6 +530,7 @@
                     <v-col cols="12">
                       <v-text-field
                         v-model="addService.service_image_url"
+                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
                         label="URL Image"
                       ></v-text-field>
                     </v-col>
@@ -546,11 +550,7 @@
                   color="blue darken-1"
                   text
                   type="submit"
-                  :disabled="
-                    addService.name == '' ||
-                    addService.description == '' ||
-                    addService.service_image_url == ''
-                  "
+                  :disabled="!addServiceValid"
                 >
                   Save
                 </v-btn>
@@ -637,7 +637,20 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      valid: true,
+      // Valid
+      valid: false,
+      
+      addServiceValid:false,
+      editServiceValid:false,
+
+      addTypeValid:false,
+      editTypeValid: false,
+
+      addCouponValid:false,
+      editCouponValid:false,
+
+
+      // Dialog
       dialog_editService: false,
       dialog_addCoupon: false,
       dialog_addType: false,
@@ -688,12 +701,14 @@ export default {
       editType: {
         name: "",
         type_image_url: "",
+        new_type_image_url: null,
         service_count: 0,
         coupon_count: 0,
       },
+
       addType: {
         name: "",
-        type_image_url: "",
+        type_image_url: null,
         service_count: 0,
         coupon_count: 0,
       },
@@ -748,10 +763,17 @@ export default {
     },
     // Type
     confirmed_addType() {
+      if (!this.valid) return;
+
+      let formData = new FormData();
+
+      formData.append("name", this.addType.name);
+      formData.append("type_image_url", this.addType.type_image_url);
+
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("http://127.0.0.1:8000/api/type/", this.addType, {
+        .post("http://127.0.0.1:8000/api/type/", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -761,10 +783,9 @@ export default {
             response.data.coupon_count = 0;
             response.data.service_count = 0;
             this.items.push(response.data);
-            console.log("test" + response.data);
             this.addType = {
               name: "",
-              type_image_url: "",
+              type_image_url: null,
             };
           } else {
             Swal.fire("ไม่สามารถเพิ่ม Type ได้", "", "error");
@@ -782,15 +803,26 @@ export default {
       this.editType.index = index;
     },
     confirmed_editType() {
+      // form data ส่งได้แค่ method post แต่ edit เป็น method put เลยต้อง spoofing ให้มันเป็น put
+      let formData = new FormData();
+
+      formData.append("name", this.editType.name);
+
+      if (this.editType.new_type_image_url) {
+        formData.append("type_image_url", this.editType.new_type_image_url);
+        this.editType.new_type_image_url = null;
+      }
+
+      //method spoofing แนบว่าเราจะใช้ method put นะ
+      formData.append("_method", "put");
+
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .put(
-          "http://127.0.0.1:8000/api/type/" + this.editType.id,
-          this.editType,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
+        .post("http://127.0.0.1:8000/api/type/" + this.editType.id, formData, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        })
         .then((response) => {
           if (response.data && response.data.status != "error") {
             Swal.fire("แก้ไขเรียบร้อย", "", "success");
@@ -819,7 +851,6 @@ export default {
           }
         });
     },
-
     // Service
     confirmed_addService() {
       const token = AuthUser.getters.user.api_token;
@@ -866,7 +897,6 @@ export default {
           }
         });
     },
-
     confirmed_editService() {
       this.edit = false;
       const token = AuthUser.getters.user.api_token;
@@ -956,12 +986,11 @@ export default {
             Swal.fire("ลบคูปองนี้เรียบร้อย", "", "success");
             this.coupons.splice(index, 1);
           } else {
-            Swal.fire("ไม่สามารถลบคูปองได้", "", "error");
+            Swal.fire(response.data.error, "", "error");
             console.log(response.data.error);
           }
         });
     },
-
     // etc ..
     selectType(id) {
       this.items = [];
@@ -1013,7 +1042,6 @@ export default {
         }
       });
     },
-
     // About Employee
     removeEmployee(id) {
       const token = AuthUser.getters.user.api_token;
@@ -1051,7 +1079,6 @@ export default {
           }
         });
     },
-
     checkEmployee(name_employee) {
       // เช็คว่า ช่องใส่ยูเซอร์เนม ว่างหรือไม่ AND เช็คว่ามี Employee คนนี้อยู่แล้วหรือไม่
       if (name_employee === "") {
