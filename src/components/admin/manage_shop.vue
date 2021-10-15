@@ -638,7 +638,7 @@ export default {
   data() {
     return {
       // Valid
-      valid: false,
+      // valid: false,
       
       addServiceValid:false,
       editServiceValid:false,
@@ -763,7 +763,7 @@ export default {
     },
     // Type
     confirmed_addType() {
-      if (!this.valid) return;
+      // if (!this.valid) return;
 
       let formData = new FormData();
 
