@@ -116,7 +116,7 @@
           <v-row justify="end" style="margin: 1px">
             <v-dialog v-model="dialog" persistent max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on"> ใช้โค้ดส่วนลด </v-btn>
+                <v-btn v-bind="attrs" v-on="on" :disabled="countUse == true"> ใช้โค้ดส่วนลด </v-btn>
               </template>
 
               <v-layout column>
@@ -314,6 +314,7 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      countUse: false,
       textTotalDis: "",
       textDiscount: "",
       costText: "",
@@ -370,11 +371,15 @@ export default {
         this.credit.expireYear,
         this.credit.cvv
       );
+      // ลบจำนวนคูปองส่วนลด
+      DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
       Swal.fire({
         icon: "success",
         title: "ชำระเงินสำเร็จ",
         showConfirmButton: false,
       });
+      // const token = AuthUser.getters.user.api_token;
+
 
       for (let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
         let d = new Date()
@@ -402,9 +407,9 @@ export default {
     },
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
     checkCode() {
-      console.log(this.code_user);
+      // console.log(this.code_user);
       this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
-      console.log(this.cost)
+      // console.log(this.cost)
       DiscountCoupon.dispatch("checkCoupon", this.code_user);
       if (DiscountCoupon.getters.success == true) {
         // DiscountCoupon.getters.thisCoupon
@@ -413,7 +418,7 @@ export default {
             let percent =
               (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) / 100;
               this.cost = this.cost - percent;
-              console.log(this.cost)
+              // console.log(this.cost)
               
             Swal.fire({
               icon: "success",
@@ -421,6 +426,7 @@ export default {
               text: "ท่านได้รับส่วนลด " + percent + " บาท",
               showConfirmButton: true,
             });
+            this.countUse = true;
             this.dialog = false;
             this.codeName = this.code_user;
             this.code_user = "";
@@ -457,7 +463,6 @@ export default {
 
       // DiscountCoupon.dispatch('deleteCoupon',1);
     },
-    // ใส่ตรงชำระเงินเสร็จแล้ว => DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
   },
 };
 </script>
