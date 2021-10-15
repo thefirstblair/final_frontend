@@ -86,6 +86,7 @@
               @click="
                 dialog_User = true;
                 employees = item.employees;
+                addEmployee.type_id = item.id;
               "
             >
               mdi-account
@@ -568,12 +569,21 @@
 
             <v-card-title>
               <v-text-field
-                v-model="employ"
-                label="Add employee"
+                v-model="name_employee"
+                label="Add User Employee"
                 single-line
                 hide-details
               ></v-text-field>
-              <v-btn class="green_button" style="margin-top: 19px" dark outlined>
+              <v-btn
+                class="green_button"
+                style="margin-top: 19px"
+                dark
+                outlined
+                @click="
+                  dialog_User = false;
+                  checkEmployee(name_employee);
+                "
+              >
                 เพิ่ม
               </v-btn>
             </v-card-title>
@@ -608,6 +618,12 @@
                 </v-col>
               </v-row>
             </v-col>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog_User = false">
+                Close
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-dialog>
       </v-row>
@@ -651,12 +667,23 @@ export default {
         services: [],
       },
 
+      // Employee
       employees: [],
       addEmployee: {
-        name: "",
+        type_id: "",
+        user_id: "",
       },
       dialog_User: false,
       employ: "",
+      i: 0,
+      j: 0,
+      flag: false,
+      flag_2: false,
+      name_employee: "",
+
+      // User
+      user: [],
+
       // Type
       editType: {
         name: "",
@@ -986,6 +1013,8 @@ export default {
         }
       });
     },
+
+    // About Employee
     removeEmployee(id) {
       const token = AuthUser.getters.user.api_token;
       this.$http
@@ -1002,9 +1031,92 @@ export default {
           }
         });
     },
+    addEmployeeToType() {
+      const token = AuthUser.getters.user.api_token;
+      this.$http
+        .post("http://127.0.0.1:8000/api/employee/", this.addEmployee, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            this.dialog_User = false;
+            Swal.fire("เพิ่มเรียบร้อย", "", "success");
+            this.addEmployee = {
+              name: "",
+              type_image_url: "",
+            };
+          } else {
+            Swal.fire("ไม่สามารถเพิ่มพนักงานได้", "", "error");
+            console.log(response.data.error);
+          }
+        });
+    },
+
+    checkEmployee(name_employee) {
+      // เช็คว่า ช่องใส่ยูเซอร์เนม ว่างหรือไม่ AND เช็คว่ามี Employee คนนี้อยู่แล้วหรือไม่
+      if (name_employee === "") {
+        this.dialog_User = true;
+      } else {
+        for (this.i = 0; this.i < this.employees.length; this.i++) {
+          if (this.employees[this.i].username === name_employee) {
+            this.dialog_User = true;
+            this.name_employee = "";
+            this.flag_2 = true;
+            Swal.fire("มีพนักงานท่านนี้อยู่แล้ว", "", "error");
+            console.log("OK");
+            break;
+          }
+        }
+      }
+
+      // เช็คว่ามีคนนี้เป็นพนักงานหรือไม่ ถ้าไม่ ไม่สามารถเพิ่มได้ แสดงว่าเขียนผิดหรือไม่มีคนนี้ ถ้ามี ก็เพิ่ม
+      for (this.i = 0; this.i < this.user.length; this.i++) {
+        // OK
+        console.log(this.user[this.i].username);
+        console.log(this.i);
+        if (
+          this.user[this.i].username === name_employee &&
+          (this.user[this.i].role === "EMPLOYEE" ||
+            this.user[this.i].role === "ADMIN") &&
+          this.flag_2 === false
+        ) {
+          this.addEmployee.user_id = this.user[this.i].id;
+          this.flag_2 = false;
+          this.addEmployeeToType();
+          this.name_employee = "";
+          console.log("OK mak");
+
+          break;
+        }
+        // NO
+        if (this.i === this.user.length - 1 && this.flag_2 === false) {
+          Swal.fire("ไม่มีพนักงานท่านนี้อยู่ในร้าน!", "", "error");
+          this.dialog_User = true;
+          this.name_employee = "";
+          console.log("OK mak mak");
+
+          break;
+        }
+      }
+      this.flag_2 = false;
+    },
   },
   created() {
     this.getAllType();
+
+    // User
+    const token = AuthUser.getters.user.api_token;
+    this.$http
+      .get("http://127.0.0.1:8000/api/user", {
+        headers: { Authorization: `${token}` },
+      })
+      .then((response) => {
+        if (response.data && response.data.status != "error") {
+          this.user = response.data;
+        } else {
+          console.log(response.data.error);
+        }
+      });
   },
 };
 </script>

@@ -13,6 +13,11 @@
         ></v-text-field>
       </v-card-title>
       <v-data-table :headers="headers" :items="items" :search="search">
+        <template v-slot:[`item.coupon_status`]="{ item }">
+          <v-chip :color="getColor(item.coupon_status)" outlined>
+            {{ item.coupon_status }}
+          </v-chip>
+        </template>
         <template v-slot:[`item.action`]="{ item, index }">
           <v-btn
             color="success"
@@ -48,6 +53,9 @@ export default {
       user: [],
       user_id: [],
       items: [],
+      list_name: [],
+      i: 0,
+      j: 0,
     };
   },
   methods: {
@@ -74,6 +82,13 @@ export default {
           }
         });
     },
+    getColor(coupon_status) {
+      if (coupon_status == "used") return "red";
+      else return "green";
+    },
+    showUserID() {
+      return AuthUser.getters.user.id;
+    },
     showUser() {
       return AuthUser.getters.user.name;
     },
@@ -88,6 +103,15 @@ export default {
       .then((response) => {
         if (response.status == 200) {
           this.items = response.data;
+
+          for (this.i = 0; this.i < this.items.length; this.i++) {
+            if (this.items[this.i].employee_id === this.showUserID()) {
+              this.list_name[this.j] = this.items[this.i];
+              this.j++;
+            }
+          }
+          this.items = this.list_name;
+
         } else {
           console.log(response.error);
         }
