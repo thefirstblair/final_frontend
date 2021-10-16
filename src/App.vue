@@ -92,6 +92,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="loginUsername"
+                          :rules="[rules.required]"
                           label="Username"
                           required
                         ></v-text-field>
@@ -99,7 +100,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="loginPassword"
-                          :append-icon="show1 ? 'eye' : 'eye-off'"
+                          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                           :rules="[rules.required, rules.min]"
                           :type="show1 ? 'text' : 'password'"
                           name="input-10-1"
@@ -431,6 +432,7 @@ export default {
       this.verify = "";
     },
     async register() {
+      if(this.$refs.registerForm.validate()){
       this.form_register.username = this.Username;
       this.form_register.name = this.Name;
       this.form_register.password = this.password;
@@ -466,6 +468,7 @@ export default {
             text: res.message,
           });
         }
+      }
       }
     },
 
