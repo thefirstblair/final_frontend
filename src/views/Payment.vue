@@ -431,7 +431,13 @@ export default {
       // console.log(this.records.items[0].item);
       // console.log(this.records);
       for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
+        let d = new Date()
+        let date = d.getDate()
+        let month = d.getMonth() + 1
+        let year = d.getFullYear()
+        let dateTime = `${date}-${month}-${year}`
         this.records.items[i] = this.records.items[i].item
+        this.records.items[i].date = dateTime
       }
       // for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
       //   this.records.items[i].name = "test"+i

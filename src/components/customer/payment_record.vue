@@ -13,7 +13,7 @@
             margin-left: 5px;
             margin-top: 10px;
           "
-          v-for="(v, index) in record_payment_list"
+          v-for="(v, index) in record_payment_list.slice().reverse()"
           :key="index"
         >
             <v-row style="
@@ -72,7 +72,7 @@
                 margin-right: 10px;"
                 class="justify-end"
             >
-                ซื้อเมื่อ : {{ v.created_at }}
+                ซื้อเมื่อ : {{ v.items[0].date }}
             </v-row>
 
         </v-col>
