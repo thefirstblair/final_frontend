@@ -5,8 +5,8 @@
 
     <v-row justify="center">
       <v-col cols="10"
-        ><v-carousel :show-arrows="false" style="margin-top: 20px">
-          <v-carousel-item
+        ><v-carousel height="auto" :show-arrows="true" style="margin-top: 20px;" >
+          <v-carousel-item 
             v-for="(item, i) in items"
             :key="i"
             :src="item.src"
@@ -150,18 +150,17 @@ export default {
         item: {},
       },
       dialog_SelectEmployee: false,
-      items: [
-        {
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+      items: [  {
+          src: "https://cdn.discordapp.com/attachments/875359570178998302/898191366545371176/Halloween_x_Gowasabi_1.jpg",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+          src: "https://cdn.discordapp.com/attachments/875359570178998302/898183643565015040/Gowasabi_1.jpg",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
+          src: "https://cdn.discordapp.com/attachments/875359570178998302/898183379491647498/Gowasabi.jpg",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
+          src: "https://cdn.discordapp.com/attachments/875359570178998302/898188065963638814/Halloween_x_Gowasabi.jpg",
         },
       ],
       types: [],
