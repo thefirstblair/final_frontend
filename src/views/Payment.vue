@@ -436,9 +436,9 @@ export default {
       // for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
       //   this.records.items[i].name = "test"+i
       // }
-      this.records.items = {
-        "name": "ย้อมผม+กัดสีผม ด้วยผลิตภัณฑ์ออแกนิก"
-      }
+      // this.records.items = {
+      //   "name": "ย้อมผม+กัดสีผม ด้วยผลิตภัณฑ์ออแกนิก"
+      // }
       console.log(this.records);
       this.$http
       .post("http://127.0.0.1:8000/api/payment_record/", {
