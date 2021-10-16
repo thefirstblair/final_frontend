@@ -134,6 +134,7 @@
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
 
     <v-dialog persistent v-model="dialog_editUser" max-width="600px">
+      <v-form ref="editinfo" v-model="valid" lazy-validation>
       <v-card>
         <v-card-title>
           <span class="text-h5">แก้ไข Permission</span>
@@ -141,7 +142,7 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field label="Name" v-model="editUser.name"
+              <v-text-field label="Name" v-model="editUser.name" :rules="[rules.required]"
                 >Name</v-text-field
               >
             </v-row>
@@ -155,6 +156,7 @@
                 :items="items"
                 label="Permission"
                 v-model="editUser.role"
+                :rules="[rules.required]"
               ></v-select>
             </v-row>
           </v-container>
@@ -166,17 +168,19 @@
             Close
           </v-btn>
           <v-btn
+            :disabled="!valid"
             color="blue darken-1"
             text
             @click="
               updateUser();
-              dialog_editUser = false;
+              
             "
           >
             Save
           </v-btn>
         </v-card-actions>
       </v-card>
+      </v-form>
     </v-dialog>
   </v-container>
 </template>
@@ -250,6 +254,8 @@ export default {
         });
     },
     updateUser() {
+      console.log(this.$refs.editinfo)
+      if(this.$refs.editinfo.validate()){
       const token = AuthUser.getters.user.api_token;
       this.$http
         .put(
@@ -268,6 +274,9 @@ export default {
             console.log(response.data.error);
           }
         });
+        this.editUser.password=""
+        this.dialog_editUser=false
+      }
     },
     deleteUser(id, index) {
       const token = AuthUser.getters.user.api_token;
