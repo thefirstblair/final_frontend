@@ -13,7 +13,7 @@
             margin-left: 5px;
             margin-top: 10px;
           "
-          v-for="(v, index) in $store.getters.getPaymentRecord"
+          v-for="(v, index) in record_payment_list"
           :key="index"
         >
             <v-row style="
@@ -39,32 +39,32 @@
                 <strong>Item</strong>
             </v-row>
 
-            <!-- <v-col 
-                style="
-                    margin-left: 40px;
-                    margin-bottom: 1px;
-                "
-                v-for="(j, index) in v.category_lists"
-                :key="index"
-            >
-
-                <v-row >
-                    {{ j.coupon_name }} x{{ j.count }}
-                </v-row>
-
-            </v-col> -->
-
             <v-col 
                 style="
                     margin-left: 40px;
                     margin-bottom: 1px;
                 "
+                v-for="(j, index) in v.items"
+                :key="index"
             >
+
                 <v-row >
-                    {{ v.item.name }}
+                    {{ j.name }}
                 </v-row>
 
             </v-col>
+
+            <!-- <v-col 
+                style="
+                    margin-left: 40px;
+                    margin-bottom: 1px;
+                "
+            >
+                <v-row >
+                    {{ v.items.name }}
+                </v-row>
+
+            </v-col> -->
 
             <v-row style="
                 margin-top: 3px;
@@ -72,7 +72,7 @@
                 margin-right: 10px;"
                 class="justify-end"
             >
-                ซื้อเมื่อ : {{ v.date }}
+                ซื้อเมื่อ : {{ v.created_at }}
             </v-row>
 
         </v-col>
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-// import AuthUser from "@/store/AuthUser";
+import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
@@ -140,20 +140,20 @@ export default {
     
   },
   created() {
-    // const token = AuthUser.getters.user.api_token
+    const token = AuthUser.getters.user.api_token
 
-    // this.$http
-    //   .get("http://127.0.0.1:8000/api/payment_record/", {
-    //     headers: { Authorization: `${token}` },
-    //   })
-    //   .then((response) => {
-    //     if (response.status == 200) {
-    //       this.record_payment_list = response.data;
-    //       console.log(this.record_payment_list);
-    //     } else {
-    //       console.log(response.error);
-    //     }
-    //   });
+    this.$http
+      .get("http://127.0.0.1:8000/api/payment_record/", {
+        headers: { Authorization: `${token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          this.record_payment_list = response.data;
+          console.log(this.record_payment_list);
+        } else {
+          console.log(response.error);
+        }
+      });
   },
 };
 </script>

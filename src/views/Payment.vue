@@ -310,6 +310,8 @@
 <script>
 import DiscountCoupon from "@/store/DiscountCouponStore";
 import Swal from "sweetalert2";
+import AuthUser from "@/store/AuthUser"
+// import axios from 'axios'
 
 export default {
   data() {
@@ -355,6 +357,7 @@ export default {
         "December",
       ],
       service_lists: [],
+      records: []
     };
   },
 
@@ -363,6 +366,31 @@ export default {
   },
   methods: {
     // ยืนยันการสั่งซื้อ
+    save() {
+      // const token = AuthUser.getters.user.api_token
+      // let url="http://127.0.0.1:8000/api/payment_record"
+      // let headers = { Authorization: `${token}` }
+      // let body={
+      //           user_id: AuthUser.getters.user.id,
+      //           items:this.$store.getters.getCarts
+   
+      // }
+      // axios.post(url,headers,body)
+      // const token = AuthUser.getters.user.api_token
+      this.$http
+      .post("http://127.0.0.1:8000/api/payment_record/", this.records, {
+        
+      })
+      console.log(this.records);
+      // .then((response) => {
+      //   if (response.status == 200) {
+          
+      //     console.log("sucess");
+      //   } else {
+      //     console.log(response.error);
+      //   }
+      // });
+    },
     confirmTest() {
       console.log(
         this.credit.cardHolderName,
@@ -381,24 +409,58 @@ export default {
       // const token = AuthUser.getters.user.api_token;
 
 
-      for (let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
-        let d = new Date()
-        let date = d.getDate()
-        let month = d.getMonth() + 1
-        let year = d.getFullYear()
-        let dateTime = `${date}-${month}-${year}`
+      // for (let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
+      //   let d = new Date()
+      //   let date = d.getDate()
+      //   let month = d.getMonth() + 1
+      //   let year = d.getFullYear()
+      //   let dateTime = `${date}-${month}-${year}`
         
-        this.$store.getters.getCarts[i].date = dateTime
-        this.$store.commit("addRecord", this.$store.getters.getCarts[i])
-        this.$store.getters.getCarts[i] = {}
-      }
+      //   this.$store.getters.getCarts[i].date = dateTime
+      //   this.$store.commit("addRecord", this.$store.getters.getCarts[i])
+      //   this.$store.getters.getCarts[i] = {}
+
+
+      // }
       // this.$store.getters.getCarts[0] = {}
       // console.log(this.$store.getters.getCarts[0]);
       // this.$store.commit("addRecord", this.$store.getters.getCarts);
-      console.log(this.$store.getters.getPaymentRecord);
+      
+      this.records.user_id = AuthUser.getters.user.id
+      this.records.items = this.$store.getters.getCarts
+      // console.log(this.records.items[0].item);
+      // console.log(this.records);
+      for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
+        this.records.items[i] = this.records.items[i].item
+      }
+      // for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
+      //   this.records.items[i].name = "test"+i
+      // }
+      this.records.items = {
+        "name": "ย้อมผม+กัดสีผม ด้วยผลิตภัณฑ์ออแกนิก"
+      }
+      console.log(this.records);
+      this.$http
+      .post("http://127.0.0.1:8000/api/payment_record/", {
+        user_id: AuthUser.getters.user.id,
+        items: this.$store.getters.getCarts
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          
+          console.log("nice");
+        } else {
+          console.log(response.error);
+        }
+      });
+      console.log(this.records);
+      // this.save()
+      // console.log(this.$store.getters.getCarts);
+      // console.log(this.$store.getters.getPaymentRecord);
       this.$store.commit("clearItem");
       // this.$store.commit("clearRecord");
-
+      // console.log(AuthUser.getters.user.id);
+      
       this.$router.push('/')
 
     },
