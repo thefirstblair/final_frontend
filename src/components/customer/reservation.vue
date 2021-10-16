@@ -3,57 +3,57 @@
     <span style="font-size: 40px">การจองของฉัน</span>
     <v-divider></v-divider>
 
-    <v-row>
+    <v-row style="overflow-y: auto; max-height: 600px" v-if="items == 0">
       <v-col>
-        <v-row style="overflow: auto; max-height: 800px">
-          <v-col
-            ref="vcol"
-            v-for="(item, index) in items"
-            :key="index"
-            cols="12"
-          >
-            <v-card color="blue" dark style="margin: 10px">
-              <v-card-title class="text-h6">
-                <label>
-                  <td>{{ item.service.name }}</td>
-                </label>
-              </v-card-title>
-              <v-card-subtitle>
-                <label>
-                  <td>
-                    {{ item.coupon.name }}
-                  </td>
-                  <br />
-                  ช่างที่คุณเลือก : {{ item.employee.name }}
-                </label>
-              </v-card-subtitle>
+        <v-divider></v-divider>
+      </v-col>
+      <v-col cols="12" style="background: #f1f1f1; margin-top: 10px">
+        <h3 style="text-align: center">ท่านยังไม่มีประวัติการจอง</h3>
+      </v-col>
+    </v-row>
 
-              <label>
-                <v-card-subtitle
-                  >สถานะ :
-                  {{ item.coupon_status }}
-                </v-card-subtitle>
-              </label>
+    <v-row style="overflow-y: auto; max-height: 600px" v-else-if="items != []">
+      <v-col ref="vcol" v-for="(item, index) in items" :key="index" cols="12">
+        <v-card color="blue" dark style="margin: 10px">
+          <v-card-title class="text-h6">
+            <label>
+              <td>{{ item.service.name }}</td>
+            </label>
+          </v-card-title>
+          <v-card-subtitle>
+            <label>
+              <td>
+                {{ item.coupon.name }}
+              </td>
+              <br />
+              ช่างที่คุณเลือก : {{ item.employee.name }}
+            </label>
+          </v-card-subtitle>
 
-              <v-row justify="center">
-                <v-btn
-                  color="primary"
-                  v-if="item.coupon_status == 'used' && !item.reviewed"
-                  dark
-                  @click="
-                    review_dialog = true;
-                    review.service_id = item.service.id;
-                    review.coupon_id = item.coupon.id;
-                    review.user_coupon_id = item.id;
-                    review.index = index;
-                  "
-                >
-                  รีวิวเลย!
-                </v-btn>
-              </v-row>
-            </v-card>
-          </v-col>
-        </v-row>
+          <label>
+            <v-card-subtitle
+              >สถานะ :
+              {{ item.coupon_status }}
+            </v-card-subtitle>
+          </label>
+
+          <v-row justify="center">
+            <v-btn
+              color="primary"
+              v-if="item.coupon_status == 'used' && !item.reviewed"
+              dark
+              @click="
+                review_dialog = true;
+                review.service_id = item.service.id;
+                review.coupon_id = item.coupon.id;
+                review.user_coupon_id = item.id;
+                review.index = index;
+              "
+            >
+              รีวิวเลย!
+            </v-btn>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
