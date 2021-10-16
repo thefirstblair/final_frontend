@@ -1,19 +1,18 @@
 <template>
   <v-container>
-    <span style="font-size:40px;">การจองของฉัน</span>
+    <span style="font-size: 40px">การจองของฉัน</span>
     <v-divider></v-divider>
 
     <v-row>
       <v-col>
-        <v-row style="overflow:auto; max-height:800px">
+        <v-row style="overflow: auto; max-height: 800px">
           <v-col
             ref="vcol"
             v-for="(item, index) in items"
             :key="index"
             cols="12"
           >
-          
-            <v-card color="blue" dark style="margin:10px;">
+            <v-card color="blue" dark style="margin: 10px">
               <v-card-title class="text-h6">
                 <label>
                   <td>{{ item.service.name }}</td>
@@ -25,7 +24,7 @@
                     {{ item.coupon.name }}
                   </td>
                   <br />
-                  ช่างที่คุณเลือก : _____________
+                  ช่างที่คุณเลือก : {{ item.employee.name }}
                 </label>
               </v-card-subtitle>
 
@@ -84,7 +83,7 @@
                   required
                   outlined
                   label="เขียนรีวิวที่นี่"
-                  style="margin-top:30px"
+                  style="margin-top: 30px"
                 ></v-textarea>
               </v-col>
             </v-container>
@@ -95,9 +94,7 @@
               Close
             </v-btn>
 
-            <v-btn color="blue darken-1" text @click="addReview">
-              Save
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="addReview"> Save </v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -122,6 +119,7 @@ export default {
         user_id: AuthUser.getters.user.id,
       },
       review_dialog: false,
+      employees: [],
     };
   },
   methods: {
