@@ -96,96 +96,119 @@
       </v-col>
     </v-row>
 
-    <!-- เดวมาเพิ่มรูปแบบ file ใน Edit Service กับ Add Service-->
     <!-- Edit Service -->
     <v-row justify="center" class="align-center">
       <v-dialog v-model="dialog_editService" scrollable max-width="80%">
         <v-card>
           <v-card-text>
             <v-container>
-              <v-form @submit.prevent="confirmed_editService" v-model="editServiceValid">
-              <v-row class="align-center">
-                <v-col v-if="!edit">
-                  <v-img
-                    :src="editService.service_image_url"
-                    style="width: 80%"
-                  />
-                </v-col>
+              <v-form
+                @submit.prevent="confirmed_editService"
+                v-model="editServiceValid"
+              >
+                <v-row class="align-center">
+                  <v-col v-if="!edit">
+                    <v-img
+                      :src="editService.service_image_url"
+                      style="width: 80%"
+                    />
+                  </v-col>
 
-                <v-col v-if="edit">
-                  <h4>แก้ไขรูปภาพ</h4>
-                  <v-text-field v-model="editService_edit.service_image_url" :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"/>
-                </v-col>
+                  <v-col v-if="edit">
+                    <h4>แก้ไขรูปภาพ</h4>
 
-                <v-col>
-                  <v-row class="align-center">
-                    <v-col cols="12">
-                      <h1>หัวข้อบริการ</h1>
-                      <br />
-                      <v-text-field
-                        v-if="edit"
-                        type="text"
-                        v-model="editService_edit.name"
-                        required
-                        :rules="[(v) => !!v || 'โปรดใส่ชื่อ']"
+                    <span>รูปภาพเก่า</span>
+                      <v-img
+                        :src="editService.service_image_url"
+                        style="margin-bottom:10px;"
                       />
-                      <h2 v-else>{{ editService.name }}</h2>
-                      <br />
-                    </v-col>
+                      <v-divider></v-divider>
+                      <v-file-input
+                        accept="image/*"
+                        label="อัพโหลดรูปภาพหน้าประเภท แบบใหม่"
+                        v-model="editService_edit.service_image_url"
+                      ></v-file-input>
+                    <!-- <v-text-field
+                      v-model="editService_edit.service_image_url"
+                      :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
+                    /> -->
+                  </v-col>
 
-                    <v-col cols="12">
-                      <h1>รายละเอียด</h1>
-                      <v-textarea
-                        auto-grow
-                        v-if="edit"
-                        style="max-height: 200px; max-width: 600px"
-                        :rules="[(v) => !!v || 'โปรดใส่รายละเอียด']"
-                        required
-                        v-model="editService_edit.description"
-                      ></v-textarea>
-                      <p v-else>
-                        {{ editService.description }}
-                      </p>
-                      <br />
+                  <v-col>
+                    <v-row class="align-center">
+                      <v-col cols="12">
+                        <h1>หัวข้อบริการ</h1>
+                        <br />
+                        <!-- edit mode -->
+                        <v-text-field
+                          v-if="edit"
+                          type="text"
+                          v-model="editService_edit.name"
+                          required
+                          :rules="[(v) => !!v || 'โปรดใส่ชื่อ']"
+                        />
 
-                      <span
-                        v-if="!edit"
-                        style="font-size: 1.5vh; text-decoration: underline"
-                        @click="
-                          edit = true;
-                          editService_edit.name = editService.name;
-                          editService_edit.description =
-                            editService.description;
-                          editService_edit.service_image_url =
-                            editService.service_image_url;
-                        "
-                        >แก้ไขเนื้อหา</span
-                      >
-                      <span
-                        v-if="edit"
-                        style="
+                        <!-- normal mode -->
+                        <h2 v-else>{{ editService.name }}</h2>
+                        <br />
+                      </v-col>
+
+                      <v-col cols="12">
+                        <h1>รายละเอียด</h1>
+                        <!-- edit mode -->
+                        <v-textarea
+                          auto-grow
+                          v-if="edit"
+                          style="max-height: 200px; max-width: 600px"
+                          :rules="[(v) => !!v || 'โปรดใส่รายละเอียด']"
+                          required
+                          v-model="editService_edit.description"
+                        ></v-textarea>
+
+                        <!-- normal mode -->
+                        <p v-else>
+                          {{ editService.description }}
+                        </p>
+                        <br />
+
+                        <span
+                          v-if="!edit"
+                          style="font-size: 1.5vh; text-decoration: underline"
+                          @click="
+                            edit = true;
+                            editService_edit.name = editService.name;
+                            editService_edit.description =
+                              editService.description;
+                            editService_edit.service_image_url =
+                              editService.service_image_url;
+                          "
+                          >แก้ไขเนื้อหา</span
+                        >
+                        <span
+                          v-if="edit"
+                          style="
                           font-size: 1.5vh;
                           text-decoration: underline;
                           margin-left: 1vh;
                         "
-                        :disabled="!editServiceValid"
-                        @click="confirmed_editService"
-                        >บันทึก</span
-                      >
-                      <span
-                        v-if="edit"
-                        @click="edit = false"
-                        style="
+                          :disabled="!editServiceValid"
+                          @click="confirmed_editService"
+                          >บันทึก</span
+                        >
+                        <span
+                          v-if="edit"
+                          @click="edit = false"
+                          style="
                           font-size: 1.5vh;
                           text-decoration: underline;
                           margin-left: 1vh;
                         "
-                        >ยกเลิกการแก้ไข</span
-                      >
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
+                          >ยกเลิกการแก้ไข</span
+                        >
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
               </v-form>
 
               <v-row>
@@ -267,7 +290,6 @@
                       <v-text-field
                         v-model="addCoupon.name"
                         :rules="[(v) => !!v || 'โปรดใส่ชื่อคูปอง']"
-                        value="addCoupon.name"
                         label="ชื่อคูปอง"
                       ></v-text-field>
                     </v-col>
@@ -338,15 +360,15 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
-                      :rules="[(v) => !!v || 'โปรดใส่ราคา']"
+                        :rules="[(v) => !!v || 'โปรดใส่ราคา']"
                         v-model="editCoupon.price"
                         label="ราคา"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
-                      :rules="[(v) => !!v || 'โปรดใส่เวลา']"
-                      required
+                        :rules="[(v) => !!v || 'โปรดใส่เวลา']"
+                        required
                         v-model="editCoupon.time"
                         label="เวลาที่ใช้ (หน่วยเป็นนาที)"
                         >นาที</v-text-field
@@ -368,9 +390,7 @@
                   color="blue darken-1"
                   text
                   type="submit"
-                  :disabled="
-                    !editCouponValid
-                  "
+                  :disabled="!editCouponValid"
                 >
                   Save
                 </v-btn>
@@ -403,7 +423,7 @@
                       <v-file-input
                         accept="image/*"
                         :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
-                        label="อัพโหลดรูปภาพหน้าประเภท"
+                        label="อัพโหลดรูปภาพหน้าประเภท (แนะนำรูปเป็น Icon ขนาดเล็กไม่เกิน 50 px)"
                         v-model="addType.type_image_url"
                         required
                       ></v-file-input>
@@ -528,11 +548,24 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
+                      <!-- <v-file-input
+                        accept="image/*"
+                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
+                        label="อัพโหลดรูปภาพ"
+                        v-model="addService.service_image_url"
+                        required
+                      ></v-file-input> -->
+                      <v-file-input
+                        accept="image/*"
+                        v-model="addService.service_image_url"
+                        label="File input"
+                      ></v-file-input>
+
+                      <!-- <v-text-field
                         v-model="addService.service_image_url"
                         :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
                         label="URL Image"
-                      ></v-text-field>
+                      ></v-text-field> -->
                     </v-col>
                   </v-row>
                 </v-container>
@@ -639,16 +672,15 @@ export default {
     return {
       // Valid
       // valid: false,
-      
-      addServiceValid:false,
-      editServiceValid:false,
 
-      addTypeValid:false,
+      addServiceValid: false,
+      editServiceValid: false,
+
+      addTypeValid: false,
       editTypeValid: false,
 
-      addCouponValid:false,
-      editCouponValid:false,
-
+      addCouponValid: false,
+      editCouponValid: false,
 
       // Dialog
       dialog_editService: false,
@@ -717,7 +749,7 @@ export default {
       addService: {
         name: "",
         description: "",
-        service_image_url: "",
+        service_image_url: null,
         coupon_count: 0,
       },
 
@@ -730,7 +762,7 @@ export default {
       editService_edit: {
         name: "",
         description: "",
-        service_image_url: "",
+        service_image_url: null,
       },
 
       // Coupon
@@ -852,11 +884,21 @@ export default {
         });
     },
     // Service
-    confirmed_addService() {
-      const token = AuthUser.getters.user.api_token;
+    confirmed_addService() {   
       this.addService.type_id = this.current_type;
+
+      let formData = new FormData();
+
+      formData.append("type_id", this.addService.type_id);
+      formData.append("name", this.addService.name);
+      formData.append("description", this.addService.description);
+      formData.append("service_image_url", this.addService.service_image_url);
+
+      console.log(this.addService.service_image_url);
+      const token = AuthUser.getters.user.api_token;
+   
       this.$http
-        .post("http://127.0.0.1:8000/api/service/", this.addService, {
+        .post("http://127.0.0.1:8000/api/service/", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -869,7 +911,7 @@ export default {
             this.addService = {
               name: "",
               description: "",
-              service_image_url: "",
+              service_image_url: null,
             };
           } else {
             Swal.fire("ไม่สามารถเพิ่มได้", "", "error");
@@ -898,13 +940,27 @@ export default {
         });
     },
     confirmed_editService() {
+
+      let formData = new FormData();
+
+      formData.append("name", this.editService_edit.name);
+      formData.append("description", this.editService_edit.description);
+
+      if (this.editService_edit.service_image_url)
+      {
+         formData.append("service_image_url", this.editService_edit.service_image_url);
+         this.editService_edit.service_image_url = null;
+      }
+     
+     formData.append("_method", "put")
+
       this.edit = false;
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .put(
+        .post(
           "http://127.0.0.1:8000/api/service/" + this.editService.id,
-          this.editService_edit,
+          formData,
           {
             headers: { Authorization: `${token}` },
           }

@@ -23,7 +23,7 @@
       <v-col>
         <v-row>
           <v-col>
-            <img :src="data.service_image_url" style="width: 100%" />
+            <img :src="data.service_image_url" style="width: 90%" />
           </v-col>
           <v-col>
             <v-row justify="left" style="margin-top:10px">
