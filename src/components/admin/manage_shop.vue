@@ -110,17 +110,17 @@
                   <v-col v-if="!edit">
                     <v-img
                       :src="editService.service_image_url"
-                      style="width: 80%"
+                      style="width:80%;"
                     />
                   </v-col>
 
-                  <v-col v-if="edit">
+                  <v-col v-else>
                     <h4>แก้ไขรูปภาพ</h4>
 
                     <span>รูปภาพเก่า</span>
                     <v-img
                       :src="editService.service_image_url"
-                      style="margin-bottom:10px;"
+                      style="margin-bottom:10px; width:80%;"
                     />
                     <v-divider></v-divider>
                     <v-file-input
@@ -733,7 +733,7 @@ export default {
       editService: {
         name: "",
         description: "",
-        service_image_url: "",
+        service_image_url: null,
       },
 
       editService_edit: {
@@ -757,6 +757,7 @@ export default {
     openEditService(item, index) {
       this.dialog_editService = true;
       this.editService = item;
+      console.log(this.editService)
       this.editService.index = index;
       this.current_service = item.id;
       this.$http

@@ -26,7 +26,7 @@
             <img :src="data.service_image_url" style="width: 90%" />
           </v-col>
           <v-col>
-            <v-row justify="left" style="margin-top:10px">
+            <v-row style="margin-top:10px">
               <h1>ชื่อบริการ : {{ data.name }}</h1>
             </v-row>
             <v-row>
