@@ -34,8 +34,7 @@
         <v-form
           ref="addUser"
           @submit.prevent="confirmed_addUser"
-          v-model="valid"
-          lazy-validation
+          v-model="addUserValid"
         >
           <v-card-title>
             <span class="text-h5">เพิ่มผู้ใช้</span>
@@ -48,15 +47,14 @@
                     required
                     label="Name"
                     v-model="addUser.name"
-                    :rules="[rules.required]"
-                    maxlength="20"
+                    :rules="[(v) => !!v || 'โปรดใส่ชื่อผู้ใช้']"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     required
                     label="Username"
-                    :rules="[rules.required]"
+                    :rules="[(v) => !!v || 'โปรดใส่ Username']"
                     v-model="addUser.username"
                     maxlength="20"
                   ></v-text-field>
@@ -64,7 +62,7 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     required
-                    label="Passoword"
+                    label="Password"
                     :rules="[rules.required, rules.min]"
                     v-model="addUser.password"
                     hint="At least 8 characters"
@@ -92,11 +90,7 @@
               color="blue darken-1"
               text
               type="submit"
-              :disabled="
-                addUser.name == '' ||
-                  addUser.username == '' ||
-                  addUser.password == ''
-              "
+              :disabled="!addUserValid"
             >
               Save
             </v-btn>
@@ -134,7 +128,7 @@
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
 
     <v-dialog persistent v-model="dialog_editUser" max-width="600px">
-      <v-form ref="editinfo" v-model="valid" lazy-validation>
+      <v-form @submit.prevent = "updateUser" v-model="editUserValid">
       <v-card>
         <v-card-title>
           <span class="text-h5">แก้ไข Permission</span>
@@ -142,7 +136,7 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field label="Name" v-model="editUser.name" :rules="[rules.required]"
+              <v-text-field label="Name" v-model="editUser.name" :rules="[(v) => !!v || 'โปรดใส่ชื่อผู้ใช้']"
                 >Name</v-text-field
               >
             </v-row>
@@ -156,7 +150,7 @@
                 :items="items"
                 label="Permission"
                 v-model="editUser.role"
-                :rules="[rules.required]"
+                :rules="[(v) => !!v || 'โปรดใส่ role']"
               ></v-select>
             </v-row>
           </v-container>
@@ -168,13 +162,10 @@
             Close
           </v-btn>
           <v-btn
-            :disabled="!valid"
+            :disabled="!editUserValid"
             color="blue darken-1"
             text
-            @click="
-              updateUser();
-              
-            "
+            type="submit"
           >
             Save
           </v-btn>
@@ -191,6 +182,8 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      editUserValid: false,
+      addUserValid:false,
       defaultItem: { name: "", username: "", role: "" },
       dialog_AddUser: false,
       dialog_editUser: false,
@@ -217,7 +210,7 @@ export default {
       },
       show1: false,
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || "Required Password.",
         min: (v) => (v && v.length >= 8) || "Min 8 characters",
       },
     };
