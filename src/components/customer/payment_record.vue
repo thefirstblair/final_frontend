@@ -225,6 +225,11 @@ export default {
         this.record_payment_list.splice(key, 1)
        
       }
+      for (let key in this.record_payment_list) {
+        if (this.record_payment_list[key].user_id != this.userId)
+        this.record_payment_list.splice(key, 1)
+       
+      }
     }
   },
   created() {
