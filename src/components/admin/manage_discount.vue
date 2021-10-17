@@ -232,7 +232,6 @@ export default {
               minimun_cost: "",
               quantity: "",
             };
-            // console.log(this.addDiscount)
           } else {
             Swal.fire("ไม่สามารถเพิ่มคูปองส่วนลดได้", "", "error");
             console.log(response.data.error);
@@ -241,9 +240,6 @@ export default {
     },
     // แก้ไขจำนวนคูปองส่วนลด
     confirmed_editDiscount() {
-      // console.log(this.editDiscount.quantity)
-      // console.log(this.editDiscount)
-      // console.log(this.editDiscount.index)
       const token = AuthUser.getters.user.api_token;
 
       this.$http
@@ -267,9 +263,6 @@ export default {
     },
     // ลบคูปองส่วนลด
     deleteDiscount(id, index) {
-      // console.log(id)
-      // console.log(index)
-
       const token = AuthUser.getters.user.api_token;
 
       this.$http
@@ -290,7 +283,7 @@ export default {
   // ดึงข้อมูลจาก discount coupon
   created() {
     const token = AuthUser.getters.user.api_token;
-    // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjEsImlhdCI6MTYzNDEyNDgzNiwiZXhwIjoxNjM0MTYwODM2fQ.hrupsz9nSox11DigaxggN87ec42uItTlB5g-GpsE5yY"
+
     this.$http
       .get("http://127.0.0.1:8000/api/discount_coupon", {
         headers: { Authorization: `${token}` },
@@ -298,8 +291,7 @@ export default {
       .then((response) => {
         if (response.status == 200) {
           this.items = response.data;
-          console.log(this.items);
-          // console.log(this.items);
+
         } else {
           console.log(response.error);
         }
