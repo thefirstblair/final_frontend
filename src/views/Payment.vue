@@ -382,30 +382,11 @@ export default {
         title: "ชำระเงินสำเร็จ",
         showConfirmButton: false,
       });
-      // const token = AuthUser.getters.user.api_token;
-
-
-      // for (let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
-      //   let d = new Date()
-      //   let date = d.getDate()
-      //   let month = d.getMonth() + 1
-      //   let year = d.getFullYear()
-      //   let dateTime = `${date}-${month}-${year}`
-        
-      //   this.$store.getters.getCarts[i].date = dateTime
-      //   this.$store.commit("addRecord", this.$store.getters.getCarts[i])
-      //   this.$store.getters.getCarts[i] = {}
-
-
-      // }
-      // this.$store.getters.getCarts[0] = {}
-      // console.log(this.$store.getters.getCarts[0]);
-      // this.$store.commit("addRecord", this.$store.getters.getCarts);
+      
       
       this.records.user_id = AuthUser.getters.user.id
       this.records.items = this.$store.getters.getCarts
-      // console.log(this.records.items[0].item);
-      // console.log(this.records);
+    
       for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
         let d = new Date()
         let date = d.getDate()
@@ -415,12 +396,7 @@ export default {
         this.records.items[i] = this.records.items[i].item
         this.records.items[i].date = dateTime
       }
-      // for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
-      //   this.records.items[i].name = "test"+i
-      // }
-      // this.records.items = {
-      //   "name": "ย้อมผม+กัดสีผม ด้วยผลิตภัณฑ์ออแกนิก"
-      // }
+  
       console.log(this.records);
       this.$http
       .post("http://127.0.0.1:8000/api/payment_record/", {
@@ -429,20 +405,13 @@ export default {
       })
       .then((response) => {
         if (response.status == 200) {
-          
           console.log("nice");
         } else {
           console.log(response.error);
         }
       });
       console.log(this.records);
-      // this.save()
-      // console.log(this.$store.getters.getCarts);
-      // console.log(this.$store.getters.getPaymentRecord);
       this.$store.commit("clearItem");
-      // this.$store.commit("clearRecord");
-      // console.log(AuthUser.getters.user.id);
-      
       this.$router.push('/')
 
     },
@@ -451,18 +420,13 @@ export default {
     },
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
     checkCode() {
-      // console.log(this.code_user);
       this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
-      // console.log(this.cost)
       DiscountCoupon.dispatch("checkCoupon", this.code_user);
       if (DiscountCoupon.getters.success == true) {
-        // DiscountCoupon.getters.thisCoupon
         if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
           if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
-            let percent =
-              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) / 100;
+            let percent = (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) / 100;
               this.cost = this.cost - percent;
-              // console.log(this.cost)
               
             Swal.fire({
               icon: "success",
@@ -494,7 +458,6 @@ export default {
             text: "เนื่องจากโค้ดส่วนลดหมด",
           });
         }
-        // console.log(DiscountCoupon.getters.thisCoupon)
       } else {
         Swal.fire({
           icon: "error",
@@ -502,10 +465,6 @@ export default {
           text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
         });
       }
-
-      // console.log(discount)
-
-      // DiscountCoupon.dispatch('deleteCoupon',1);
     },
   },
 };

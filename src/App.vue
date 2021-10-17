@@ -346,12 +346,7 @@ export default {
       return () => this.password === this.verify || "Password must match";
     },
   },
-  // comment
-  // mounted(){
-  //   // this.$store.commit('clearItem');
-  //   console.log(this.$store.state.carts);
-  // },
-
+ 
   methods: {
     validate() {
       if (this.$refs.loginForm.validate()) {
