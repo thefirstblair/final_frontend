@@ -108,9 +108,9 @@
               >
                 <v-row class="align-center">
                   <v-col cols="6" v-if="!edit">
-                    <v-img 
+                    <v-img
                       :src="editService.service_image_url"
-                      style="width:100%;"
+                      style="width: 100%"
                     />
                   </v-col>
 
@@ -120,7 +120,7 @@
                     <span>รูปภาพเก่า</span>
                     <v-img
                       :src="editService.service_image_url"
-                      style="margin-bottom:10px; width:100%;"
+                      style="margin-bottom: 10px; width: 100%"
                     />
                     <v-divider></v-divider>
                     <v-file-input
@@ -183,10 +183,10 @@
                         <span
                           v-if="edit"
                           style="
-                          font-size: 1.5vh;
-                          text-decoration: underline;
-                          margin-left: 1vh;
-                        "
+                            font-size: 1.5vh;
+                            text-decoration: underline;
+                            margin-left: 1vh;
+                          "
                           :disabled="!editServiceValid"
                           @click="confirmed_editService"
                           >บันทึก</span
@@ -195,10 +195,10 @@
                           v-if="edit"
                           @click="edit = false"
                           style="
-                          font-size: 1.5vh;
-                          text-decoration: underline;
-                          margin-left: 1vh;
-                        "
+                            font-size: 1.5vh;
+                            text-decoration: underline;
+                            margin-left: 1vh;
+                          "
                           >ยกเลิกการแก้ไข</span
                         >
                       </v-col>
@@ -473,7 +473,7 @@
                       <span>รูปภาพเก่า</span>
                       <v-img
                         :src="editType.type_image_url"
-                        style="margin-bottom:10px;"
+                        style="margin-bottom: 10px"
                       />
                       <v-divider></v-divider>
                       <v-file-input
@@ -581,7 +581,7 @@
 
             <v-card-title>
               <v-text-field
-                v-model="name_employee"
+                v-model="addEmployee.username"
                 label="Add User Employee"
                 single-line
                 hide-details
@@ -590,11 +590,11 @@
                 class="green_button"
                 style="margin-top: 19px"
                 dark
-                :disabled="name_employee == ''"
+                :disabled="addEmployee.username == ''"
                 outlined
                 @click="
                   dialog_User = false;
-                  checkEmployee(name_employee);
+                  addEmployeeToType();
                 "
               >
                 เพิ่ม
@@ -693,18 +693,9 @@ export default {
       employees: [],
       addEmployee: {
         type_id: "",
-        user_id: "",
+        username: "",
       },
       dialog_User: false,
-      employ: "",
-      i: 0,
-      j: 0,
-      flag: false,
-      flag_2: false,
-      name_employee: "",
-
-      // User
-      user: [],
 
       // Type
       editType: {
@@ -1079,8 +1070,9 @@ export default {
           if (response.data && response.data.status != "error") {
             Swal.fire("ลบพนักงานเรียบร้อย", "", "success");
             this.dialog_User = false;
+            this.getAllType();
           } else {
-            Swal.fire("ไม่สามารถลบพนักงานได้", "", "error");
+            Swal.fire(response.data.error, "", "error");
             console.log(response.data.error);
           }
         });
@@ -1095,82 +1087,20 @@ export default {
           if (response.data && response.data.status != "error") {
             this.dialog_User = false;
             Swal.fire("เพิ่มเรียบร้อย", "", "success");
+            this.getAllType();
             this.addEmployee = {
-              name: "",
-              type_image_url: "",
-            };
+              type_id: "",
+              username: "",
+            }
           } else {
-            Swal.fire("ไม่สามารถเพิ่มพนักงานได้", "", "error");
+            Swal.fire(response.data.error, "", "error");
             console.log(response.data.error);
           }
         });
     },
-
-    // MARK
-    checkEmployee(name_employee) {
-      // เช็คว่า ช่องใส่ยูเซอร์เนม ว่างหรือไม่ AND เช็คว่ามี Employee คนนี้อยู่แล้วหรือไม่
-      if (name_employee === "") {
-        this.dialog_User = true;
-      } else {
-        for (this.i = 0; this.i < this.employees.length; this.i++) {
-          if (this.employees[this.i].username === name_employee) {
-            this.dialog_User = true;
-            this.name_employee = "";
-            this.flag_2 = true;
-            Swal.fire("มีพนักงานท่านนี้อยู่แล้ว", "", "error");
-            break;
-          }
-        }
-      }
-
-      // เช็คว่ามีคนนี้เป็นพนักงานหรือไม่ ถ้าไม่ ไม่สามารถเพิ่มได้ แสดงว่าเขียนผิดหรือไม่มีคนนี้ ถ้ามี ก็เพิ่ม
-      for (this.i = 0; this.i < this.user.length; this.i++) {
-        // OK
-        console.log(this.user[this.i].username);
-        console.log(this.i);
-        if (
-          this.user[this.i].username === name_employee &&
-          (this.user[this.i].role === "EMPLOYEE" ||
-            this.user[this.i].role === "ADMIN") &&
-          this.flag_2 === false
-        ) {
-          this.addEmployee.user_id = this.user[this.i].id;
-          this.flag_2 = false;
-          this.addEmployeeToType();
-          this.name_employee = "";
-          console.log("OK mak");
-
-          break;
-        }
-        // NO
-        if (this.i === this.user.length - 1 && this.flag_2 === false) {
-          Swal.fire("ไม่มีพนักงานท่านนี้อยู่ในร้าน!", "", "error");
-          this.dialog_User = true;
-          this.name_employee = "";
-          console.log("OK mak mak");
-
-          break;
-        }
-      }
-      this.flag_2 = false;
-    },
   },
   created() {
     this.getAllType();
-
-    // User
-    const token = AuthUser.getters.user.api_token;
-    this.$http
-      .get("http://127.0.0.1:8000/api/user", {
-        headers: { Authorization: `${token}` },
-      })
-      .then((response) => {
-        if (response.data && response.data.status != "error") {
-          this.user = response.data;
-        } else {
-          console.log(response.data.error);
-        }
-      });
   },
 };
 </script>
