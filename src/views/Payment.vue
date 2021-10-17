@@ -366,31 +366,7 @@ export default {
   },
   methods: {
     // ยืนยันการสั่งซื้อ
-    save() {
-      // const token = AuthUser.getters.user.api_token
-      // let url="http://127.0.0.1:8000/api/payment_record"
-      // let headers = { Authorization: `${token}` }
-      // let body={
-      //           user_id: AuthUser.getters.user.id,
-      //           items:this.$store.getters.getCarts
-   
-      // }
-      // axios.post(url,headers,body)
-      // const token = AuthUser.getters.user.api_token
-      this.$http
-      .post("http://127.0.0.1:8000/api/payment_record/", this.records, {
-        
-      })
-      console.log(this.records);
-      // .then((response) => {
-      //   if (response.status == 200) {
-          
-      //     console.log("sucess");
-      //   } else {
-      //     console.log(response.error);
-      //   }
-      // });
-    },
+    
     confirmTest() {
       console.log(
         this.credit.cardHolderName,

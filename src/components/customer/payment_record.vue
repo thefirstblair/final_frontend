@@ -4,7 +4,7 @@
       <v-col>
         <span style="font-size: 40px">ประวัติการชำระเงินของฉัน</span>
         <v-divider></v-divider>
-
+        
         <v-col
           cols="3.5"
           style="
@@ -21,15 +21,12 @@
                 padding-top: 10px;"
             >
                 ประวัติการชำระเงิน 
-
             </v-row>
-
             <v-row style="
                 margin-left: 5px;
                 padding-top: 10px;">
                 <v-divider></v-divider>
             </v-row>
-
             
             <v-row style="
                 margin-left: 25px;
@@ -63,7 +60,6 @@
                 <v-row >
                     {{ v.items.name }}
                 </v-row>
-
             </v-col> -->
 
             <v-row style="
@@ -76,8 +72,83 @@
             </v-row>
 
         </v-col>
-
+      
       </v-col>
+
+        <!-- <v-col
+        v-for="(v, index) in record_payment_list.slice().reverse()"
+        :key="index"
+        >
+          
+          <v-col
+          v-if="v.user_id === userId"
+          cols="3.5"
+          style="
+            background: #f1f1f1;
+            margin-right: 5px;
+            margin-left: 5px;
+            margin-top: 10px;
+          "
+          >
+        
+            <v-row style="
+                margin-left: 5px;
+                padding-top: 10px;"
+                v-if="v.user_id === userId"
+            >
+                ประวัติการชำระเงิน 
+
+            </v-row>
+
+            <v-row style="
+                margin-left: 5px;
+                padding-top: 10px;"
+                v-if="v.user_id === userId"
+            >
+                <v-divider></v-divider>
+            </v-row>
+
+            <v-row style="
+                margin-left: 25px;
+                padding-top: 1px;
+                padding-bottom: 14px;"
+                v-if="v.user_id === userId"
+            >
+                <strong>Item</strong>
+            </v-row>
+
+            <v-col v-if="v.user_id === userId">
+              <v-col 
+                style="
+                    margin-left: 40px;
+                    margin-bottom: 1px;
+                "
+                v-for="(j, index) in v.items"
+                :key="index"
+              >
+
+                <v-row v-if="v.user_id === userId">
+                    {{ j.name }}
+                </v-row>
+
+              </v-col>
+            </v-col>
+
+            <v-row style="
+                margin-top: 3px;
+                margin-bottom: 1px;
+                margin-right: 10px;"
+                class="justify-end"
+                v-if="v.user_id === userId"
+            >
+                ซื้อเมื่อ : {{ v.items[0].date }}
+            </v-row>
+
+          </v-col>
+          <v-col v-else>
+          </v-col>
+        </v-col> -->
+      
     </v-row>
 
     <!-- <v-row>
@@ -95,12 +166,15 @@ import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
+      userId: AuthUser.getters.user.id,
       headers: [
         { text: "ชื่อ Coupon", value: "coupon.name" },
         { text: "ซื้อเมื่อ", value: "created_at" },
         { text: "จำนวน", value: "count" },
       ],
-      record_payment_list: []
+      record_payment_list: [
+        "user_id"
+      ]
       // record_payment_list: [
       //   {
       //     date: "10-9-2021",
@@ -137,7 +211,21 @@ export default {
     };
   },
   methods: {
-    
+    deleteRecord() {
+      // delete record if not this user
+
+      for (let key in this.record_payment_list) {
+        // console.log(this.record_payment_list[key]);
+        if (this.record_payment_list[key].user_id != this.userId)
+        this.record_payment_list.splice(key, 1)
+       
+      }
+      for (let key in this.record_payment_list) {
+        if (this.record_payment_list[key].user_id != this.userId)
+        this.record_payment_list.splice(key, 1)
+       
+      }
+    }
   },
   created() {
     const token = AuthUser.getters.user.api_token
@@ -150,10 +238,12 @@ export default {
         if (response.status == 200) {
           this.record_payment_list = response.data;
           console.log(this.record_payment_list);
+          console.log(this.userId);
+          this.deleteRecord()
         } else {
           console.log(response.error);
         }
-      });
+      })    
   },
 };
 </script>
