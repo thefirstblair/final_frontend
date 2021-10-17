@@ -107,20 +107,20 @@
                 v-model="editServiceValid"
               >
                 <v-row class="align-center">
-                  <v-col v-if="!edit">
-                    <v-img
+                  <v-col cols="6" v-if="!edit">
+                    <v-img 
                       :src="editService.service_image_url"
-                      style="width:80%;"
+                      style="width:100%;"
                     />
                   </v-col>
 
-                  <v-col v-else>
+                  <v-col cols="6" v-else>
                     <h4>แก้ไขรูปภาพ</h4>
 
                     <span>รูปภาพเก่า</span>
                     <v-img
                       :src="editService.service_image_url"
-                      style="margin-bottom:10px; width:80%;"
+                      style="margin-bottom:10px; width:100%;"
                     />
                     <v-divider></v-divider>
                     <v-file-input
@@ -130,7 +130,7 @@
                     ></v-file-input>
                   </v-col>
 
-                  <v-col>
+                  <v-col cols="6">
                     <v-row class="align-center">
                       <v-col cols="12">
                         <h1>หัวข้อบริการ</h1>
