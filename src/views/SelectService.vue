@@ -4,7 +4,7 @@
       <v-col cols="3">
         <div style="header">
           <span>หมวดหมู่</span>
-          <h2 style="text-align: right">{{ type_name }}</h2>
+          <h1 style="text-align: right; background: #E0FFF4">{{ type_name }}</h1>
         </div>
         <div
           class="type_select_btn"

@@ -1,9 +1,9 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="3">
-         <span>Dashboard</span>
-          <h2 style="text-align: right">Admin</h2>
+    <v-row style="margin-top: 5px">
+      <v-col cols="3" >
+         <span >Dashboard</span> 
+          <h1 style="text-align: right; background: #E0FFF4">Admin</h1>
         <div class="type_select_btn" @click="current_component = 'manage_shop'">
           ตัวจัดการบริการ
         </div>

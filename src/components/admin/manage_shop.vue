@@ -59,7 +59,17 @@
             >
               mdi-magnify-plus
             </v-icon>
-
+            <v-icon
+              v-if="!isInType"
+              small
+              @click="
+                dialog_User = true;
+                employees = item.employees;
+                addEmployee.type_id = item.id;
+              "
+            >
+              mdi-account
+            </v-icon>
             <v-icon
               small
               @click="
@@ -79,17 +89,6 @@
               "
             >
               mdi-delete
-            </v-icon>
-            <v-icon
-              v-if="!isInType"
-              small
-              @click="
-                dialog_User = true;
-                employees = item.employees;
-                addEmployee.type_id = item.id;
-              "
-            >
-              mdi-account
             </v-icon>
           </template>
         </v-data-table>
@@ -748,7 +747,7 @@ export default {
     openEditService(item, index) {
       this.dialog_editService = true;
       this.editService = item;
-      console.log(this.editService)
+      console.log(this.editService);
       this.editService.index = index;
       this.current_service = item.id;
       this.$http
@@ -1091,7 +1090,7 @@ export default {
             this.addEmployee = {
               type_id: "",
               username: "",
-            }
+            };
           } else {
             Swal.fire(response.data.error, "", "error");
             console.log(response.data.error);
