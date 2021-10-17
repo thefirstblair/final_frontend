@@ -34,14 +34,6 @@
                รายละเอียด : {{ data.description }}
               </h3>
             </v-row>
-            <v-row>
-              <!-- <v-col
-                v-for="(v, index) in data.image.slice(1, data.image.length)"
-                :key="index"
-              >
-                <img :src="v" style="width: 100%" />
-              </v-col> -->
-            </v-row>
           </v-col>
         </v-row>
         <v-row>
@@ -235,7 +227,6 @@ export default {
         });
     },
     addToCart() {
-      // console.log(this.select_current);
       this.$store.commit("addItem", this.select_current);
       this.select_current = {
         employee: {},
