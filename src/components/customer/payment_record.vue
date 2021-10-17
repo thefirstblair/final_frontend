@@ -30,7 +30,7 @@
           :key="index"
         >
           <v-row style="margin-left: 5px; padding-top: 10px">
-             ราคารวมทั้งหมด : {{ v.totalPrice }} บาท
+             ราคารวมทั้งหมด : {{ v.totalPrice }} บาท {{ v.discount_coupon && '( '+ v.discount_coupon +' )' }}
           </v-row> 
           <v-row style="margin-left: 5px; padding-top: 10px">
             <v-divider></v-divider>
@@ -234,6 +234,7 @@ export default {
       .then((response) => {
         if (response.status == 200) {
           this.record_payment_list = response.data;
+          console.log(this.record_payment_list);
         } else {
           console.log(response.error);
         }

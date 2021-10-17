@@ -23,12 +23,24 @@
           class="scroll"
         >
           <v-card-title>
-            ยอดรวมทั้งหมด {{ $store.getters.getTotalPrice }} บาท
+            ยอดรวมทั้งหมด
+            {{
+              !coupon_preview
+                ? $store.getters.getTotalPrice
+                : $store.getters.getTotalPrice -
+                  ($store.getters.getTotalPrice *
+                    coupon_preview.discount_percent) /
+                    100
+            }}
+            บาท
+            {{ coupon_preview && "( " + coupon_preview.specific_code + " )" }}
+            <span
+              style="margin-left:10px; font-size:80%; text-decoration:underline; color:red;"
+              v-if="coupon_preview"
+              @click="coupon_preview = null"
+              >ลบคูปอง</span
+            >
           </v-card-title>
-
-          <!-- <v-card-title>
-            ยอดรวมหลังใช้คูปองทั้งหมด {{ this.cost }} บาท
-          </v-card-title> -->
 
           <v-divider></v-divider>
 
@@ -56,43 +68,11 @@
                       Employee : {{ v.employee.name }}
                     </v-row>
                   </v-col>
-
-                  <!-- <v-col cols="2" style="">
-                    <v-row> </v-row>
-                    <v-row style="text-align: right" class="align-right">
-                      {{ v.count }} ชิ้น
-                    </v-row>
-                  </v-col> -->
                 </v-row>
               </v-col>
             </v-col>
           </div>
           <v-divider></v-divider>
-
-          <div style="overflow: auto; max-height: 62vh">
-            <v-col
-              style="
-                  margin-right: 5px;
-                  margin-top: 10px;
-                  margin-bottom: 10px;
-                "
-            >
-              <v-col cols="10" style="">
-                <v-row style="padding: 3px">
-                  {{ this.textDiscount }} {{ this.codeName }}
-                </v-row>
-                <!-- <v-row style="padding: 3px">
-                  
-                </v-row> -->
-                <!-- <v-row style="padding: 3px">
-                  {{ this.percent }}
-                </v-row> -->
-              </v-col>
-              <v-card-title>
-                {{ this.textTotalDis }} {{ this.costText }}
-              </v-card-title>
-            </v-col>
-          </div>
         </v-card>
       </v-col>
 
@@ -112,7 +92,7 @@
           <v-row justify="end" style="margin: 1px">
             <v-dialog v-model="dialog" persistent max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" :disabled="countUse == true">
+                <v-btn v-bind="attrs" v-on="on" :disabled="coupon_preview">
                   ใช้โค้ดส่วนลด
                 </v-btn>
               </template>
@@ -135,10 +115,7 @@
                   </v-col>
 
                   <v-row justify="center">
-                    <v-btn
-                      @click="checkCode(code_user)"
-                      :disabled="code_user == ''"
-                    >
+                    <v-btn @click="checkCode" :disabled="code_user == ''">
                       ใช้โค้ด
                     </v-btn>
                   </v-row>
@@ -305,7 +282,7 @@
 </template>
 
 <script>
-import DiscountCoupon from "@/store/DiscountCouponStore";
+// import DiscountCoupon from "@/store/DiscountCouponStore";
 import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser";
 
@@ -337,7 +314,7 @@ export default {
       },
       selected: "Cash",
       payments: ["Cash", "Credit Card"],
-      yearlist: ["2030", "2029", "2028", "2027"],
+      yearlist: ["2030", "2029", "2028", "2027", "2026", "2025", "2024"],
       monthList: [
         "January",
         "February",
@@ -354,23 +331,15 @@ export default {
       ],
       service_lists: [],
       records: {},
+      coupon_preview: null,
     };
-  },
-
-  created() {
-    this.fetchDiscount();
   },
   methods: {
     // ยืนยันการสั่งซื้อ
 
     confirmPayment() {
-      // ลบจำนวนคูปองส่วนลด
-      DiscountCoupon.dispatch(
-        "useDiscountCoupon",
-        DiscountCoupon.getters.thisCoupon.id
-      );
-
       this.records.items = this.$store.getters.getCarts;
+      this.records.discount_coupon = this.coupon_preview.specific_code;
 
       for (let i = 0; i < this.$store.getters.getCarts.length; i++) {
         let d = new Date();
@@ -392,6 +361,7 @@ export default {
               title: "ชำระเงินสำเร็จ",
               showConfirmButton: false,
             });
+            this.coupon_preview = null;
           } else {
             Swal.fire({
               icon: "error",
@@ -404,58 +374,93 @@ export default {
       this.$store.commit("clearItem");
       this.$router.push("/");
     },
-    fetchDiscount() {
-      DiscountCoupon.dispatch("fetchCoupon");
-    },
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
     checkCode() {
-      this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
-      DiscountCoupon.dispatch("checkCoupon", this.code_user);
-      if (DiscountCoupon.getters.success == true) {
-        if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
-          if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
-            let percent =
-              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
-              100;
-            this.cost = this.cost - percent;
+      this.$http
+        .get("http://127.0.0.1:8000/api/discount_coupon/" + this.code_user, {
+          headers: { Authorization: `${AuthUser.getters.user.api_token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            this.dialog = false;
 
+            if (
+              this.$store.getters.getTotalPrice < response.data.minimum_cost
+            ) {
+              this.code_user = "";
+              Swal.fire({
+                icon: "error",
+                title:
+                  "คุณไม่สามารถใช้คูปองนี้ได้ เนื่องจากยอดชำระขั้นต่ำไม่ถึง " +
+                  response.data.minimum_cost +
+                  " บาท",
+                showConfirmButton: false,
+              });
+              return;
+            }
+
+            this.coupon_preview = response.data;
             Swal.fire({
               icon: "success",
-              title: "สามารถใช้โค้ดส่วนลดได้",
-              text: "ท่านได้รับส่วนลด " + percent + " บาท",
-              showConfirmButton: true,
+              title: "คุณสามารถใช้คูปองนี้ได้ !",
+              showConfirmButton: false,
             });
-            this.countUse = true;
-            this.dialog = false;
-            this.codeName = this.code_user;
-            this.code_user = "";
-            this.costText = this.cost;
-            this.textDiscount = "คูปองส่วนลด : ";
-            this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด";
           } else {
+            this.code_user = "";
             Swal.fire({
               icon: "error",
-              title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-              text:
-                "เนื่องจากยอดชำระไม่ถึง " +
-                DiscountCoupon.getters.thisCoupon.minimum_cost +
-                " บาท",
+              title: response.data.error,
+              showConfirmButton: false,
             });
           }
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-            text: "เนื่องจากโค้ดส่วนลดหมด",
-          });
-        }
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-          text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
         });
-      }
+      //   this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
+      //   DiscountCoupon.dispatch("checkCoupon", this.code_user);
+      //   if (DiscountCoupon.getters.success == true) {
+      //     if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
+      //       if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
+      //         let percent =
+      //           (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
+      //           100;
+      //         this.cost = this.cost - percent;
+
+      //         Swal.fire({
+      //           icon: "success",
+      //           title: "สามารถใช้โค้ดส่วนลดได้",
+      //           text: "ท่านได้รับส่วนลด " + percent + " บาท",
+      //           showConfirmButton: true,
+      //         });
+      //         this.countUse = true;
+      //         this.dialog = false;
+      //         this.codeName = this.code_user;
+      //         this.code_user = "";
+      //         this.costText = this.cost;
+      //         this.textDiscount = "คูปองส่วนลด : ";
+      //         this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด";
+      //       } else {
+      //         Swal.fire({
+      //           icon: "error",
+      //           title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+      //           text:
+      //             "เนื่องจากยอดชำระไม่ถึง " +
+      //             DiscountCoupon.getters.thisCoupon.minimum_cost +
+      //             " บาท",
+      //         });
+      //       }
+      //     } else {
+      //       Swal.fire({
+      //         icon: "error",
+      //         title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+      //         text: "เนื่องจากโค้ดส่วนลดหมด",
+      //       });
+      //     }
+      //   } else {
+      //     Swal.fire({
+      //       icon: "error",
+      //       title: "ไม่สามารถใช้โค้ดส่วนลดได้",
+      //       text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
+      //     });
+      //   }
     },
   },
 };

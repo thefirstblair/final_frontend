@@ -43,7 +43,7 @@
           </v-menu>
         </div>
 
-        <v-btn icon @click="showlogin()">
+        <v-btn icon v-if="$route.name != 'Payment'" @click="showlogin()">
           <v-badge left
             ><span slot="badge">{{ $store.getters.getCount }}</span>
             <v-icon>mdi-cart</v-icon>
@@ -346,7 +346,9 @@ export default {
       return () => this.password === this.verify || "Password must match";
     },
   },
- 
+  created(){
+    // console.log(this.$route.name);
+  },
   methods: {
     validate() {
       if (this.$refs.loginForm.validate()) {
@@ -471,7 +473,6 @@ export default {
       }
       }
     },
-
     goToPayment(){
       if (this.$store.state.carts.length > 0){
         this.$router.push('/payment');
