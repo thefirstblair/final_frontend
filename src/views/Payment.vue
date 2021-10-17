@@ -168,7 +168,6 @@
             ref="creditCard"
             @submit.prevent="confirmTest"
             v-model="isFormValid"
-            lazy-validation
           >
             <v-card max-width="800" max-height="350">
               <v-card-title
@@ -311,7 +310,6 @@
 import DiscountCoupon from "@/store/DiscountCouponStore";
 import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser"
-// import axios from 'axios'
 
 export default {
   data() {
