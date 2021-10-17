@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row style="margin-top: 5px">
       <v-col cols="3">
         <div style="header">
           <span>หมวดหมู่</span>
@@ -103,11 +103,11 @@
         </v-row>
 
         <v-row>
-        <v-row v-if="data.reviews == 0">
+        <v-row v-if="data.reviews == 0" style="margin-bottom: 5px">
           <v-col cols="12">
             <h2 style="text-align: center;  background: #f1f1f1; height:50px;" >บริการนี้ยังไม่มีรีวิว</h2>
             </v-col> </v-row>
-          <v-row v-else-if="data.reviews != []">
+          <v-row v-else-if="data.reviews != []" style="margin-bottom: 5px">
             <v-col
               cols="3.5"
               style="
