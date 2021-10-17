@@ -7,7 +7,7 @@
 
         <v-row
           style="overflow-y: auto; max-height: 600px"
-          v-if="record_payment_list == 0"
+          v-if="record_payment_list.length == 0"
         >
           <v-col>
             <v-divider></v-divider>
@@ -25,13 +25,13 @@
             margin-left: 5px;
             margin-top: 10px;
           "
-          v-else-if="record_payment_list != []"
-          v-for="(v, index) in record_payment_list.slice().reverse()"
+          v-else
+          v-for="(v, index) in record_payment_list"
           :key="index"
         >
           <v-row style="margin-left: 5px; padding-top: 10px">
-            ประวัติการชำระเงิน
-          </v-row>
+             ราคารวมทั้งหมด : {{ v.totalPrice }} บาท
+          </v-row> 
           <v-row style="margin-left: 5px; padding-top: 10px">
             <v-divider></v-divider>
           </v-row>
@@ -67,7 +67,8 @@
             style="margin-top: 3px; margin-bottom: 1px; margin-right: 10px"
             class="justify-end"
           >
-            ซื้อเมื่อ : {{ v.items[0].date }}
+
+          ซื้อเมื่อ : {{ v.items[0].date }} 
           </v-row>
         </v-col>
       </v-col>
@@ -162,13 +163,13 @@ import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
-      userId: AuthUser.getters.user.id,
-      headers: [
-        { text: "ชื่อ Coupon", value: "coupon.name" },
-        { text: "ซื้อเมื่อ", value: "created_at" },
-        { text: "จำนวน", value: "count" },
-      ],
-      record_payment_list: ["user_id"],
+      // userId: AuthUser.getters.user.id,
+      // headers: [
+      //   { text: "ชื่อ Coupon", value: "coupon.name" },
+      //   { text: "ซื้อเมื่อ", value: "created_at" },
+      //   { text: "จำนวน", value: "count" },
+      // ],
+      record_payment_list: {},
       // record_payment_list: [
       //   {
       //     date: "10-9-2021",
@@ -205,24 +206,23 @@ export default {
     };
   },
   methods: {
-    deleteRecord() {
-      // delete record if not this user
+    // deleteRecord() {
+    //   // delete record if not this user
 
-      for (let key in this.record_payment_list) {
-        // console.log(this.record_payment_list[key]);
-        if (this.record_payment_list[key].user_id != this.userId)
-          this.record_payment_list.splice(key, 1);
-      }
-      for (let key in this.record_payment_list) {
-        if (this.record_payment_list[key].user_id != this.userId)
-          this.record_payment_list.splice(key, 1);
-      }
-      for (let key in this.record_payment_list) {
-        if (this.record_payment_list[key].user_id != this.userId)
-        this.record_payment_list.splice(key, 1)
-       
-      }
-    }
+    //   for (let key in this.record_payment_list) {
+    //     // console.log(this.record_payment_list[key]);
+    //     if (this.record_payment_list[key].user_id != this.userId)
+    //       this.record_payment_list.splice(key, 1);
+    //   }
+    //   for (let key in this.record_payment_list) {
+    //     if (this.record_payment_list[key].user_id != this.userId)
+    //       this.record_payment_list.splice(key, 1);
+    //   }
+    //   for (let key in this.record_payment_list) {
+    //     if (this.record_payment_list[key].user_id != this.userId)
+    //       this.record_payment_list.splice(key, 1);
+    //   }
+    // },
   },
   created() {
     const token = AuthUser.getters.user.api_token;
@@ -234,9 +234,6 @@ export default {
       .then((response) => {
         if (response.status == 200) {
           this.record_payment_list = response.data;
-          console.log(this.record_payment_list);
-          console.log(this.userId);
-          this.deleteRecord();
         } else {
           console.log(response.error);
         }

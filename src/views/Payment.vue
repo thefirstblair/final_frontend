@@ -55,11 +55,7 @@
                     <v-row style="padding: 3px">
                       Employee : {{ v.employee.name }}
                     </v-row>
-
-                    
                   </v-col>
-
-                  
 
                   <!-- <v-col cols="2" style="">
                     <v-row> </v-row>
@@ -74,11 +70,13 @@
           <v-divider></v-divider>
 
           <div style="overflow: auto; max-height: 62vh">
-            <v-col style="
+            <v-col
+              style="
                   margin-right: 5px;
                   margin-top: 10px;
                   margin-bottom: 10px;
-                ">
+                "
+            >
               <v-col cols="10" style="">
                 <v-row style="padding: 3px">
                   {{ this.textDiscount }} {{ this.codeName }}
@@ -90,13 +88,11 @@
                   {{ this.percent }}
                 </v-row> -->
               </v-col>
-               <v-card-title>
-                {{ this.textTotalDis }} {{ this.costText }} 
+              <v-card-title>
+                {{ this.textTotalDis }} {{ this.costText }}
               </v-card-title>
             </v-col>
-            
           </div>
-
         </v-card>
       </v-col>
 
@@ -116,7 +112,9 @@
           <v-row justify="end" style="margin: 1px">
             <v-dialog v-model="dialog" persistent max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" :disabled="countUse == true"> ใช้โค้ดส่วนลด </v-btn>
+                <v-btn v-bind="attrs" v-on="on" :disabled="countUse == true">
+                  ใช้โค้ดส่วนลด
+                </v-btn>
               </template>
 
               <v-layout column>
@@ -166,7 +164,7 @@
         <v-col cols="12" v-if="selected === 'Credit Card'">
           <v-form
             ref="creditCard"
-            @submit.prevent="confirmTest"
+            @submit.prevent="confirmPayment"
             v-model="isFormValid"
           >
             <v-card max-width="800" max-height="350">
@@ -294,7 +292,7 @@
           style="margin-top: 5px"
         >
           <v-btn
-            @click="confirmTest"
+            @click="confirmPayment"
             x-large
             color="success"
             style="margin-top: 10px"
@@ -309,7 +307,7 @@
 <script>
 import DiscountCoupon from "@/store/DiscountCouponStore";
 import Swal from "sweetalert2";
-import AuthUser from "@/store/AuthUser"
+import AuthUser from "@/store/AuthUser";
 
 export default {
   data() {
@@ -355,7 +353,7 @@ export default {
         "December",
       ],
       service_lists: [],
-      records: []
+      records: {},
     };
   },
 
@@ -364,69 +362,47 @@ export default {
   },
   methods: {
     // ยืนยันการสั่งซื้อ
-    
-    confirmTest() {
-      console.log(
-        this.credit.cardHolderName,
-        this.credit.cardNumber,
-        this.credit.expireMonth,
-        this.credit.expireYear,
-        this.credit.cvv
-      );
+
+    confirmPayment() {
       // ลบจำนวนคูปองส่วนลด
-      DiscountCoupon.dispatch('useDiscountCoupon',DiscountCoupon.getters.thisCoupon.id)
-      Swal.fire({
-        icon: "success",
-        title: "ชำระเงินสำเร็จ",
-        showConfirmButton: false,
-      });
-      
-      
-      this.records.user_id = AuthUser.getters.user.id
-      this.records.items = this.$store.getters.getCarts
-    
-      for(let i = 0 ; i < this.$store.getters.getCarts.length ; i++) {
-        let d = new Date()
-        let date = d.getDate()
-        let month = d.getMonth() + 1
-        let year = d.getFullYear()
-        let dateTime = `${date}-${month}-${year}`
-        this.records.items[i] = this.records.items[i].item
-        this.records.items[i].date = dateTime
+      DiscountCoupon.dispatch(
+        "useDiscountCoupon",
+        DiscountCoupon.getters.thisCoupon.id
+      );
+
+      this.records.items = this.$store.getters.getCarts;
+
+      for (let i = 0; i < this.$store.getters.getCarts.length; i++) {
+        let d = new Date();
+        let date = d.getDate();
+        let month = d.getMonth() + 1;
+        let year = d.getFullYear();
+        let dateTime = `${date}-${month}-${year}`;
+        this.records.items[i].date = dateTime;
       }
-  
-      console.log(this.records);
-      this.$http
-      .post("http://127.0.0.1:8000/api/payment_record/", {
-        user_id: AuthUser.getters.user.id,
-        items: this.$store.getters.getCarts
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          console.log("nice");
-        } else {
-          console.log(response.error);
-        }
-      });
-
-      const token = AuthUser.getters.user.api_token;
 
       this.$http
-      .post("http://127.0.0.1:8000/api/user_coupon/", {
-        headers: { Authorization: `${token}` }
-      } ,{
-        user_id: AuthUser.getters.user.id,
-        // service_id: ,
-        // coupon_id: ,
-        // employee_id: ,
-        coupon_status: "unuse",
-        reviewed: 0,
-      })
-      
-      console.log(this.records);
+        .post("http://127.0.0.1:8000/api/payment_record/", this.records, {
+          headers: { Authorization: `${AuthUser.getters.user.api_token}` },
+        })
+        .then((response) => {
+          if (response.data && response.data.status != "error") {
+            Swal.fire({
+              icon: "success",
+              title: "ชำระเงินสำเร็จ",
+              showConfirmButton: false,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: response.error,
+              showConfirmButton: false,
+            });
+          }
+        });
+
       this.$store.commit("clearItem");
-      this.$router.push('/')
-
+      this.$router.push("/");
     },
     fetchDiscount() {
       DiscountCoupon.dispatch("fetchCoupon");
@@ -438,9 +414,11 @@ export default {
       if (DiscountCoupon.getters.success == true) {
         if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
           if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
-            let percent = (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) / 100;
-              this.cost = this.cost - percent;
-              
+            let percent =
+              (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
+              100;
+            this.cost = this.cost - percent;
+
             Swal.fire({
               icon: "success",
               title: "สามารถใช้โค้ดส่วนลดได้",
@@ -452,8 +430,8 @@ export default {
             this.codeName = this.code_user;
             this.code_user = "";
             this.costText = this.cost;
-            this.textDiscount = "คูปองส่วนลด : "
-            this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด"
+            this.textDiscount = "คูปองส่วนลด : ";
+            this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด";
           } else {
             Swal.fire({
               icon: "error",
