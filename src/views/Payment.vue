@@ -408,6 +408,21 @@ export default {
           console.log(response.error);
         }
       });
+
+      const token = AuthUser.getters.user.api_token;
+
+      this.$http
+      .post("http://127.0.0.1:8000/api/user_coupon/", {
+        headers: { Authorization: `${token}` }
+      } ,{
+        user_id: AuthUser.getters.user.id,
+        // service_id: ,
+        // coupon_id: ,
+        // employee_id: ,
+        coupon_status: "unuse",
+        reviewed: 0,
+      })
+      
       console.log(this.records);
       this.$store.commit("clearItem");
       this.$router.push('/')
