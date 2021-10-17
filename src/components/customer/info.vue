@@ -8,7 +8,10 @@
         <div style="margin: auto; padding: 2vh">
           <v-row>
             <v-col>
-              <v-row justify="center" style="margin-top: 4px; margin-bottom: 1px;">
+              <v-row
+                justify="center"
+                style="margin-top: 4px; margin-bottom: 1px;"
+              >
                 <v-avatar style="margin-top=1vh" color="primary" size="128"
                   ><v-icon dark x-large> mdi-account-circle </v-icon></v-avatar
                 >
@@ -45,48 +48,55 @@
                     </v-btn>
                   </template>
                   <v-layout column>
-                    <v-card>
-                      <v-card-text>
-                        <v-text-field
-                          type="password"
-                          label="Old password"
-                          required
-                          v-model="oldpassword"
-                        ></v-text-field>
+                    <v-form
+                      v-model="passwordValid"
+                      @submit.prevent="updatePassword"
+                    >
+                      <v-card>
+                        <v-card-text>
+                          <v-text-field
+                            type="password"
+                            label="Old password"
+                            :rules="passwordRules"
+                            v-model="oldpassword"
+                          ></v-text-field>
 
-                        <v-text-field
-                          v-model="password"
-                          label="New Password"
-                          name="password"
-                          type="password"
-                          :rules="passwordRules"
-                          required
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="confirmPassword"
-                          label="Confirm New Password"
-                          name="confirmPassword"
-                          type="password"
-                          :rules="confirmPasswordRules"
-                          required
-                        ></v-text-field>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn 
-                          @click="updatePassword"
-                          color="primary" dark justify="center" text>
-                          เปลี่ยนรหัสผ่าน
-                        </v-btn>
-                        <v-btn
-                          color="blue darken-1"
-                          text
-                          @click="dialog = false"
-                        >
-                          Close
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
+                          <v-text-field
+                            v-model="password"
+                            label="New Password"
+                            name="password"
+                            type="password"
+                            :rules="passwordRules"
+                          ></v-text-field>
+                          <v-text-field
+                            v-model="confirmPassword"
+                            label="Confirm New Password"
+                            name="confirmPassword"
+                            type="password"
+                            :rules="confirmPasswordRules"
+                          ></v-text-field>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            :disabled="!passwordValid"
+                            color="primary"
+                            dark
+                            justify="center"
+                            text
+                          >
+                            เปลี่ยนรหัสผ่าน
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="dialog = false"
+                          >
+                            Close
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-form>
                   </v-layout>
                 </v-dialog>
               </v-row>
@@ -105,6 +115,7 @@ export default {
     return {
       info: {},
       dialog: false,
+      passwordValid: false,
       oldpassword: "",
       password: "",
       confirmPassword: "",
@@ -121,10 +132,8 @@ export default {
     };
   },
   created() {
-    // console.log(AuthUser.getters.user.api_token);
-    // รับ token user or admin ใหม่ทุกรอบ 
-    const token =AuthUser.getters.user.api_token
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
+    // รับ token user or admin ใหม่ทุกรอบ
+    const token = AuthUser.getters.user.api_token;
 
     this.$http
       .get("http://127.0.0.1:8000/api/user/me", {
@@ -145,19 +154,22 @@ export default {
   },
   methods: {
     updatePassword() {
-      const token =AuthUser.getters.user.api_token
-        // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjQsImlhdCI6MTYzMzcwNzQ1MiwiZXhwIjoxNjMzNzQzNDUyfQ.KtRn4eB3LhOMXxNqj6CmxrXy4epDaXbD-yC4XOu8mjY";
+      const token = AuthUser.getters.user.api_token;
       this.$http
-        .put("http://127.0.0.1:8000/api/user/me", {
-          oldpassword:this.oldpassword,
-          newpassword:this.password,
-        }, {
-          headers: { Authorization: `${token}` },
-        })
+        .put(
+          "http://127.0.0.1:8000/api/user/me",
+          {
+            oldpassword: this.oldpassword,
+            newpassword: this.password,
+          },
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
         .then((response) => {
           if (response.data.status == "error") {
             alert(response.data.error);
-          }else if(response.data.status != "error"){
+          } else if (response.data.status != "error") {
             this.dialog = false;
             this.oldpassword = "";
             this.newpassword = "";
@@ -165,9 +177,7 @@ export default {
         });
     },
   },
-
 };
 </script>
-
 
 <style></style>

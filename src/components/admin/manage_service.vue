@@ -14,7 +14,7 @@
       </v-card-title>
       <v-data-table :headers="headers" :items="items" :search="search">
         <template v-slot:[`item.coupon_status`]="{ item }">
-          <v-chip :color="getColor(item.coupon_status)" outlined>
+          <v-chip :color="item.coupon_status == 'used' ? 'red' : 'green'" outlined>
             {{ item.coupon_status }}
           </v-chip>
         </template>
@@ -25,14 +25,12 @@
             >เปลี่ยนสถานะ</v-btn
           >
         </template>
-        
       </v-data-table>
     </v-col>
   </v-row>
 </template>
 
 <script>
-// import axios from 'axios';
 import AuthUser from "@/store/AuthUser";
 export default {
   data() {
@@ -60,7 +58,6 @@ export default {
   methods: {
     updateCouponStatus(id, index, status) {
       const token = AuthUser.getters.user.api_token;
-      // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
       this.$http
         .put(
           "http://127.0.0.1:8000/api/user_coupon/" + id,
@@ -81,16 +78,9 @@ export default {
           }
         });
     },
-    getColor(coupon_status) {
-      if (coupon_status == "used") return "red";
-      else return "green";
-    },
   },
   created() {
-    // รับ token admin ใหม่ทุกรอบ
     const token = AuthUser.getters.user.api_token;
-    // "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnb3dhc2FiaS1qd3QiLCJzdWIiOjMsImlhdCI6MTYzMzc4OTU0OSwiZXhwIjoxNjMzODI1NTQ5fQ.zHA4y82s3D55TQPcGBcNYUK-hjjDqSzkAKG2uTRbZyw";
-
     this.$http
       .get("http://127.0.0.1:8000/api/user_coupon/", {
         headers: { Authorization: `${token}` },

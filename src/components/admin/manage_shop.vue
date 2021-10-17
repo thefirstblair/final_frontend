@@ -118,20 +118,16 @@
                     <h4>แก้ไขรูปภาพ</h4>
 
                     <span>รูปภาพเก่า</span>
-                      <v-img
-                        :src="editService.service_image_url"
-                        style="margin-bottom:10px;"
-                      />
-                      <v-divider></v-divider>
-                      <v-file-input
-                        accept="image/*"
-                        label="อัพโหลดรูปภาพหน้าประเภท แบบใหม่"
-                        v-model="editService_edit.service_image_url"
-                      ></v-file-input>
-                    <!-- <v-text-field
+                    <v-img
+                      :src="editService.service_image_url"
+                      style="margin-bottom:10px;"
+                    />
+                    <v-divider></v-divider>
+                    <v-file-input
+                      accept="image/*"
+                      label="อัพโหลดรูปภาพหน้าประเภท แบบใหม่"
                       v-model="editService_edit.service_image_url"
-                      :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
-                    /> -->
+                    ></v-file-input>
                   </v-col>
 
                   <v-col>
@@ -427,11 +423,6 @@
                         v-model="addType.type_image_url"
                         required
                       ></v-file-input>
-                      <!-- <v-text-field
-                        v-model="addType.type_image_url"
-                        required
-                        label="URL เพื่อแสดงไอค่อนหน้าเว็ป"
-                      ></v-text-field> -->
                     </v-col>
                   </v-row>
                 </v-container>
@@ -548,24 +539,12 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <!-- <v-file-input
-                        accept="image/*"
-                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
-                        label="อัพโหลดรูปภาพ"
-                        v-model="addService.service_image_url"
-                        required
-                      ></v-file-input> -->
                       <v-file-input
                         accept="image/*"
+                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
                         v-model="addService.service_image_url"
                         label="File input"
                       ></v-file-input>
-
-                      <!-- <v-text-field
-                        v-model="addService.service_image_url"
-                        :rules="[(v) => !!v || 'โปรดใส่รูปภาพ']"
-                        label="URL Image"
-                      ></v-text-field> -->
                     </v-col>
                   </v-row>
                 </v-container>
@@ -611,6 +590,7 @@
                 class="green_button"
                 style="margin-top: 19px"
                 dark
+                :disabled="name_employee == ''"
                 outlined
                 @click="
                   dialog_User = false;
@@ -670,9 +650,6 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      // Valid
-      // valid: false,
-
       addServiceValid: false,
       editServiceValid: false,
 
@@ -778,7 +755,6 @@ export default {
   },
   methods: {
     openEditService(item, index) {
-      console.log(index);
       this.dialog_editService = true;
       this.editService = item;
       this.editService.index = index;
@@ -795,8 +771,6 @@ export default {
     },
     // Type
     confirmed_addType() {
-      // if (!this.valid) return;
-
       let formData = new FormData();
 
       formData.append("name", this.addType.name);
@@ -884,7 +858,7 @@ export default {
         });
     },
     // Service
-    confirmed_addService() {   
+    confirmed_addService() {
       this.addService.type_id = this.current_type;
 
       let formData = new FormData();
@@ -894,16 +868,14 @@ export default {
       formData.append("description", this.addService.description);
       formData.append("service_image_url", this.addService.service_image_url);
 
-      console.log(this.addService.service_image_url);
       const token = AuthUser.getters.user.api_token;
-   
+
       this.$http
         .post("http://127.0.0.1:8000/api/service/", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
           if (response.data && response.data.status != "error") {
-            console.log(response);
             this.dialog_addService = false;
             Swal.fire("เพิ่มเรียบร้อย", "", "success");
             response.data.coupon_count = 0;
@@ -921,9 +893,6 @@ export default {
     },
     removeService(id, index) {
       const token = AuthUser.getters.user.api_token;
-      // this.id = id;
-      // this.index = index;
-      console.log(id, index);
 
       this.$http
         .delete("http://127.0.0.1:8000/api/service/" + id, {
@@ -940,19 +909,20 @@ export default {
         });
     },
     confirmed_editService() {
-
       let formData = new FormData();
 
       formData.append("name", this.editService_edit.name);
       formData.append("description", this.editService_edit.description);
 
-      if (this.editService_edit.service_image_url)
-      {
-         formData.append("service_image_url", this.editService_edit.service_image_url);
-         this.editService_edit.service_image_url = null;
+      if (this.editService_edit.service_image_url) {
+        formData.append(
+          "service_image_url",
+          this.editService_edit.service_image_url
+        );
+        this.editService_edit.service_image_url = null;
       }
-     
-     formData.append("_method", "put")
+
+      formData.append("_method", "put");
 
       this.edit = false;
       const token = AuthUser.getters.user.api_token;
@@ -1092,7 +1062,6 @@ export default {
       this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {
         if (response.status == 200) {
           this.items = response.data;
-          console.log(this.items);
         } else {
           console.log(response.error);
         }
@@ -1135,6 +1104,8 @@ export default {
           }
         });
     },
+
+    // MARK
     checkEmployee(name_employee) {
       // เช็คว่า ช่องใส่ยูเซอร์เนม ว่างหรือไม่ AND เช็คว่ามี Employee คนนี้อยู่แล้วหรือไม่
       if (name_employee === "") {
@@ -1146,7 +1117,6 @@ export default {
             this.name_employee = "";
             this.flag_2 = true;
             Swal.fire("มีพนักงานท่านนี้อยู่แล้ว", "", "error");
-            console.log("OK");
             break;
           }
         }

@@ -19,8 +19,6 @@
         <Reservations v-else-if="current_component == 'Reservations'" />
         <PaymentRecord v-else-if="current_component == 'PaymentRecord'" />
       </v-col>
-
-      
     </v-row>
   </v-container>
 </template>
