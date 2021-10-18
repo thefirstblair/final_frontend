@@ -127,7 +127,7 @@
 
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
 
-    <v-dialog persistent v-model="dialog_editUser" max-width="600px">
+    <v-dialog v-model="dialog_editUser" max-width="600px">
       <v-form ref="editinfo" @submit.prevent = "updateUser" v-model="editUserValid">
       <v-card>
         <v-card-title>
@@ -141,7 +141,7 @@
               >
             </v-row>
             <v-row>
-              <v-text-field label="Password" v-model="editUser.password" :rules="[rules.required, rules.min]"
+              <v-text-field label="Password" v-model="editUser.password" 
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 @click:append="show1 = !show1"
