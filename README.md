@@ -1,4 +1,4 @@
-# GoWasabil (Frontend)
+# GoWasabi! (Frontend)
 
 ส่วนของ Backend URL: https://github.com/pornthida030/final_backend.git
 
