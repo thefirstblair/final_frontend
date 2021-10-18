@@ -55,24 +55,30 @@
                       <v-card>
                         <v-card-text>
                           <v-text-field
-                            type="password"
                             label="Old password"
                             :rules="passwordRules"
                             v-model="oldpassword"
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show1 ? 'text' : 'password'"
+                            @click:append="show1 = !show1"
                           ></v-text-field>
 
                           <v-text-field
                             v-model="password"
                             label="New Password"
                             name="password"
-                            type="password"
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show1 ? 'text' : 'password'"
+                            @click:append="show1 = !show1"
                             :rules="passwordRules"
                           ></v-text-field>
                           <v-text-field
                             v-model="confirmPassword"
                             label="Confirm New Password"
                             name="confirmPassword"
-                            type="password"
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show1 ? 'text' : 'password'"
+                             @click:append="show1 = !show1"
                             :rules="confirmPasswordRules"
                           ></v-text-field>
                         </v-card-text>
@@ -91,7 +97,7 @@
                           <v-btn
                             color="blue darken-1"
                             text
-                            @click="dialog = false; oldpassword='';password='';confirmPassword=''"
+                            @click="dialog = false; oldpassword='';password='';confirmPassword=''; show1=false"
                           >
                             Close
                           </v-btn>
@@ -114,6 +120,7 @@ import AuthUser from "@/store/AuthUser";
 export default {
   data() {
     return {
+      show1:false,
       info: {},
       dialog: false,
       passwordValid: false,

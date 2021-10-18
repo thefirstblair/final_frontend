@@ -83,7 +83,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog_AddUser = false">
+            <v-btn color="blue darken-1" text @click="dialog_AddUser = false; addUser.role='USER'; addUser.name='';addUser.username='';addUser.password=''; show1=false">
               Close
             </v-btn>
             <v-btn
@@ -142,6 +142,9 @@
             </v-row>
             <v-row>
               <v-text-field label="Password" v-model="editUser.password" :rules="[rules.required, rules.min]"
+                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="show1 ? 'text' : 'password'"
+                @click:append="show1 = !show1"
                 >Password</v-text-field
               >
             </v-row>
@@ -158,7 +161,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="dialog_editUser = false; editUser.password='';">
+          <v-btn color="blue darken-1" text @click="dialog_editUser = false; editUser.password=''; show1=false">
             Close
           </v-btn>
           <v-btn
