@@ -1,21 +1,21 @@
 <template>
   <v-container>
     <v-row style="margin-top: 5px">
-      <v-col cols="3" >
-         <span >Dashboard</span> 
-          <h1 style="text-align: right; background: #E0FFF4">Admin</h1>
-        <div class="type_select_btn" @click="current_component = 'manage_shop'">
-          ตัวจัดการบริการ
-        </div>
-        <div class="type_select_btn" @click="current_component = 'manage_service'">
-          จัดการการจอง / ประวัติ ของลูกค้า
-        </div>
+      <v-col cols="3">
+        <span>Dashboard</span>
+        <h1 style="text-align: right; background: #e0fff4">Admin</h1>
 
-        <div class="type_select_btn" @click="current_component = 'manage_user'">
-          จัดการผู้ใช้งาน
-        </div>
-        <div class="type_select_btn" @click="current_component = 'manage_discount'">
-          จัดการคูปองส่วนลด
+        <div
+          class="type_select_btn"
+          v-for="(v, index) in list_compo"
+          :key="index"
+          :class="{ active: index == lists_select }"
+          @click="
+            current_component = v.name;
+            lists_select = index;
+          "
+        >
+          {{ v.name_l }}
         </div>
       </v-col>
       <v-col>
@@ -23,7 +23,6 @@
         <manageService v-else-if="current_component == 'manage_service'" />
         <manageUser v-else-if="current_component == 'manage_user'" />
         <manageDiscount v-else-if="current_component == 'manage_discount'" />
-
       </v-col>
     </v-row>
   </v-container>
@@ -36,10 +35,29 @@ import manageUser from "@/components/admin/manage_user.vue";
 import manageDiscount from "@/components/admin/manage_discount.vue";
 
 export default {
-  components: { manageShop, manageService, manageUser, manageDiscount},
+  components: { manageShop, manageService, manageUser, manageDiscount },
   data() {
     return {
       current_component: "manage_shop",
+      lists_select: 0,
+      list_compo: [
+        {
+          name: "manage_shop",
+          name_l: "จัดการบริการ",
+        },
+        {
+          name: "manage_service",
+          name_l: "จัดการประวัติการจองของลูกค้า",
+        },
+        {
+          name: "manage_user",
+          name_l: "จัดการผู้ใช้งาน",
+        },
+        {
+          name: "manage_discount",
+          name_l: "จัดการคูปองส่วนลด",
+        },
+      ],
     };
   },
 };
