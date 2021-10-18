@@ -84,13 +84,14 @@
                             dark
                             justify="center"
                             text
+                            @click="updatePassword()"
                           >
                             เปลี่ยนรหัสผ่าน
                           </v-btn>
                           <v-btn
                             color="blue darken-1"
                             text
-                            @click="dialog = false"
+                            @click="dialog = false; oldpassword='';password='';confirmPassword=''"
                           >
                             Close
                           </v-btn>
@@ -121,7 +122,7 @@ export default {
       confirmPassword: "",
       passwordRules: [
         (value) => !!value || "Please type password.",
-        (value) => (value && value.length >= 6) || "minimum 6 characters",
+        (value) => (value && value.length >= 8) || "minimum 8 characters",
       ],
       confirmPasswordRules: [
         (value) => !!value || "type confirm password",
@@ -173,6 +174,9 @@ export default {
             this.dialog = false;
             this.oldpassword = "";
             this.newpassword = "";
+            this.password="";
+            this.confirmPassword="";
+            alert("คุณได้ทำการเปลี่ยนรหัสผ่านสำเร็จ")
           }
         });
     },
