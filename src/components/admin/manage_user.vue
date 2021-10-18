@@ -128,7 +128,7 @@
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
 
     <v-dialog persistent v-model="dialog_editUser" max-width="600px">
-      <v-form @submit.prevent = "updateUser" v-model="editUserValid">
+      <v-form ref="editinfo" @submit.prevent = "updateUser" v-model="editUserValid">
       <v-card>
         <v-card-title>
           <span class="text-h5">แก้ไข Permission</span>
@@ -158,7 +158,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="dialog_editUser = false">
+          <v-btn color="blue darken-1" text @click="dialog_editUser = false; editUser.password='';">
             Close
           </v-btn>
           <v-btn
