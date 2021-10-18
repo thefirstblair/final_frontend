@@ -1,10 +1,10 @@
 <template>
   <!-- เข้าถึงได้แค่ Employee สามารถเปลี่ยนสถานะคูปองที่ลูกค้าได้เลือกตนเองมาได้เช่นเดียวกับแอดมิน-->
   <v-container>
-    <v-row>
+    <v-row style="margin-top: 5px">
       <v-col cols="3">
         <span>Dashboard</span>
-        <h2 style="text-align: right">Employee</h2>
+        <h1 style="text-align: right; background: #E0FFF4">Employee</h1>
 
         <div
           class="type_select_btn"

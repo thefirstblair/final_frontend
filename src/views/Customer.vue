@@ -1,9 +1,9 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row style="margin-top: 5px">
       <v-col cols="3">
          <span>Dashboard</span>
-          <h2 style="text-align: right">Customers</h2>
+          <h1 style="text-align: right; background: #E0FFF4">Customers</h1>
         <div class="type_select_btn" @click="current_component = 'Info'">
           บัญชีผู้ใช้
         </div>
