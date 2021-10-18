@@ -339,8 +339,10 @@ export default {
 
     confirmPayment() {
       this.records.items = this.$store.getters.getCarts;
-      this.records.discount_coupon = this.coupon_preview.specific_code;
-
+      if (this.coupon_preview != null){
+        this.records.discount_coupon = this.coupon_preview.specific_code;
+      }
+      // console.log(this.coupon_preview)
       for (let i = 0; i < this.$store.getters.getCarts.length; i++) {
         let d = new Date();
         let date = d.getDate();
