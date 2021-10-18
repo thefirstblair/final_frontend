@@ -377,6 +377,7 @@ export default {
         });
 
         this.clearFormLogin();
+        this.clearFormRegister();
       } else {
        if (res.message == 1) {
           //แสดงข้อความ error
@@ -448,6 +449,7 @@ export default {
           timer: 1500,
         });
         this.clearFormRegister();
+        this.clearFormLogin();
       } else {
         if (res.message == 2) {
           //แสดงข้อความ error

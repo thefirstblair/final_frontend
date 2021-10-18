@@ -2,16 +2,20 @@
   <v-container>
     <v-row style="margin-top: 5px">
       <v-col cols="3">
-         <span>Dashboard</span>
-          <h1 style="text-align: right; background: #E0FFF4">Customers</h1>
-        <div class="type_select_btn" @click="current_component = 'Info'">
-          บัญชีผู้ใช้
-        </div>
-        <div class="type_select_btn" @click="current_component = 'Reservations'">
-          ประวัติการจองของฉัน
-        </div>
-        <div class="type_select_btn" @click="current_component = 'PaymentRecord'">
-          ประวัติการชำระเงิน
+        <span>Dashboard</span>
+        <h1 style="text-align: right; background: #e0fff4">Customers</h1>
+
+        <div
+          class="type_select_btn"
+          v-for="(v, index) in list_compo"
+          :key="index"
+          :class="{ active: index == lists_select }"
+          @click="
+            current_component = v.name;
+            lists_select = index;
+          "
+        >
+          {{ v.name_l }}
         </div>
       </v-col>
       <v-col cols="8">
@@ -33,6 +37,21 @@ export default {
   data() {
     return {
       current_component: "Info",
+      lists_select: 0,
+      list_compo: [
+        {
+          name: "Info",
+          name_l: "บัญชีผู้ใช้",
+        },
+        {
+          name: "Reservations",
+          name_l: "ประวัติการจองของฉัน",
+        },
+        {
+          name: "PaymentRecord",
+          name_l: "ประวัติการชำระเงิน",
+        },
+      ],
     };
   },
 };
