@@ -183,7 +183,7 @@ export default {
             this.newpassword = "";
             this.password="";
             this.confirmPassword="";
-            alert("คุณได้ทำการเปลี่ยนรหัสผ่านสำเร็จ")
+            alert("คุณได้ทำการเปลี่ยนพาสเวิร์ดสำเร็จ")
           }
         });
     },
