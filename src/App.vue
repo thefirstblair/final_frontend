@@ -410,6 +410,7 @@ export default {
       AuthUser.dispatch("logout");
       this.$store.commit('clearItem');
       this.$router.push({ path: '/' }).catch(()=>{})
+      alert("คุณได้ทำการออกจากระบบเรียบร้อย")
     },
     isCustomer() {
       //เช็คว่าเป็นผู้ใช้ไม
