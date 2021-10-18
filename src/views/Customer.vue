@@ -11,7 +11,7 @@
           ประวัติการจองของฉัน
         </div>
         <div class="type_select_btn" @click="current_component = 'PaymentRecord'">
-          ประวัติการการชำระเงิน
+          ประวัติการชำระเงิน
         </div>
       </v-col>
       <v-col cols="8">
