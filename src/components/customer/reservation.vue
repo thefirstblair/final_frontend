@@ -57,7 +57,7 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="review_dialog" persistent max-width="600px">
+    <v-dialog v-model="review_dialog" max-width="600px">
       <v-form>
         <v-card>
           <v-card-title>
@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import AuthUser from "@/store/AuthUser";
 export default {
   data() {
@@ -133,7 +134,7 @@ export default {
         .then((response) => {
           if (response.data && response.data.status != "error") {
             this.review_dialog = false;
-
+            Swal.fire("รีวิวเรียบร้อย", "", "success");
             this.review = {
               index: 0,
               user_coupon_id: 0,
@@ -144,11 +145,17 @@ export default {
               user_id: AuthUser.getters.user.id,
             };
             this.items[this.review.index].reviewed = true;
+            this.reload();
+
           } else {
             console.log(response.data.error);
           }
         });
     },
+
+     async reload() {
+      location.reload();
+    }
   },
   created() {
     const token = AuthUser.getters.user.api_token;
