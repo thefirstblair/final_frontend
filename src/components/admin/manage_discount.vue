@@ -263,21 +263,34 @@ export default {
     },
     // ลบคูปองส่วนลด
     deleteDiscount(id, index) {
-      const token = AuthUser.getters.user.api_token;
+      Swal.fire({
+        title: 'คุณแน่ใจว่าจะลบ?',
+        text: "การลบจะไม่สามารถคืนสิ่งที่ลบได้",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ใช่ฉันแน่ใจ'
+      }).then((result) => {
+      if (result.isConfirmed) {
+           const token = AuthUser.getters.user.api_token;
 
-      this.$http
-        .delete("http://127.0.0.1:8000/api/discount_coupon/" + id, {
-          headers: { Authorization: `${token}` },
-        })
-        .then((response) => {
-          if (response.data && response.data.status != "error") {
-            Swal.fire("ลบคูปองส่วนลดเรียบร้อย", "", "success");
-            this.items.splice(index, 1);
+          this.$http
+          .delete("http://127.0.0.1:8000/api/discount_coupon/" + id, {
+              headers: { Authorization: `${token}` },
+          })
+          .then((response) => {
+            if (response.data && response.data.status != "error") {
+              Swal.fire("ลบคูปองส่วนลดเรียบร้อย", "", "success");
+              this.items.splice(index, 1);
           } else {
             Swal.fire("ไม่สามารถลบคูปองส่วนลดได้", "", "error");
             console.log(response.data.error);
           }
-        });
+          });
+        }
+      })
+   
     },
   },
   // ดึงข้อมูลจาก discount coupon
