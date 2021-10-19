@@ -832,21 +832,34 @@ export default {
         });
     },
     removeType(id, index) {
-      const token = AuthUser.getters.user.api_token;
+      Swal.fire({
+        title: "คุณแน่ใจว่าจะลบ?",
+        text: "การลบจะไม่สามารถคืนสิ่งที่ลบได้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ใช่ฉันแน่ใจ",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const token = AuthUser.getters.user.api_token;
 
-      this.$http
-        .delete("http://127.0.0.1:8000/api/type/" + id, {
-          headers: { Authorization: `${token}` },
-        })
-        .then((response) => {
-          if (response.data && response.data.status != "error") {
-            Swal.fire("ลบเรียบร้อย", "", "success");
-            this.items.splice(index, 1);
-          } else {
-            Swal.fire("ไม่สามารถลบได้", "", "error");
-            console.log(response.data.error);
-          }
-        });
+          this.$http
+            .delete("http://127.0.0.1:8000/api/type/" + id, {
+              headers: { Authorization: `${token}` },
+            })
+
+            .then((response) => {
+              if (response.data && response.data.status != "error") {
+                Swal.fire("ลบเรียบร้อย", "", "success");
+                this.items.splice(index, 1);
+              } else {
+                Swal.fire("ไม่สามารถลบได้", "", "error");
+                console.log(response.data.error);
+              }
+            });
+        }
+      });
     },
     // Service
     confirmed_addService() {
@@ -883,21 +896,33 @@ export default {
         });
     },
     removeService(id, index) {
-      const token = AuthUser.getters.user.api_token;
+      Swal.fire({
+        title: "คุณแน่ใจว่าจะลบ?",
+        text: "การลบจะไม่สามารถคืนสิ่งที่ลบได้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ใช่ฉันแน่ใจ",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const token = AuthUser.getters.user.api_token;
 
-      this.$http
-        .delete("http://127.0.0.1:8000/api/service/" + id, {
-          headers: { Authorization: `${token}` },
-        })
-        .then((response) => {
-          if (response.data && response.data.status != "error") {
-            Swal.fire("ลบเรียบร้อย", "", "success");
-            this.items.splice(index, 1);
-          } else {
-            Swal.fire("ไม่สามารถลบได้", "", "error");
-            console.log(response.data.error);
-          }
-        });
+          this.$http
+            .delete("http://127.0.0.1:8000/api/service/" + id, {
+              headers: { Authorization: `${token}` },
+            })
+            .then((response) => {
+              if (response.data && response.data.status != "error") {
+                Swal.fire("ลบเรียบร้อย", "", "success");
+                this.items.splice(index, 1);
+              } else {
+                Swal.fire("ไม่สามารถลบได้", "", "error");
+                console.log(response.data.error);
+              }
+            });
+        }
+      });
     },
     confirmed_editService() {
       let formData = new FormData();
@@ -992,9 +1017,19 @@ export default {
         });
     },
     removeCoupon(id, index) {
-      const token = AuthUser.getters.user.api_token;
+       Swal.fire({
+        title: 'คุณแน่ใจว่าจะลบ?',
+        text: "การลบจะไม่สามารถคืนสิ่งที่ลบได้",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ใช่ฉันแน่ใจ'
+      }).then((result) => {
+      if (result.isConfirmed) {
+         const token = AuthUser.getters.user.api_token;
 
-      this.$http
+           this.$http
         .delete("http://127.0.0.1:8000/api/coupon/" + id, {
           headers: { Authorization: `${token}` },
         })
@@ -1007,6 +1042,11 @@ export default {
             console.log(response.data.error);
           }
         });
+      }
+      })
+     
+
+    
     },
     // etc ..
     selectType(id) {
