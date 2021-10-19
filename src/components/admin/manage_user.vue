@@ -22,9 +22,7 @@
       outlined
       @click="dialog_AddUser = !dialog_AddUser"
     >
-      <v-icon>
-        mdi-plus
-      </v-icon>
+      <v-icon> mdi-plus </v-icon>
       Add New User
     </v-btn>
 
@@ -83,7 +81,18 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog_AddUser = false; addUser.role='USER'; addUser.name='';addUser.username='';addUser.password=''; show1=false">
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="
+                dialog_AddUser = false;
+                addUser.role = 'USER';
+                addUser.name = '';
+                addUser.username = '';
+                addUser.password = '';
+                show1 = false;
+              "
+            >
               Close
             </v-btn>
             <v-btn
@@ -128,52 +137,69 @@
     <!-- EDIT USER (EDIT ได้แค่ Name และ Permission)-->
 
     <v-dialog v-model="dialog_editUser" max-width="600px">
-      <v-form ref="editinfo" @submit.prevent = "updateUser" v-model="editUserValid">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">แก้ไข Permission</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-text-field label="Name" v-model="editUser.name" :rules="[(v) => !!v || 'โปรดใส่ชื่อผู้ใช้']"
-                >Name</v-text-field
-              >
-            </v-row>
-            <v-row>
-              <v-text-field label="Password" v-model="editUser.password" 
-                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="show1 ? 'text' : 'password'"
-                @click:append="show1 = !show1"
-                >Password</v-text-field
-              >
-            </v-row>
-            <v-row>
-              <v-select
-                :items="items"
-                label="Permission"
-                v-model="editUser.role"
-                :rules="[(v) => !!v || 'โปรดใส่ role']"
-              ></v-select>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
+      <v-form
+        ref="editinfo"
+        @submit.prevent="updateUser"
+        v-model="editUserValid"
+      >
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">แก้ไข Permission</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-text-field
+                  label="Name"
+                  v-model="editUser.name"
+                  :rules="[(v) => !!v || 'โปรดใส่ชื่อผู้ใช้']"
+                  >Name</v-text-field
+                >
+              </v-row>
+              <v-row>
+                <v-text-field
+                  label="Password"
+                  v-model="editUser.password"
+                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show1 ? 'text' : 'password'"
+                  @click:append="show1 = !show1"
+                  >Password</v-text-field
+                >
+              </v-row>
+              <v-row>
+                <v-select
+                  :items="items"
+                  label="Permission"
+                  v-model="editUser.role"
+                  :rules="[(v) => !!v || 'โปรดใส่ role']"
+                ></v-select>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn color="blue darken-1" text @click="dialog_editUser = false; editUser.password=''; show1=false">
-            Close
-          </v-btn>
-          <v-btn
-            :disabled="!editUserValid"
-            color="blue darken-1"
-            text
-            type="submit"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="
+                dialog_editUser = false;
+                editUser.password = '';
+                show1 = false;
+              "
+            >
+              Close
+            </v-btn>
+            <v-btn
+              :disabled="!editUserValid"
+              color="blue darken-1"
+              text
+              type="submit"
+            >
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-form>
     </v-dialog>
   </v-container>
@@ -186,7 +212,7 @@ export default {
   data() {
     return {
       editUserValid: false,
-      addUserValid:false,
+      addUserValid: false,
       defaultItem: { name: "", username: "", role: "" },
       dialog_AddUser: false,
       dialog_editUser: false,
@@ -235,8 +261,8 @@ export default {
             this.dialog_AddUser = false;
             Swal.fire("เพิ่มผู้ใช้งานเรียบร้อย", "", "success");
             this.user.push(response.data.data);
-            console.log(response.data.data)
-            console.log(this.user)
+            console.log(response.data.data);
+            console.log(this.user);
             this.addUser = {
               name: "",
               username: "",
@@ -244,53 +270,73 @@ export default {
               role: "USER",
             };
           } else {
-            Swal.fire("ไม่สามารถเพิ่มผู้ใช้งานได้ โปรดตรวจสอบ Username กับ Password ของท่านอีกครั้ง", "", "error");
+            Swal.fire(
+              "ไม่สามารถเพิ่มผู้ใช้งานได้ โปรดตรวจสอบ Username กับ Password ของท่านอีกครั้ง",
+              "",
+              "error"
+            );
             console.log(response.data.error);
           }
         });
     },
     updateUser() {
-      console.log(this.$refs.editinfo)
-      if(this.$refs.editinfo.validate()){
-      const token = AuthUser.getters.user.api_token;
-      this.$http
-        .put(
-          "http://127.0.0.1:8000/api/user/" + this.editUser.id,
-          this.editUser,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
-        .then((response) => {
-          if (response.data && response.data.status != "error") {
-            this.user.splice(this.editUser.index, 1, response.data);
-            Swal.fire("แก้ไขเรียบร้อย", "", "success");
-          } else {
-            Swal.fire("ไม่สามารถแก้ไขผู้ใช้งานได้ โปรดตรวจสอบอีกครั้ง", "", "error");
-            console.log(response.data.error);
-          }
-        });
-        this.editUser.password=""
-        this.dialog_editUser=false
+      console.log(this.$refs.editinfo);
+      if (this.$refs.editinfo.validate()) {
+        const token = AuthUser.getters.user.api_token;
+        this.$http
+          .put(
+            "http://127.0.0.1:8000/api/user/" + this.editUser.id,
+            this.editUser,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          )
+          .then((response) => {
+            if (response.data && response.data.status != "error") {
+              this.user.splice(this.editUser.index, 1, response.data);
+              Swal.fire("แก้ไขเรียบร้อย", "", "success");
+            } else {
+              Swal.fire(
+                "ไม่สามารถแก้ไขผู้ใช้งานได้ โปรดตรวจสอบอีกครั้ง",
+                "",
+                "error"
+              );
+              console.log(response.data.error);
+            }
+          });
+        this.editUser.password = "";
+        this.dialog_editUser = false;
       }
     },
     deleteUser(id, index) {
-      const token = AuthUser.getters.user.api_token;
-      console.log(id)
-      console.log(index)
-      this.$http
-        .delete("http://127.0.0.1:8000/api/user/" + id, {
-          headers: { Authorization: `${token}` },
-        })
-        .then((response) => {
-          if (response.data && response.data.status != "error") {
-            Swal.fire("ลบผู้ใช้นี้เรียบร้อย", "", "success");
-            this.user.splice(index, 1);
-          } else {
-            Swal.fire("ไม่สามารถลบผู้ใช้งานได้", "", "error");
-            console.log(response.data.error);
-          }
-        });
+      Swal.fire({
+        title: "คุณแน่ใจว่าจะลบ?",
+        text: "การลบจะไม่สามารถคืนสิ่งที่ลบได้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ยืนยัน",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const token = AuthUser.getters.user.api_token;
+          console.log(id);
+          console.log(index);
+          this.$http
+            .delete("http://127.0.0.1:8000/api/user/" + id, {
+              headers: { Authorization: `${token}` },
+            })
+            .then((response) => {
+              if (response.data && response.data.status != "error") {
+                Swal.fire("ลบผู้ใช้นี้เรียบร้อย", "", "success");
+                this.user.splice(index, 1);
+              } else {
+                Swal.fire("ไม่สามารถลบผู้ใช้งานได้", "", "error");
+                console.log(response.data.error);
+              }
+            });
+        }
+      });
     },
   },
   created() {
