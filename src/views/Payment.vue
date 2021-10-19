@@ -416,53 +416,6 @@ export default {
             });
           }
         });
-      //   this.cost = this.$store.getters.getTotalPrice; //เอาเงินรวมทั้งหมดมา
-      //   DiscountCoupon.dispatch("checkCoupon", this.code_user);
-      //   if (DiscountCoupon.getters.success == true) {
-      //     if (DiscountCoupon.getters.thisCoupon.quantity > 0) {
-      //       if (this.cost >= DiscountCoupon.getters.thisCoupon.minimum_cost) {
-      //         let percent =
-      //           (this.cost * DiscountCoupon.getters.thisCoupon.discount_percent) /
-      //           100;
-      //         this.cost = this.cost - percent;
-
-      //         Swal.fire({
-      //           icon: "success",
-      //           title: "สามารถใช้โค้ดส่วนลดได้",
-      //           text: "ท่านได้รับส่วนลด " + percent + " บาท",
-      //           showConfirmButton: true,
-      //         });
-      //         this.countUse = true;
-      //         this.dialog = false;
-      //         this.codeName = this.code_user;
-      //         this.code_user = "";
-      //         this.costText = this.cost;
-      //         this.textDiscount = "คูปองส่วนลด : ";
-      //         this.textTotalDis = "ยอดรวมหลังใช้คูปองทั้งหมด";
-      //       } else {
-      //         Swal.fire({
-      //           icon: "error",
-      //           title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-      //           text:
-      //             "เนื่องจากยอดชำระไม่ถึง " +
-      //             DiscountCoupon.getters.thisCoupon.minimum_cost +
-      //             " บาท",
-      //         });
-      //       }
-      //     } else {
-      //       Swal.fire({
-      //         icon: "error",
-      //         title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-      //         text: "เนื่องจากโค้ดส่วนลดหมด",
-      //       });
-      //     }
-      //   } else {
-      //     Swal.fire({
-      //       icon: "error",
-      //       title: "ไม่สามารถใช้โค้ดส่วนลดได้",
-      //       text: "เนื่องจากกรอกโค้ดไม่ถูกต้อง",
-      //     });
-      //   }
     },
   },
 };
