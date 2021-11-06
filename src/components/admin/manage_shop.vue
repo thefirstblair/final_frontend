@@ -751,7 +751,7 @@ export default {
       this.editService.index = index;
       this.current_service = item.id;
       this.$http
-        .get("http://127.0.0.1:8000/api/service/" + item.id)
+        .get("https://se-api-pond.herokuapp.com/api/service/" + item.id)
         .then((response) => {
           if (response.status == 200) {
             this.coupons = response.data.coupons;
@@ -770,7 +770,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("http://127.0.0.1:8000/api/type/", formData, {
+        .post("https://se-api-pond.herokuapp.com/api/type/", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -815,7 +815,7 @@ export default {
 
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .post("http://127.0.0.1:8000/api/type/" + this.editType.id, formData, {
+        .post("https://se-api-pond.herokuapp.com/api/type/" + this.editType.id, formData, {
           headers: {
             Authorization: `${token}`,
           },
@@ -845,7 +845,7 @@ export default {
           const token = AuthUser.getters.user.api_token;
 
           this.$http
-            .delete("http://127.0.0.1:8000/api/type/" + id, {
+            .delete("https://se-api-pond.herokuapp.com/api/type/" + id, {
               headers: { Authorization: `${token}` },
             })
 
@@ -875,7 +875,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("http://127.0.0.1:8000/api/service/", formData, {
+        .post("https://se-api-pond.herokuapp.com/api/service/", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -909,7 +909,7 @@ export default {
           const token = AuthUser.getters.user.api_token;
 
           this.$http
-            .delete("http://127.0.0.1:8000/api/service/" + id, {
+            .delete("https://se-api-pond.herokuapp.com/api/service/" + id, {
               headers: { Authorization: `${token}` },
             })
             .then((response) => {
@@ -945,7 +945,7 @@ export default {
 
       this.$http
         .post(
-          "http://127.0.0.1:8000/api/service/" + this.editService.id,
+          "https://se-api-pond.herokuapp.com/api/service/" + this.editService.id,
           formData,
           {
             headers: { Authorization: `${token}` },
@@ -974,7 +974,7 @@ export default {
       this.addCoupon.time = Number(this.addCoupon.time);
 
       this.$http
-        .post("http://127.0.0.1:8000/api/coupon/", this.addCoupon, {
+        .post("https://se-api-pond.herokuapp.com/api/coupon/", this.addCoupon, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -999,7 +999,7 @@ export default {
       this.editCoupon.time = Number(this.editCoupon.time);
       this.$http
         .put(
-          "http://127.0.0.1:8000/api/coupon/" + this.editCoupon.id,
+          "https://se-api-pond.herokuapp.com/api/coupon/" + this.editCoupon.id,
           this.editCoupon,
           {
             headers: { Authorization: `${token}` },
@@ -1030,7 +1030,7 @@ export default {
          const token = AuthUser.getters.user.api_token;
 
            this.$http
-        .delete("http://127.0.0.1:8000/api/coupon/" + id, {
+        .delete("https://se-api-pond.herokuapp.com/api/coupon/" + id, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -1064,7 +1064,7 @@ export default {
       ];
 
       this.$http
-        .get("http://127.0.0.1:8000/api/type/" + id)
+        .get("https://se-api-pond.herokuapp.com/api/type/" + id)
         .then((response) => {
           if (response.status == 200) {
             this.items = response.data.services;
@@ -1090,7 +1090,7 @@ export default {
       this.getAllType();
     },
     getAllType() {
-      this.$http.get("http://127.0.0.1:8000/api/type/").then((response) => {
+      this.$http.get("https://se-api-pond.herokuapp.com/api/type/").then((response) => {
         if (response.status == 200) {
           this.items = response.data;
         } else {
@@ -1102,7 +1102,7 @@ export default {
     removeEmployee(id) {
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .delete("http://127.0.0.1:8000/api/employee/" + id, {
+        .delete("https://se-api-pond.herokuapp.com/api/employee/" + id, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -1119,7 +1119,7 @@ export default {
     addEmployeeToType() {
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .post("http://127.0.0.1:8000/api/employee/", this.addEmployee, {
+        .post("https://se-api-pond.herokuapp.com/api/employee/", this.addEmployee, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
