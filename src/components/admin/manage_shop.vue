@@ -770,7 +770,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/type/", formData, {
+        .post("https://se-api-pond.herokuapp.com/api/type", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -875,7 +875,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/service/", formData, {
+        .post("https://se-api-pond.herokuapp.com/api/service", formData, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -974,7 +974,7 @@ export default {
       this.addCoupon.time = Number(this.addCoupon.time);
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/coupon/", this.addCoupon, {
+        .post("https://se-api-pond.herokuapp.com/api/coupon", this.addCoupon, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -1090,7 +1090,7 @@ export default {
       this.getAllType();
     },
     getAllType() {
-      this.$http.get("https://se-api-pond.herokuapp.com/api/type/").then((response) => {
+      this.$http.get("https://se-api-pond.herokuapp.com/api/type").then((response) => {
         if (response.status == 200) {
           this.items = response.data;
         } else {
@@ -1119,7 +1119,7 @@ export default {
     addEmployeeToType() {
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/employee/", this.addEmployee, {
+        .post("https://se-api-pond.herokuapp.com/api/employee", this.addEmployee, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {

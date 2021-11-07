@@ -353,7 +353,7 @@ export default {
       }
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/payment_record/", this.records, {
+        .post("https://se-api-pond.herokuapp.com/api/payment_record", this.records, {
           headers: { Authorization: `${AuthUser.getters.user.api_token}` },
         })
         .then((response) => {

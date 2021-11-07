@@ -228,7 +228,7 @@ export default {
     const token = AuthUser.getters.user.api_token;
 
     this.$http
-      .get("https://se-api-pond.herokuapp.com/api/payment_record/", {
+      .get("https://se-api-pond.herokuapp.com/api/payment_record", {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {

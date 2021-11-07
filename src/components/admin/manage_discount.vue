@@ -218,7 +218,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/discount_coupon/", this.addDiscount, {
+        .post("https://se-api-pond.herokuapp.com/api/discount_coupon", this.addDiscount, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {

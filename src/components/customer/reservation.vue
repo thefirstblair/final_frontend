@@ -128,7 +128,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/review/", this.review, {
+        .post("https://se-api-pond.herokuapp.com/api/review", this.review, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {

@@ -253,7 +253,7 @@ export default {
     confirmed_addUser() {
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .post("https://se-api-pond.herokuapp.com/api/user/", this.addUser, {
+        .post("https://se-api-pond.herokuapp.com/api/user", this.addUser, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
