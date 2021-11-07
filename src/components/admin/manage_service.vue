@@ -60,7 +60,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
       this.$http
         .put(
-          "http://127.0.0.1:8000/api/user_coupon/" + id,
+          "https://se-api-pond.herokuapp.com/api/user_coupon/" + id,
           {
             coupon_status:
               (status == "unuse" && "used") || (status == "used" && "unuse"),
@@ -82,7 +82,7 @@ export default {
   created() {
     const token = AuthUser.getters.user.api_token;
     this.$http
-      .get("http://127.0.0.1:8000/api/user_coupon/", {
+      .get("https://se-api-pond.herokuapp.com/api/user_coupon/", {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {

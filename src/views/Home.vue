@@ -182,7 +182,7 @@ export default {
     },
     randomCoupon() {
       this.$http
-        .get("http://127.0.0.1:8000/api/coupon/random")
+        .get("https://se-api-pond.herokuapp.com/api/coupon/random")
         .then((response) => {
           if (response.status == 200) {
             this.random_coupon = response.data;
@@ -209,7 +209,7 @@ export default {
   created() {
     this.randomCoupon();
 
-    this.$http.get("http://127.0.0.1:8000/api/type").then((response) => {
+    this.$http.get("https://se-api-pond.herokuapp.com/api/type").then((response) => {
       if (response.status == 200) {
         this.types = response.data;
       } else {

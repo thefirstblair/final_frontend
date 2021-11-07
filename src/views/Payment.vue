@@ -353,7 +353,7 @@ export default {
       }
 
       this.$http
-        .post("http://127.0.0.1:8000/api/payment_record/", this.records, {
+        .post("https://se-api-pond.herokuapp.com/api/payment_record/", this.records, {
           headers: { Authorization: `${AuthUser.getters.user.api_token}` },
         })
         .then((response) => {
@@ -379,7 +379,7 @@ export default {
     // เช็ค code ส่วนลดว่าตรงกับใน database ไหม
     checkCode() {
       this.$http
-        .get("http://127.0.0.1:8000/api/discount_coupon/" + this.code_user, {
+        .get("https://se-api-pond.herokuapp.com/api/discount_coupon/" + this.code_user, {
           headers: { Authorization: `${AuthUser.getters.user.api_token}` },
         })
         .then((response) => {
