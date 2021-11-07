@@ -144,7 +144,7 @@ export default {
     const token = AuthUser.getters.user.api_token;
 
     this.$http
-      .get("http://127.0.0.1:8000/api/user/me", {
+      .get("https://se-api-pond.herokuapp.com/api/user/me", {
         headers: {
           Authorization: `${token}`,
         },
@@ -165,7 +165,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
       this.$http
         .put(
-          "http://127.0.0.1:8000/api/user/me",
+          "https://se-api-pond.herokuapp.com/api/user/me",
           {
             oldpassword: this.oldpassword,
             newpassword: this.password,

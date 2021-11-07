@@ -218,7 +218,7 @@ export default {
       const token = AuthUser.getters.user.api_token;
 
       this.$http
-        .post("http://127.0.0.1:8000/api/discount_coupon/", this.addDiscount, {
+        .post("https://se-api-pond.herokuapp.com/api/discount_coupon", this.addDiscount, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -244,7 +244,7 @@ export default {
 
       this.$http
         .put(
-          "http://127.0.0.1:8000/api/discount_coupon/" + this.editDiscount.id,
+          "https://se-api-pond.herokuapp.com/api/discount_coupon/" + this.editDiscount.id,
           this.editDiscount,
           {
             headers: { Authorization: `${token}` },
@@ -276,7 +276,7 @@ export default {
            const token = AuthUser.getters.user.api_token;
 
           this.$http
-          .delete("http://127.0.0.1:8000/api/discount_coupon/" + id, {
+          .delete("https://se-api-pond.herokuapp.com/api/discount_coupon/" + id, {
               headers: { Authorization: `${token}` },
           })
           .then((response) => {
@@ -298,7 +298,7 @@ export default {
     const token = AuthUser.getters.user.api_token;
 
     this.$http
-      .get("http://127.0.0.1:8000/api/discount_coupon", {
+      .get("https://se-api-pond.herokuapp.com/api/discount_coupon", {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {
