@@ -216,7 +216,7 @@ export default {
   methods: {
     getListData(id) {
       this.$http
-        .get("http://127.0.0.1:8000/api/service/" + id)
+        .get("https://se-api-pond.herokuapp.com/api/service/" + id)
         .then((response) => {
           if (response.status == 200) {
             this.data = response.data;
@@ -251,7 +251,7 @@ export default {
   },
   created() {
     this.$http
-      .get("http://127.0.0.1:8000/api/type/" + this.$route.params.id)
+      .get("https://se-api-pond.herokuapp.com/api/type/" + this.$route.params.id)
       .then((response) => {
         if (response.status == 200) {
           this.type_name = response.data.name;
