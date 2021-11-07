@@ -253,7 +253,7 @@ export default {
     confirmed_addUser() {
       const token = AuthUser.getters.user.api_token;
       this.$http
-        .post("http://127.0.0.1:8000/api/user/", this.addUser, {
+        .post("https://se-api-pond.herokuapp.com/api/user/", this.addUser, {
           headers: { Authorization: `${token}` },
         })
         .then((response) => {
@@ -285,7 +285,7 @@ export default {
         const token = AuthUser.getters.user.api_token;
         this.$http
           .put(
-            "http://127.0.0.1:8000/api/user/" + this.editUser.id,
+            "https://se-api-pond.herokuapp.com/api/user/" + this.editUser.id,
             this.editUser,
             {
               headers: { Authorization: `${token}` },
@@ -323,7 +323,7 @@ export default {
           console.log(id);
           console.log(index);
           this.$http
-            .delete("http://127.0.0.1:8000/api/user/" + id, {
+            .delete("https://se-api-pond.herokuapp.com/api/user/" + id, {
               headers: { Authorization: `${token}` },
             })
             .then((response) => {
@@ -342,7 +342,7 @@ export default {
   created() {
     const token = AuthUser.getters.user.api_token;
     this.$http
-      .get("http://127.0.0.1:8000/api/user", {
+      .get("https://se-api-pond.herokuapp.com/api/user", {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {
